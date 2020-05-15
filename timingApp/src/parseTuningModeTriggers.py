@@ -107,7 +107,7 @@ getTargetBucketDelay(int targetBucket)
 	return (125 * ((21 * targetBucket) % 328)) / 4;
 }
 
-int getTimestamp(unsigned char evtcode, int *syncDelays, int nBunches, int gunBunchesDelay, int targetBucket) {
+int getTimestamp(unsigned char evtcode, const int *syncDelays, int nBunches, int gunBunchesDelay, int targetBucket) {
 ''')
 
 #print 'Found %d trigger defs' % len(triggers)

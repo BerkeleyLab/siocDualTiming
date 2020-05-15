@@ -3,7 +3,7 @@
 
 #include "timingSequenceConstants.h"
 
-int getTimestamp(unsigned char evtcode, int *syncDelays, int nBunches, int gunBunchesDelay, int targetBucket);
+int getTimestamp(unsigned char evtcode, const int *syncDelays, int nBunches, int gunBunchesDelay, int targetBucket);
 
 extern unsigned char modeEvtCodes[NUM_MODES][MAX_SEQUENCE_LENGTH];
 
