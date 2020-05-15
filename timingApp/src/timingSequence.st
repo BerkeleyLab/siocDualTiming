@@ -1,8 +1,8 @@
-program timingSequence ("T=T.P=EVG1:,R=")
+program timingSequence ("T=T,P=EVG1:,R=")
 
 // Macros
-//  T: "Test" for test crate, "" for production
-//  P:, R: Event generator prefixes
+//  T: Timing system record prefix.
+//  P:, R: Event generator record prefixes.
 // Defaults provided here can be overridden by seq command in st.cmd.
 
 // No wait for connections
@@ -15,13 +15,12 @@ option +d;
 #include "timingSequenceConstants.h"
 %%#include <stdio.h>
 %%#include <stdlib.h>
-%%#include "timingSequenceDefs.h"
 %%#include "tuningModes.h"
 
 /*
  * Injection request waveform.
  */
-int32_t request[7];
+int request[7];
 assign request to "{T}TimInjReq";
 monitor request;
 evflag requestFlag;
@@ -173,6 +172,27 @@ monotonicSequence(int count, int *tstampsAndEvents)
         prev = this;
 	}
 }
+
+/*
+ * Map mode (0 to 255) to event code table index (0 to NUM_MODES-1)
+ */
+typedef enum {
+	DEFAULT_MODE = 0,
+	LINACTUNE_MODE = 10,
+	BRTUNE_MODE = 20,
+	BTSTUNE_MODE = 30,
+	SRINJECTION_MODE = 40,
+	SRINJECTION_PREPARE_MODE = 41
+} MODES;
+
+typedef enum {
+	DEFAULT_MODE_INDEX,
+	LINACTUNE_MODE_INDEX,
+	BRTUNE_MODE_INDEX,
+	BTSTUNE_MODE_INDEX,
+	SRINJECTION_MODE_INDEX,
+	SRINJECTION_PREPARE_MODE_INDEX
+} MODE_INDEXES;
 }%
 
 entry {

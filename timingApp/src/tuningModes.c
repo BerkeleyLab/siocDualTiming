@@ -8,7 +8,6 @@
  */
 
 #include "tuningModes.h"
-#include "timingSequenceDefs.h"
 #include <stdio.h>
 
 /*
