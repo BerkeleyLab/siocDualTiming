@@ -9,7 +9,8 @@ do
     case "$i" in
         [0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.)  EVG_ADDRESS="$1" ;;
         -s) FPGA_SIMM_DISABLE="" ;;
-        -d) SEQ_DEBUG="1"
+        -d) SEQ_DEBUG="1" ;;
+        -a) export AUTOSAVE_PATH="\$(TOP)/autosave" ;;
     esac
 done
 export P="testEVG"
