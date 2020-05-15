@@ -11,6 +11,12 @@ do
         -s) FPGA_SIMM_DISABLE="" ;;
         -d) SEQ_DEBUG="1" ;;
         -a) export AUTOSAVE_PATH="\$(TOP)/autosave" ;;
+        -*) echo "Usage: $0 [-a] [-d] [-h] [-s]" >&2
+            echo "       -a -- Use local autosave/restore directory" >&2
+            echo "       -d -- Enable injection sequence program diagnostic messages" >&2
+            echo "       -h -- Show this help messdage, then exit" >&2
+            echo "       -s -- Place EVG records into simulation mode" >&2
+            exit 1 ;;
     esac
 done
 export P="testEVG"
