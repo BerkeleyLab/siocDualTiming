@@ -1,0 +1,5 @@
+ASYN       = /eda/epics/R3.15.5/modules/soft/asyn/asyn4-38
+AUTOSAVE   = /eda/epics/R3.15.5/modules/soft/autosave/autosave-5-1
+IOCEXIT    = /eda/epics/R3.15.5/modules/soft/iocExit/iocExit-2-0
+SNCSEQ     = /eda/epics/R3.15.5/modules/soft/seq/seq-2.2.8
+EPICS_BASE = /eda/epics/R3.15.5/base
