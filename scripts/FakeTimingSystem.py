@@ -14,6 +14,7 @@ parser.add_argument('-t', '--test', default='test', help='Timing system test pre
 parser.add_argument('-v', '--verbose', action='store_true', help='Show outgoing requests')
 args = parser.parse_args()
 
+# Connect to PV and verify connection
 def pv(name):
     pv = epics.PV(name, connection_timeout=1.0)
     pv.get()
@@ -65,12 +66,12 @@ def sequenceCallback(pvname=None, value=None, **kws):
         i += 2
         print('%d:%d'%(gap, evCode))
         if evCode == 127: break;
-
 if args.monitor:
     # Show event generator updates
     sequence = pv(args.evg + 'E1:SEQ1')
     sequence.add_callback(sequenceCallback)
 
+# Send requests until count limit has been reached
 cycleDone = False
 while args.count > 0:
     while not cycleDone:
@@ -82,4 +83,5 @@ while args.count > 0:
     requestPV.put(request)
     if (args.verbose): print(request)
     args.count -= 1
-time.sleep(1.0)
+if args.monitor:
+    time.sleep(1.0)
