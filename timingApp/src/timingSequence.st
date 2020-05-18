@@ -376,7 +376,8 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
                     }
                 }
                 evtcodes[nTStamps] = event;
-                tstamp = getTimestamp(event, injFieldSync, extrFieldSync, bunches, gunBunchesDelay, bucket);
+                tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
+                                              bunches, gunBunchesDelay, bucket);
                 if (tstamp < 0) {
                     fprintf(stderr, "WARNING: tstamp for evtcode %hu is %d -- "
                                "forcing to zero\n", evtcodes[nTStamps], tstamp);
