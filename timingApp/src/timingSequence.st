@@ -350,6 +350,7 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
         entry { if(debugFlag) printf("State: create_requested_sequence\n"); }
         when () {
             %%const unsigned char *e;
+            int targetBucketDelay = (125 * ((bucket * 21) % 328)) / 4;
             int i, nTStamps;
             int highwater = 0;
             int foundEOS = 0;
@@ -376,7 +377,7 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
                 }
                 else {
                     tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
-                                              bunches, gunBunchesDelay, bucket);
+                                   bunches, gunBunchesDelay, targetBucketDelay);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
                         tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
                     }

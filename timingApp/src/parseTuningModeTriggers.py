@@ -74,7 +74,7 @@ with open('TuningModeTriggers.csv', newline='') as csvFile:
                     expr = re.sub('GunBunchDelay', 'gunBunchesDelay', expr, re.IGNORECASE)
                     expr = re.sub('#[\s]*Bunches', 'numBunches', expr, re.IGNORECASE)
                     expr = re.sub('ExtrFieldSync', 'extrFieldSync', expr, re.IGNORECASE)
-                    expr = re.sub('TargetBucket', 'targetBucket', expr, re.IGNORECASE)
+                    expr = re.sub('TargetBucket', 'targetBucketDelay', expr, re.IGNORECASE)
                     expr = re.sub('[\s]+', '', expr)
                     expr = re.sub('\+', ' + ', expr)
                 # Stash info
@@ -122,7 +122,7 @@ eventListForMode(int mode)
     # Emit time stamp lookup
     outFile.write('''
 static int
-getTimestamp(int evtCode, int injFieldSync, int extrFieldSync, int numBunches, int gunBunchesDelay, int targetBucket)
+getTimestamp(int evtCode, int injFieldSync, int extrFieldSync, int numBunches, int gunBunchesDelay, int targetBucketDelay)
 {
     switch (evtCode) {
 ''')
