@@ -67,6 +67,8 @@ with open('TuningModeTriggers.csv', newline='') as csvFile:
                 expr = line[ExpressionColumn]
                 if match('^[\s]*$', expr) or match('^[\s]*Start[\s]*$', expr):
                     expr = "0"
+                elif match('^[\s]*End', expr):
+                    expr = "END_OF_SEQUENCE_TICKS"
                 else:
                     expr = re.sub('InjFieldSync', 'injFieldSync', expr, re.IGNORECASE)
                     expr = re.sub('GunBunchDelay', 'gunBunchesDelay', expr, re.IGNORECASE)

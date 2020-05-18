@@ -109,11 +109,6 @@ monitor bunchesToField;
 int gunBunchesDelay;
 
 /*
- * Soft sequence
- */
-uint8_t evtcodes[MAX_SEQUENCE_LENGTH];
-
-/*
  * Injection cycles are initiated only when all EVR links are good.
  */
 int allEVRvalid;
@@ -173,6 +168,7 @@ monotonicSequence(int count, int *tstampsAndEvents)
 	}
 }
 
+#define END_OF_SEQUENCE_TICKS (1<<30)
 #include "TimingLookups.h"
 
 }%
@@ -286,7 +282,7 @@ state sync_await_start {
             inhibit  = request[GUN_INHIBIT];
             sequence = request[SEQUENCE];
             injFieldSync = request[INJ_FIELD_SYNC_DELAY];
-            injFieldSync = request[EXTR_FIELD_SYNC_DELAY];
+            extrFieldSync = request[EXTR_FIELD_SYNC_DELAY];
         } state validate_request
     }
 
@@ -355,7 +351,7 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
         when () {
             %%const unsigned char *e;
             int i, nTStamps;
-            int highwater = 0, highwaterCount = 0;
+            int highwater = 0;
             int foundEOS = 0;
 
             /*
@@ -375,21 +371,23 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
                         continue;
                     }
                 }
-                evtcodes[nTStamps] = event;
-                tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
-                                              bunches, gunBunchesDelay, bucket);
-                if (tstamp < 0) {
-                    fprintf(stderr, "WARNING: tstamp for evtcode %hu is %d -- "
-                               "forcing to zero\n", evtcodes[nTStamps], tstamp);
-                    tstamp = 0;
-                }
-                if (event < SEQUENCE_END_EVTCODE) {
-                    if (tstamp > highwater) {
-                        highwater = tstamp;
-                    }
+                if (event == SEQUENCE_END_EVTCODE) {
+                    tstamp = highwater;
                 }
                 else {
-                    tstamp = highwater + ++highwaterCount;
+                    tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
+                                              bunches, gunBunchesDelay, bucket);
+                    if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
+                        tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
+                    }
+                    if (tstamp < 0) {
+                        fprintf(stderr, "WARNING: tstamp for evtcode %d is %d"
+                                               " -- ignoring\n", event, tstamp);
+                        continue;
+                    }
+                    if (tstamp >= highwater) {
+                        highwater = tstamp + 1;
+                    }
                 }
                 evgSequence[(2*nTStamps)+0] = tstamp;
                 evgSequence[(2*nTStamps)+1] = event;
