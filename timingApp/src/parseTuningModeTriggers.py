@@ -78,11 +78,15 @@ with open('TuningModeTriggers.csv', newline='') as csvFile:
                 eventDict[evt] = [expr, offset, tickOffset]
                 # Note modes for which event is active
                 for mode, modeInfo in modeDict.items():
-                    isActive = line[modeInfo['column']]
-                    if match('[\s]*x[\s]*', isActive):
+                    col = modeInfo['column']
+                    isActive = line[col]
+                    if match('^[\s]*x[\s]*$', isActive):
                         evtList = modeInfo['events']
                         if not evt in evtList:
                             evtList.append(evt)
+                    elif not match('^[\s]*$', isActive):
+                        print("Line %d -- Error: Bad value in column %d" % (lineno, col+1), file=sys.stderr)
+                        sys.exit(1)
 
 if inHeader:
     print("Error -- Can't find column headers", file=sys.stderr)
