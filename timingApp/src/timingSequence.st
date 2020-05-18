@@ -15,7 +15,6 @@ option +d;
 #include "timingSequenceConstants.h"
 %%#include <stdio.h>
 %%#include <stdlib.h>
-%%#include "tuningModes.h"
 
 /*
  * Injection request waveform.
@@ -45,7 +44,8 @@ int bucket = 1;     /* Target bucket (1-328) */
 int bunches = 1;    /* Number of electron gun bunches (1-16) */
 int inhibit = 0;    /* Inhibit electron gun if set, even if mode allows gun */
 int mode = 0;       /* Type of injection sequence.  Indexes modeEvtCodes. */
-int syncDelays[2];  /* Field delays */
+int injFieldSync;   /* Injection field delay */
+int extrFieldSync;  /* Extraction field delay */
 
 /*
  * Storage ring current.
@@ -173,36 +173,9 @@ monotonicSequence(int count, int *tstampsAndEvents)
 	}
 }
 
-/*
- * Map mode (0 to 255) to event code table index (0 to NUM_MODES-1)
- */
-typedef enum {
-	DEFAULT_MODE = 0,
-	LINACTUNE_MODE = 10,
-	BRTUNE_MODE = 20,
-	BTSTUNE_MODE = 30,
-	SRINJECTION_MODE = 40,
-	SRINJECTION_PREPARE_MODE = 41
-} MODES;
+#include "TimingLookups.h"
 
-typedef enum {
-	DEFAULT_MODE_INDEX,
-	LINACTUNE_MODE_INDEX,
-	BRTUNE_MODE_INDEX,
-	BTSTUNE_MODE_INDEX,
-	SRINJECTION_MODE_INDEX,
-	SRINJECTION_PREPARE_MODE_INDEX
-} MODE_INDEXES;
 }%
-
-entry {
-    modeIndexes[DEFAULT_MODE] = DEFAULT_MODE_INDEX;
-    modeIndexes[LINACTUNE_MODE] = LINACTUNE_MODE_INDEX;
-    modeIndexes[BRTUNE_MODE] = BRTUNE_MODE_INDEX;
-    modeIndexes[BTSTUNE_MODE] = BTSTUNE_MODE_INDEX;
-    modeIndexes[SRINJECTION_MODE] = SRINJECTION_MODE_INDEX;
-    modeIndexes[SRINJECTION_PREPARE_MODE] = SRINJECTION_PREPARE_MODE_INDEX;
-}
 
 ss ssTiming {
     /*
@@ -312,8 +285,8 @@ state sync_await_start {
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
             sequence = request[SEQUENCE];
-            syncDelays[0] = request[INJ_FIELD_SYNC_DELAY];
-            syncDelays[1] = request[EXTR_FIELD_SYNC_DELAY];
+            injFieldSync = request[INJ_FIELD_SYNC_DELAY];
+            injFieldSync = request[EXTR_FIELD_SYNC_DELAY];
         } state validate_request
     }
 
@@ -324,10 +297,6 @@ state sync_await_start {
         entry { if(debugFlag) printf("State: validate_request\n"); }
         when (sequence == lastSequence) {
             faultCode = FC_STALE_SEQUENCE;
-        } state increment_bad_count
-
-        when ((mode < MIN_MODE) || (mode > MAX_MODE)) {
-            faultCode = FC_INVALID_MODE;
         } state increment_bad_count
 
         when ((bucket < MIN_BUCKETS) || (bucket > MAX_BUCKETS)) {
@@ -384,7 +353,7 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
     state create_requested_sequence {
         entry { if(debugFlag) printf("State: create_requested_sequence\n"); }
         when () {
-            unsigned char *e = modeEvtCodes[modeIndexes[mode]];
+            %%const unsigned char *e;
             int i, nTStamps;
             int highwater = 0, highwaterCount = 0;
             int foundEOS = 0;
@@ -392,6 +361,11 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
             /*
              * Get time stamp for each event and merge into common array
              */
+            e = eventListForMode(mode);
+            if (e == NULL) {
+                faultCode = FC_INVALID_MODE;
+                state increment_bad_count;
+            }
             gunBunchesDelay = bunchesToField[bunches-1];
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
                 int event = e[i];
@@ -402,8 +376,7 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
                     }
                 }
                 evtcodes[nTStamps] = event;
-                tstamp = getTimestamp(event, syncDelays, bunches,
-                                                       gunBunchesDelay, bucket);
+                tstamp = getTimestamp(event, injFieldSync, extrFieldSync, bunches, gunBunchesDelay, bucket);
                 if (tstamp < 0) {
                     fprintf(stderr, "WARNING: tstamp for evtcode %hu is %d -- "
                                "forcing to zero\n", evtcodes[nTStamps], tstamp);

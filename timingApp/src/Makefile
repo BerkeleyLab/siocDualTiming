@@ -32,7 +32,6 @@ timing_LIBS += seq
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
 timing_SRCS += timingSequence.st
-timing_SRCS += tuningModes.c
 timing_SRCS += timing_registerRecordDeviceDriver.cpp
 
 # Build the main IOC entry point on workstation OSs.
@@ -46,6 +45,6 @@ timing_LIBS += $(EPICS_BASE_IOC_LIBS)
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
-tuningModes.c: ../TuningModeTriggers.csv ../parseTuningModeTriggers.py 
-	cd .. ; python parseTuningModeTriggers.py
+TimingLookups.h: ../TuningModeTriggers.csv ../parseTuningModeTriggers.py 
+	cd .. ; python a.py
 

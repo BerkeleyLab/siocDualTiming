@@ -1,169 +1,140 @@
 #!/usr/bin/env python
-#
-# parseTuningModeTriggers.py: Takes the exported Google Spreadsheet tab maintained by
-# G. Portmann/J. Weber/B. Gunion as input, and outputs a c file that defines all the 
-# event codes and timestamps for the tuning modes.
-# Expects as input the exported spreadsheet in TuningModeTriggers.csv.
-# Writes output to tuningModes.c.
-#
-# @date April 2017
-# @author Bob Gunion
 
 from __future__ import print_function
+import csv
 import sys
 import re
 
-fin = open('TuningModeTriggers.csv')
-if not fin:
-    print('Cannot find TuningModeTriggers.csv!', file=sys.stderr)
-    sys.exit(-2)
+EventColumn      = -1
+OffsetColumn     = -1
+ExpressionColumn = -1
+TickOffsetColumn = -1
 
-fout = open('tuningModes.c', 'w')
-if not fout:
-    print('Cannot open tuningModes.c for writing!', file=sys.stderr)
-    sys.exit(-2)
+modeDict = { }
+eventDict = { }
 
-# Signal,default?,Linac?,Booster?,BTS?,SRInjection?,SRInjPrep?,evtcode,tsoffset,functime,offsetticks
-re_trigger = re.compile(r'([^,]+),(x?),(x?),(x?),(x?),(x?),(x?),(\d+),(\d+),([^,]+),(-?\d*).*')
+def match(pattern, string):
+    return re.match(pattern, string, re.IGNORECASE)
 
-functimeprefixes = [
-    'Start',
-    'InjFieldSync + GunBunchDelay + #Bunches',
-    'InjFieldSync + GunBunchDelay',
-    'InjFieldSync',
-    'ExtrFieldSync + TargetBucket',
-    'ExtrFieldSync',
-    'End'
-]
-functimes = [
-    '0',
-    'syncDelays[INJ_SYNCDELAY_INDEX] + gunBunchesDelay + nBunches',
-    'syncDelays[INJ_SYNCDELAY_INDEX] + gunBunchesDelay',
-    'syncDelays[INJ_SYNCDELAY_INDEX]',
-    'syncDelays[EXTR_SYNCDELAY_INDEX] + getTargetBucketDelay(targetBucket)',
-    'syncDelays[EXTR_SYNCDELAY_INDEX]',
-    'DELAY_END'
-]
-
-class Trigger:
-    def __init__(self, m):
-        self.name = m.group(1)
-        self.evtcode = m.group(8)
-        self.tsoffset = m.group(9)
-        self.functime = m.group(10)
-        self.offsetticks = m.group(11)
-        self.modes = []
-        for i in range(2, 8):
-            self.modes.append(m.group(i) == 'x')
-
-    def getTimestamp(self):
-        index = 0
-        found = False
-        for prefix in functimeprefixes:
-            if self.functime.startswith(prefix):
-                found = True
-                break
-            index += 1
-        if not found:
-            print('ERROR: Invalid functional time string:',self.functime, file=sys.stderr)
-            sys.exit(-2)
-        str = functimes[index]+' + '+self.tsoffset
-        if len(self.offsetticks) > 0:
-            str += ' + '+self.offsetticks
-        return str
-
-def sortEvtCode(t):
-    return t.evtcode
-
-triggers = []
-
-for line in fin:
-    m = re_trigger.match(line)
-    if not m:
-        continue
-    triggers.append(Trigger(m))
-fin.close()
-
-triggers = sorted(triggers, key = lambda t: int(t.evtcode))
-
-fout.write('''/**
- * tuningModes.c
- *
- * THIS FILE IS GENERATED - ANY CHANGES WILL BE LOST WHEN THIS IOC IS BUILT
- *
- * Defines functions whose return values depend on the Timing PV Names Google Spreadsheet.
- * Generated from TuningModeTriggers.csv
- */
-
-#include "tuningModes.h"
-#include <stdio.h>
-
-/*
- * Convert target bucket to delay
- */
-static int
-getTargetBucketDelay(int targetBucket)
-{
-	return (125 * ((21 * targetBucket) % 328)) / 4;
-}
-
-int getTimestamp(unsigned char evtcode, const int *syncDelays, int nBunches, int gunBunchesDelay, int targetBucket) {
-''')
-
-#print 'Found %d trigger defs' % len(triggers)
-priorEvtCodes = []
-first = True
-for t in triggers:
-    #print t.name, t.modes[0], t.modes[1], t.modes[2], t.modes[3], t.modes[4], t.modes[5], t.evtcode, t.tsoffset, t.functime, t.offsetticks
-    #print t.getTimestamp()
-    if t.evtcode in priorEvtCodes:
-        continue
-    priorEvtCodes.append(t.evtcode)
-    if first:
-        first = False
-        fout.write('    switch (evtcode) {\n')
-    fout.write('    case '+t.evtcode+': return '+t.getTimestamp()+';\n')
-
-fout.write('''    case 127: return DELAY_END + 1;
-    default:
-        printf("Invalid event code %d passed to getTimestamp; returning -1\\n", evtcode);
-        return -1;
-    }
-}''')
-
-fout.write('''
-
-unsigned char modeEvtCodes[NUM_MODES][MAX_SEQUENCE_LENGTH] = {
-''')
-
-modes = [
-    0,  # default
-    10, # Linac/LTB
-    20, # Booster
-    30, # BTS
-    40, # SR Injection
-    41  # SR Inj Prep
-]
-first = True
-for mode in range(0, 6):
-    if first:
-        first = False
-        fout.write('    {\n')
+def number(str, lineno):
+    if match('^[\s]*$', str):
+        return 0
+    elif match('^[\s]*[\d-]+[\s]*$', str):
+        return int(str)
     else:
-        fout.write('    },\n    {\n')
-    priorEvtCodes = []
-    tfirst = True
-    for t in triggers:
-        if not t.modes[mode]:
-            continue
-        if t.evtcode in priorEvtCodes:
-            continue
-        priorEvtCodes.append(t.evtcode)
-        if tfirst:
-            tfirst = False
-        fout.write('        '+t.evtcode+',\n')
-    fout.write('        127\n')
+        print("Line %d -- Error: Bad offset %s" % (lineno, str), file=sys.stderr)
+        sys.exit(1)
 
-fout.write('    }\n};\n')
+with open('TuningModeTriggers.csv', newline='') as csvFile:
+    reader = csv.reader(csvFile)
+    lineno = 0
+    inHeader = True
+    lastEvent = 0
+    for line in reader:
+        lineno += 1
+        if inHeader:
+            # Look for descriptive column headers
+            if match('Mode[\s]Number', line[0]):
+                for c in range(0, len(line)):
+                    val = line[c]
+                    if match('[\d]+', val):
+                        modeDict[val] = {'column':c, 'events':[]}
+                    if match('Number', val): EventColumn = c
+                    if match('Timestamp[\s]Offset', val): OffsetColumn = c
+                    if match('Functional[\s]Time', val): ExpressionColumn = c
+                    if match('Offset[\s]\[Ticks\]', val): TickOffsetColumn = c
+                if EventColumn < 0  \
+                 or OffsetColumn < 0 \
+                 or ExpressionColumn < 0 \
+                 or TickOffsetColumn < 0 \
+                 or len(modeDict) == 0:
+                    print("Line %d -- Error: Bad heading" % (lineno), file=sys.stderr)
+                    sys.exit(1)
+                inHeader = False
+        else:
+            evt = line[EventColumn]
+            if match('^[\s]*[\d]+[\s]*$', evt):
+                evt = int(evt)
+                if evt == 127: break
+                if evt <= 0 or evt > 255:
+                    print("Line %d -- Error: Bad event number" % (lineno), file=sys.stderr)
+                    sys.exit(1)
+                if evt < lastEvent:
+                    print("Line %d -- Warning: Event out of order -- line ignored" % (lineno), file=sys.stderr)
+                    continue
+                # Canonicalize expression
+                lastEvent = evt
+                expr = line[ExpressionColumn]
+                if match('^[\s]*$', expr) or match('^[\s]*Start[\s]*$', expr):
+                    expr = "0"
+                else:
+                    expr = re.sub('InjFieldSync', 'injFieldSync', expr, re.IGNORECASE)
+                    expr = re.sub('GunBunchDelay', 'gunBunchesDelay', expr, re.IGNORECASE)
+                    expr = re.sub('#[\s]*Bunches', 'numBunches', expr, re.IGNORECASE)
+                    expr = re.sub('ExtrFieldSync', 'extrFieldSync', expr, re.IGNORECASE)
+                    expr = re.sub('TargetBucket', 'targetBucket', expr, re.IGNORECASE)
+                    expr = re.sub('[\s]+', '', expr)
+                    expr = re.sub('\+', ' + ', expr)
+                # Stash info
+                offset = number(line[OffsetColumn], lineno)
+                tickOffset = number(line[TickOffsetColumn], lineno)
+                eventDict[evt] = [expr, offset, tickOffset]
+                # Note modes for which event is active
+                for mode, modeInfo in modeDict.items():
+                    isActive = line[modeInfo['column']]
+                    if match('[\s]*x[\s]*', isActive):
+                        evtList = modeInfo['events']
+                        if not evt in evtList:
+                            evtList.append(evt)
 
-fout.close()
+if inHeader:
+    print("Error -- Can't find column headers", file=sys.stderr)
+    sys.exit(1)
+
+with open('TimingLookups.h', 'w+') as outFile:
+    # Emit event list lookup
+    outFile.write('''/*
+ * Machine-generated file -- do not edit!
+ */
+
+/* Get list of events for specified mode */
+static const unsigned char *
+eventListForMode(int mode)
+{
+    switch (mode) {
+''')
+    for mode, modeInfo in modeDict.items():
+        evtList = modeInfo['events']
+        outFile.write('    case %s:{static const unsigned char e[] = {' % (mode))
+        for e in evtList:
+            outFile.write('%d, ' %(e))
+            sep = ', '
+        print('127}; return e;}', file=outFile)
+
+    outFile.write('''    default: break;
+    }
+    return NULL;
+}
+''')
+
+    # Emit time stamp lookup
+    outFile.write('''
+static int
+getTimestamp(int evtCode, int injFieldSync, int extrFieldSync, int numBunches, int gunBunchesDelay, int targetBucket)
+{
+    switch (evtCode) {
+''')
+    for evtCode, evtInfo in eventDict.items():
+        outFile.write('    case %d: return %s' % (evtCode, evtInfo[0]))
+        if evtInfo[1] != 0:
+            outFile.write(' + %d' % (evtInfo[1]))
+        if evtInfo[2] > 0:
+            outFile.write(' + %d' % (evtInfo[1]))
+        elif evtInfo[2] < 0:
+            outFile.write(' - %d' % (-evtInfo[2]))
+        print(';', file=outFile)
+    outFile.write('''    default: break;
+    }
+    return -1;
+}
+''')
