@@ -29,7 +29,6 @@ with open('TuningModeTriggers.csv', newline='') as csvFile:
     reader = csv.reader(csvFile)
     lineno = 0
     inHeader = True
-    lastEvent = 0
     for line in reader:
         lineno += 1
         if inHeader:
@@ -59,11 +58,7 @@ with open('TuningModeTriggers.csv', newline='') as csvFile:
                 if evt <= 0 or evt > 255:
                     print("Line %d -- Error: Bad event number" % (lineno), file=sys.stderr)
                     sys.exit(1)
-                if evt < lastEvent:
-                    print("Line %d -- Warning: Event out of order -- line ignored" % (lineno), file=sys.stderr)
-                    continue
                 # Canonicalize expression
-                lastEvent = evt
                 expr = line[ExpressionColumn]
                 if match('^[\s]*$', expr) or match('^[\s]*Start[\s]*$', expr):
                     expr = "0"
