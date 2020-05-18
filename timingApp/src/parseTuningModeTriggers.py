@@ -19,7 +19,7 @@ def match(pattern, string):
 def number(str, lineno):
     if match('^[\s]*$', str):
         return 0
-    elif match('^[\s]*[\d-]+[\s]*$', str):
+    elif match('^[\s]*[-]?[\d]+[\s]*$', str):
         return int(str)
     else:
         print("Line %d -- Error: Bad offset %s" % (lineno, str), file=sys.stderr)
