@@ -12,18 +12,23 @@ TickOffsetColumn = -1
 
 modeDict = { }
 eventDict = { }
+duplicateCheckDict = { }
+consistencyCheckDict = { }
 
 def match(pattern, string):
     return re.match(pattern, string, re.IGNORECASE)
 
-def number(str, lineno):
-    if match('^[\s]*$', str):
-        return 0
-    elif match('^[\s]*[-]?[\d]+[\s]*$', str):
-        return int(str)
-    else:
-        print("Line %d -- Error: Bad offset %s" % (lineno, str), file=sys.stderr)
+def offset(expr, str, lineno):
+    if match('^[\s]*[-]?[\d]+[\s]*$', str):
+        n = int(str)
+        if (n < 0):
+            return (expr + ' - %d' % (-n))
+        if (n > 0):
+            return (expr + ' + %d' % (n))
+    elif not match('^[\s]*$', str):
+        print('Line %d -- Error: Bad offset "%s"' % (lineno, str), file=sys.stderr)
         sys.exit(1)
+    return expr
 
 with open('TuningModeTriggers.csv') as csvFile:
     reader = csv.reader(csvFile)
@@ -72,21 +77,39 @@ with open('TuningModeTriggers.csv') as csvFile:
                     expr = re.sub('TargetBucket', 'targetBucketDelay', expr, re.IGNORECASE)
                     expr = re.sub('[\s]+', '', expr)
                     expr = re.sub('\+', ' + ', expr)
+                expr = offset(expr, line[TickOffsetColumn], lineno)
+                signature = expr
+                expr = offset(expr, line[OffsetColumn], lineno)
                 # Stash info
-                offset = number(line[OffsetColumn], lineno)
-                tickOffset = number(line[TickOffsetColumn], lineno)
-                eventDict[evt] = [expr, offset, tickOffset]
+                eventDict[evt] = expr
                 # Note modes for which event is active
                 for mode, modeInfo in modeDict.items():
                     col = modeInfo['column']
                     isActive = line[col]
                     if match('^[\s]*x[\s]*$', isActive):
+                        signature = signature + 'x'
                         evtList = modeInfo['events']
                         if not evt in evtList:
                             evtList.append(evt)
                     elif not match('^[\s]*$', isActive):
                         print("Line %d -- Error: Bad value in column %d" % (lineno, col+1), file=sys.stderr)
                         sys.exit(1)
+                    else:
+                        signature = signature + ' '
+                # Check for duplicates
+                if signature in duplicateCheckDict:
+                    duplicateEvent = duplicateCheckDict[signature]
+                    if evt != duplicateEvent:
+                        print("Line %d -- Event %d is identical to event %d" % (lineno, evt, duplicateEvent))
+                else:
+                    duplicateCheckDict[signature] = evt
+                # Check consitencty
+                if evt in consistencyCheckDict:
+                    matchSignature = consistencyCheckDict[evt]
+                    if signature != matchSignature:
+                        print("Line %d -- WARNING Event %d has different conditions/actions" % (lineno, evt))
+                else:
+                    consistencyCheckDict[evt] = signature
 
 if inHeader:
     print("Error -- Can't find column headers", file=sys.stderr)
@@ -124,15 +147,8 @@ getTimestamp(int evtCode, int injFieldSync, int extrFieldSync, int numBunches, i
 {
     switch (evtCode) {
 ''')
-    for evtCode, evtInfo in eventDict.items():
-        outFile.write('    case %d: return %s' % (evtCode, evtInfo[0]))
-        if evtInfo[1] != 0:
-            outFile.write(' + %d' % (evtInfo[1]))
-        if evtInfo[2] > 0:
-            outFile.write(' + %d' % (evtInfo[1]))
-        elif evtInfo[2] < 0:
-            outFile.write(' - %d' % (-evtInfo[2]))
-        print(';', file=outFile)
+    for evtCode, expr in eventDict.items():
+        print('    case %d: return %s;' % (evtCode, expr), file=outFile)
     outFile.write('''    default: break;
     }
     return -1;
