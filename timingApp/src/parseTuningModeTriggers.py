@@ -131,7 +131,6 @@ eventListForMode(int mode)
         outFile.write('    case %s:{static const unsigned char e[] = {' % (mode))
         for e in evtList:
             outFile.write('%d, ' %(e))
-            sep = ', '
         print('127}; return e;}', file=outFile)
 
     outFile.write('''    default: break;
