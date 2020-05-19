@@ -107,7 +107,8 @@ with open('TuningModeTriggers.csv') as csvFile:
                 if evt in consistencyCheckDict:
                     matchSignature = consistencyCheckDict[evt]
                     if signature != matchSignature:
-                        print("Line %d -- WARNING Event %d has different conditions/actions" % (lineno, evt))
+                        print("Line %d -- Event %d has different conditions/actions" % (lineno, evt))
+                        sys.exit(1)
                 else:
                     consistencyCheckDict[evt] = signature
 
