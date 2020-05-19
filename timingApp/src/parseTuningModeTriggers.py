@@ -103,7 +103,7 @@ with open('TuningModeTriggers.csv') as csvFile:
                         print("Line %d -- Event %d is identical to event %d" % (lineno, evt, duplicateEvent))
                 else:
                     duplicateCheckDict[signature] = evt
-                # Check consitencty
+                # Check consistency
                 if evt in consistencyCheckDict:
                     matchSignature = consistencyCheckDict[evt]
                     if signature != matchSignature:
