@@ -25,7 +25,7 @@ def number(str, lineno):
         print("Line %d -- Error: Bad offset %s" % (lineno, str), file=sys.stderr)
         sys.exit(1)
 
-with open('TuningModeTriggers.csv', newline='') as csvFile:
+with open('TuningModeTriggers.csv') as csvFile:
     reader = csv.reader(csvFile)
     lineno = 0
     inHeader = True
