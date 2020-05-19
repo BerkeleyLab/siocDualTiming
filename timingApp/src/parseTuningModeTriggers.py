@@ -47,7 +47,7 @@ with open('TuningModeTriggers.csv') as csvFile:
                     if match('Timestamp[\s]Offset', val): OffsetColumn = c
                     if match('Functional[\s]Time', val): ExpressionColumn = c
                     if match('Offset[\s]\[Ticks\]', val): TickOffsetColumn = c
-                if EventColumn < 0  \
+                if EventColumn < 0 \
                  or OffsetColumn < 0 \
                  or ExpressionColumn < 0 \
                  or TickOffsetColumn < 0 \
@@ -87,7 +87,7 @@ with open('TuningModeTriggers.csv') as csvFile:
                     col = modeInfo['column']
                     isActive = line[col]
                     if match('^[\s]*x[\s]*$', isActive):
-                        signature = signature + 'x'
+                        signature = 'x' + signature
                         evtList = modeInfo['events']
                         if not evt in evtList:
                             evtList.append(evt)
@@ -95,7 +95,7 @@ with open('TuningModeTriggers.csv') as csvFile:
                         print("Line %d -- Error: Bad value in column %d" % (lineno, col+1), file=sys.stderr)
                         sys.exit(1)
                     else:
-                        signature = signature + ' '
+                        signature = ' ' + signature
                 # Check for duplicates
                 if signature in duplicateCheckDict:
                     duplicateEvent = duplicateCheckDict[signature]
