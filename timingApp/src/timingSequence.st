@@ -1,4 +1,4 @@
-program timingSequence ("T=T,P=EVG1:,R=")
+program timingSequence ("T=,P=EVG1:,R=")
 
 // Macros
 //  T: Timing system record prefix.
