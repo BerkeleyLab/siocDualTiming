@@ -98,7 +98,6 @@ with open('TimingLookups.h', 'w+') as outFile:
  * Machine-generated file -- do not edit!
  */
 
-/* Get list of events for specified mode */
 static const unsigned char *
 eventListForMode(int mode)
 {
