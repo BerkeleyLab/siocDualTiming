@@ -1,0 +1,4 @@
+# Avoid accidental updates of FPGA default squence -- put this record into simulation mode on startup
+record (waveform, "$(P)$(R)E1:SEQ0") {
+    field(SIMM, "YES")
+}

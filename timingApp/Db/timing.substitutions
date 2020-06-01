@@ -1,3 +1,9 @@
+file "perIOC.template"
+{ pattern
+{       T       P       R  }
+  { "\$(T)" "\$(P)" "\$(R)" }
+}
+
 file "perTimingSequencer.template"
 { pattern
 {       T     }
