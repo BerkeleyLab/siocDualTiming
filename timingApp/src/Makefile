@@ -48,4 +48,3 @@ include $(TOP)/configure/RULES
 timingSequence.c: TimingLookups.h
 TimingLookups.h: ../TuningModeTriggers.csv ../parseTuningModeTriggers.py 
 	cd .. ; python parseTuningModeTriggers.py 
-
