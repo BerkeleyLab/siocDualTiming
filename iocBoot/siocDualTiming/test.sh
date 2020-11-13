@@ -23,5 +23,5 @@ do
 done
 export P="testEVG"
 export R=":"
-export T="test"
+export T="dual"
 ./st.cmd
