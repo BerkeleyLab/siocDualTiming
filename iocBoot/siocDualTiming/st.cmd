@@ -40,7 +40,7 @@ dbLoadRecords("db/alsGblPVs.db","T=$(T)")
 
 ###############################################################################
 # Track production system?
-$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","T=$(T)")
+$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","T=$(T),PROD=")
 
 ##############################################################################
 # Load additional records
