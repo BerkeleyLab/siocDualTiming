@@ -38,6 +38,10 @@ dbLoadRecords("db/eventGenerator.db","P=$(P),R=$(R),PORT=EVG01")
 dbLoadRecords("db/timing.db","P=$(P),R=$(R),T=$(T)")
 dbLoadRecords("db/alsGblPVs.db","T=$(T)")
 
+###############################################################################
+# Track production system?
+$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","T=$(T)")
+
 ##############################################################################
 # Load additional records
 dbLoadRecords("db/iocExit.db","IOC=$(IOC)")
@@ -76,7 +80,3 @@ $(FPGA_SIMM_DISABLE) <st.simm
 # Start timing sequence program
 dbpf "$(T)InjSeqDebug" $(SEQ_DEBUG)
 seq timingSequence "P=$(P),R=$(R),T=$(T)"
-
-###############################################################################
-# Start tracking production system?
-$(FPGA_TRACK_DISABLE) <st.track

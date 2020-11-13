@@ -1,4 +1,0 @@
-# Track production system
-dbpf $(T)TimInjReq.INP "TimInjReq CPP MS"
-dbpf $(T)GunBunchToInjFieldTrigger.INP "GunBunchToInjFieldTrigger CPP MS"
-dbpf $(T)TimPotentate.INP "TimPotentate CPP MS"

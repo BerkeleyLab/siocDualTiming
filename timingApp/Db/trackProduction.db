@@ -1,0 +1,10 @@
+# Track production system
+record(waveform, $(T)TimInjReq) {
+    field(INP,  "(PROD)TimInjReq CPP MS")
+}
+record(waveform, $(T)GunBunchToInjFieldTrigger) {
+    field(INP,  "(PROD)GunBunchToInjFieldTrigger CPP MS")
+}
+record(bi, $(T)TimPotentate) {
+    field(INP,  "(PROD)TimPotentate CPP MS")
+}
