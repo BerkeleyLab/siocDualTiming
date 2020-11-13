@@ -13,6 +13,7 @@ epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)"
 ###############################################################################
 # Conditionals
 epicsEnvSet "FPGA_SIMM_DISABLE" "$(FPGA_SIMM_DISABLE=#)"
+epicsEnvSet "FPGA_TRACK_DISABLE" "$(FPGA_TRACK_DISABLE=#)"
 epicsEnvSet "SEQ_DEBUG" "$(SEQ_DEBUG=0)"
 
 ###############################################################################
@@ -75,3 +76,7 @@ $(FPGA_SIMM_DISABLE) <st.simm
 # Start timing sequence program
 dbpf "$(T)InjSeqDebug" $(SEQ_DEBUG)
 seq timingSequence "P=$(P),R=$(R),T=$(T)"
+
+###############################################################################
+# Start tracking production system?
+$(FPGA_TRACK_DISABLE) <st.track
