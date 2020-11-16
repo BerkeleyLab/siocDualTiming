@@ -209,7 +209,7 @@ ss ssTiming {
     /*
      * Initial synchronization
      */
-state sync_await_start {
+    state sync_await_start {
         entry { if(debugFlag) printf("State: sync_await_start\n"); }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
