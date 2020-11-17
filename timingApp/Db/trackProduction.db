@@ -8,3 +8,7 @@ record(waveform, $(T)GunBunchToInjFieldTrigger) {
 record(bi, $(T)TimPotentate) {
     field(INP,  "$(PROD)TimPotentate CPP MS")
 }
+record(longout, "$(P)$(R)INJ:singleShot") {
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(EVG_OLDEvt10Cnt-I")
+}
