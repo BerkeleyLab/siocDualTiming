@@ -10,5 +10,5 @@ record(bi, $(T)TimPotentate) {
 }
 record(longout, "$(P)$(R)INJ:singleShot") {
     field(OMSL, "closed_loop")
-    field(DOL,  "$(EVG_OLDEvt10Cnt-I")
+    field(DOL,  "$(OLD_EVG_INJ_START) CP MS")
 }

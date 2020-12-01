@@ -40,7 +40,7 @@ dbLoadRecords("db/alsGblPVs.db","T=$(T)")
 
 ###############################################################################
 # Track production system?
-$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","T=$(T),PROD=")
+$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","P=$(P),R=$(R),T=$(T),PROD=,OLD_EVG_INJ_START=LI11:EVR1:Evt10Cnt-I")
 
 ##############################################################################
 # Load additional records
@@ -80,3 +80,4 @@ $(FPGA_SIMM_DISABLE) <st.simm
 # Start timing sequence program
 dbpf "$(T)InjSeqDebug" $(SEQ_DEBUG)
 seq timingSequence "P=$(P),R=$(R),T=$(T)"
+dbpr testEVG:INJ:singleShot 1

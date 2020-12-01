@@ -8,7 +8,7 @@ export SEQ_DEBUG="0"
 for i in "$@"
 do
     case "$i" in
-        [0-9]*)  EVG_ADDRESS="$1" ;;
+        [0-9]*)  EVG_ADDRESS="$i" ;;
         -s) FPGA_SIMM_DISABLE="" ;;
         -t) FPGA_TRACK_DISABLE="" ;;
         -d) SEQ_DEBUG="1" ;;
