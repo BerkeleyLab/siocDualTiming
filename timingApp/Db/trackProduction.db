@@ -12,3 +12,8 @@ record(longout, "$(P)$(R)INJ:singleShot") {
     field(OMSL, "closed_loop")
     field(DOL,  "$(OLD_EVG_INJ_START) CP MS")
 }
+record(bo, "$(P)$(R)INJ:injCycleEnable") {
+    field(SIML, "YES")
+    field(SIOL, "0")
+}
+
