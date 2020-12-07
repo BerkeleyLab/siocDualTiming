@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 621
-y 216
+x 255
+y 126
 w 320
-h 180
+h 160
 font "helvetica-medium-r-18.0"
 ctlFont "helvetica-medium-r-12.0"
 btnFont "helvetica-bold-r-14.0"
@@ -39,89 +39,6 @@ useDisplayBg
 value {
   "$(T)Timing Sequencer"
 }
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 8
-y 124
-w 64
-h 39
-
-beginGroup
-
-# (Message Button)
-object activeMessageButtonClass
-beginObjectProperties
-major 4
-minor 1
-release 0
-x 42
-y 143
-w 30
-h 20
-fgColor index 14
-onColor index 31
-offColor index 31
-topShadowColor index 30
-botShadowColor index 32
-controlPv "$(T)InjSeqDebug"
-pressValue "1"
-onLabel "Set"
-offLabel "Set"
-3d
-font "helvetica-medium-r-14.0"
-endObjectProperties
-
-# (Message Button)
-object activeMessageButtonClass
-beginObjectProperties
-major 4
-minor 1
-release 0
-x 8
-y 143
-w 30
-h 20
-fgColor index 14
-onColor index 31
-offColor index 31
-topShadowColor index 30
-botShadowColor index 32
-controlPv "$(T)InjSeqDebug"
-pressValue "0"
-onLabel "Clr"
-offLabel "Clr"
-3d
-font "helvetica-medium-r-14.0"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 8
-y 124
-w 64
-h 16
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 19
-useDisplayBg
-value {
-  "Debug"
-}
-endObjectProperties
-
-endGroup
-
 endObjectProperties
 
 # (Group)
@@ -362,5 +279,33 @@ endObjectProperties
 
 endGroup
 
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 229
+y 116
+w 80
+h 25
+fgColor index 14
+bgColor index 31
+topShadowColor index 30
+botShadowColor index 32
+font "helvetica-bold-r-14.0"
+buttonLabel "More..."
+numPvs 4
+numDsps 2
+displayFileName {
+  0 "EVG_Engineering.edl"
+  1 "TIM_debugControl.edl"
+}
+menuLabel {
+  0 "EVG"
+  1 "Seq Debug"
+}
 endObjectProperties
 
