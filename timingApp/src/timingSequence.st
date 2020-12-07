@@ -408,7 +408,15 @@ printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
     }
 
     state load_requested_sequence {
-        entry { if(debugFlag) printf("State: load_requested_sequence\n"); }
+        entry {
+            if(debugFlag) {
+                int i;
+                printf("State: load_requested_sequence\n");
+                for (i = 0 ; i < 7 ; i++) {
+                    printf("R[%d]: %d\n", i, request[i]);
+                }
+            }
+        }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (evgSequencerStarts != evgSequencerCurrentStarts) {
