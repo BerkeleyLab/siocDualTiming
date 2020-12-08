@@ -216,4 +216,6 @@ record(calc, "$(T)TimAllEVRvalid") {
     field(INPB, "S0123:EVR1:Link-Sts MS CPP")
     field(INPC, "S0817:EVR1:Link-Sts MS CPP")
     field(CALC, "A&B&C")
+    field(LOLO, "0")
+    field(LLSV, "MAJOR")
 }
