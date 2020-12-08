@@ -4,7 +4,7 @@ major 4
 minor 0
 release 1
 x 255
-y 126
+y 148
 w 320
 h 160
 font "helvetica-medium-r-18.0"
@@ -307,5 +307,75 @@ menuLabel {
   0 "EVG"
   1 "Seq Debug"
 }
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 114
+w 107
+h 20
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 92
+y 114
+w 20
+h 20
+lineColor index 14
+fillColor index 19
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 92
+y 114
+w 20
+h 20
+lineColor index 14
+lineAlarm
+fill
+fillColor index 15
+visPv "$(T)TimAllEVRvalid"
+visMin "1"
+visMax "2"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 117
+w 84
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 19
+useDisplayBg
+value {
+  "All EVR valid"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
 endObjectProperties
 

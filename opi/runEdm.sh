@@ -1,8 +1,6 @@
 #!/bin/sh
 
-T="dual"
-P="testEVG"
-R=":"
+T="test"
 E="TIM_injectionSequencer.edl"
 
 getPath() {
@@ -32,7 +30,7 @@ for i in $ARGS
 do
     case "$i" in
     *.edl)       E="$i"  ;;
-    *)           P="$i"  R=":" ;;
+    *)           T="$i"  R=":" ;;
     esac
 done
 
@@ -41,4 +39,4 @@ case "$T" in
     *)  TARG="T=$T"     ;;
 esac
 
-edm -eolc -x -m "P=${P},R=${R},${TARG}" "$E" &
+edm -eolc -x -m "${TARG}" "$E" &

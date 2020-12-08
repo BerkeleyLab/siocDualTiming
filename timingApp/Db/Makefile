@@ -16,7 +16,6 @@ DB_INSTALLS += $(EVG)/db/eventGenerator.db
 DB_INSTALLS += $(IOCEXIT)/db/iocExit.db
 DB += alsGblPVs.db
 DB += timing.db
-DB += trackProduction.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

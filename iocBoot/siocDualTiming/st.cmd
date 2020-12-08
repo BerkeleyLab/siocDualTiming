@@ -2,18 +2,14 @@
 
 ###############################################################################
 # Set up environment
-epicsEnvSet "P" "$(P=EVG)"
-epicsEnvSet "R" "$(R=:)"
-epicsEnvSet "T" "$(T=Test)"
-epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=192.168.1.129)"
+epicsEnvSet "T" "$(T=$(DUAL_TIMING_IOC_TEST=test))"
+epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=131.243.93.169)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
 epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)"
 
 ###############################################################################
 # Conditionals
-epicsEnvSet "FPGA_SIMM_DISABLE" "$(FPGA_SIMM_DISABLE=#)"
-epicsEnvSet "FPGA_TRACK_DISABLE" "$(FPGA_TRACK_DISABLE=#)"
 epicsEnvSet "SEQ_DEBUG" "$(SEQ_DEBUG=0)"
 
 ###############################################################################
@@ -34,13 +30,9 @@ asynSetTraceMask("EVG01_SEQ",-1,0x1)
 
 ###############################################################################
 # Load record instances
-dbLoadRecords("db/eventGenerator.db","P=$(P),R=$(R),PORT=EVG01")
-dbLoadRecords("db/timing.db","P=$(P),R=$(R),T=$(T)")
+dbLoadRecords("db/eventGenerator.db","P=$(T),R=EVG:,PORT=EVG01")
+dbLoadRecords("db/timing.db","P=$(T),R=EVG:,T=$(T)")
 dbLoadRecords("db/alsGblPVs.db","T=$(T)")
-
-###############################################################################
-# Track production system?
-$(FPGA_TRACK_DISABLE) dbLoadRecords("db/trackProduction.db","P=$(P),R=$(R),T=$(T),PROD=,OLD_EVG_INJ_START=LI11:EVR1:Evt10Cnt-I")
 
 ##############################################################################
 # Load additional records
@@ -73,11 +65,6 @@ dbl >"/vxboot/PVnames/$(IOC)"
 epicsEnvShow >"/vxboot/PVenv/$(IOC).softioc"
 
 ###############################################################################
-# Put FPGA I/O records into simulation mode?
-$(FPGA_SIMM_DISABLE) <st.simm
-
-###############################################################################
 # Start timing sequence program
 dbpf "$(T)InjSeqDebug" $(SEQ_DEBUG)
-seq timingSequence "P=$(P),R=$(R),T=$(T)"
-dbpr testEVG:INJ:singleShot 1
+seq timingSequence "P=$(T),R=EVG:,T=$(T)"
