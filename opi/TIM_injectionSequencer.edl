@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 255
-y 148
+x 280
+y 162
 w 320
 h 160
 font "helvetica-medium-r-18.0"
@@ -306,6 +306,9 @@ displayFileName {
 menuLabel {
   0 "EVG"
   1 "Seq Debug"
+}
+symbols {
+  0 "P=$(T),R=EVG:"
 }
 endObjectProperties
 
