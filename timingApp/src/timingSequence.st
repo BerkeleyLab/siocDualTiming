@@ -43,7 +43,7 @@ int lastSequence = -1;
 int bucket = 1;     /* Target bucket (1-328) */
 int bunches = 1;    /* Number of electron gun bunches (1-16) */
 int inhibit = 0;    /* Inhibit electron gun if set, even if mode allows gun */
-int mode = 0;       /* Type of injection sequence.  Indexes modeEvtCodes. */
+int mode = 0;       /* Type of injection sequence.  See eventListForMode() */
 int injFieldSync;   /* Injection field delay */
 int extrFieldSync;  /* Extraction field delay */
 
