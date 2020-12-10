@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
+<html><head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>TimingIOC</title>
   </head>
@@ -10,7 +9,7 @@
     <h2>Injection Sequence State Notation Language Program</h2>
     <h3>Timing Records</h3>
     <p>Record names are prefixed with "$(T)".&nbsp; For production the
-      $(T) macro value is empty.<br>
+      $(T) macro value is empty, for testing it is set to "test".<br>
     </p>
     <blockquote> </blockquote>
     <blockquote>
@@ -116,20 +115,20 @@
     <p><br>
     </p>
     <h3>Event Generator Records</h3>
-    <p>The timing state notation language program interacts with the <a
-href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html">event
+    <p>The timing state notation language program interacts with the <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html">event
         generator</a> through the following records.<br>
     </p>
     <blockquote>
-      <p>$(P)$(R)E1:seqStatus<br>
-        $(P)$(R)E1:seqStarts<br>
-        $(P)$(R)INJ:injCycleEnable<br>
-        $(P)$(R)E1:SEQ1<br>
-        $(P)$(R)E1:SEQ1:enable</p>
+      <p>$(T)EVG:E1:seqStatus<br>
+        $(T)EVG:E1:seqStarts<br>
+        $(T)EVG:INJ:injCycleEnable<br>
+        $(T)EVG:E1:SEQ1<br>
+        $(T)EVG:E1:SEQ1:enable</p>
     </blockquote>
     <h3>Other Records<br>
     </h3>
     The timing state notation language program monitors the beam current
     "SR:DCCT:AVG" record.<br>
-  </body>
-</html>
+  
+
+</body></html>
