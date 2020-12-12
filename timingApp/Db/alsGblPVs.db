@@ -2,34 +2,34 @@
 # subtracted below
 #
 record(longout, $(T)TimInjFieldSyncDelaySP) {
-	field(DESC, "Inj Field Delay SP in 4 * BROC")
-	field(DTYP, "Soft Channel")
-	field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
-	field(EGU, "4*BROC")
+    field(DESC, "Inj Field Delay SP in 4 * BROC")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
+    field(EGU, "4*BROC")
 }
 
 record(longout, "$(T)TimInjFieldEventDelay") {
-	field(DESC, "Fine adjustment to Sync Delay")
-	field(DTYP, "Soft Channel")
-	field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
-	field(EGU, "EvtClkTicks")
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
+    field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)GaussClockInjectionFieldTrigger") {
-	field(INPA, "$(T)TimInjFieldSyncDelaySP")
-	field(INPB, "125")
-	field(INPC, "$(T)TimInjFieldEventDelay")
-	field(CALC, "(A*B)-C")
-	field(FLNK, "$(T)TimInjFieldSyncDelay PP")
-	field(EGU, "EvtClkTicks")
+    field(INPA, "$(T)TimInjFieldSyncDelaySP")
+    field(INPB, "125")
+    field(INPC, "$(T)TimInjFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(FLNK, "$(T)TimInjFieldSyncDelay PP")
+    field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)TimInjFieldSyncDelay")
 {
-	field(DESC, "Inj delay in ticks")
-	field(EGU, "EvtClkTicks")
-	field(INPA, "$(T)GaussClockInjectionFieldTrigger")
-	field(CALC, "A")
+    field(DESC, "Inj delay in ticks")
+    field(EGU, "EvtClkTicks")
+    field(INPA, "$(T)GaussClockInjectionFieldTrigger")
+    field(CALC, "A")
 }
 
 #
@@ -37,34 +37,34 @@ record(calc, "$(T)TimInjFieldSyncDelay")
 # subtracted below
 #
 record(longout, $(T)TimExtrFieldSyncDelaySP) {
-	field(DESC, "Extraction Field Dly in COIC cycles")
-	field(DTYP, "Soft Channel")
-	field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
-	field(EGU, "COIC cycles")
+    field(DESC, "Extraction Field Dly in COIC cycles")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
+    field(EGU, "COIC cycles")
 }
 
 record(longout, "$(T)TimExtrFieldEventDelay") {
-	field(DESC, "Fine adjustment to Sync Delay")
-	field(DTYP, "Soft Channel")
-	field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
-	field(EGU, "EvtClkTicks")
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
+    field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)GaussClockExtractionFieldTrigger") {
-	field(INPA, "$(T)TimExtrFieldSyncDelaySP")
-	field(INPB, "10250")
-	field(INPC, "$(T)TimExtrFieldEventDelay")
-	field(CALC, "(A*B)-C")
-	field(FLNK, "$(T)TimExtrFieldSyncDelay PP")
-	field(EGU, "EvtClkTicks")
+    field(INPA, "$(T)TimExtrFieldSyncDelaySP")
+    field(INPB, "10250")
+    field(INPC, "$(T)TimExtrFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(FLNK, "$(T)TimExtrFieldSyncDelay PP")
+    field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)TimExtrFieldSyncDelay")
 {
-	field(DESC, "ExtrInj delay in ticks")
-	field(EGU, "EvtClkTicks")
-	field(INPA, "$(T)GaussClockExtractionFieldTrigger")
-	field(CALC, "A")
+    field(DESC, "ExtrInj delay in ticks")
+    field(EGU, "EvtClkTicks")
+    field(INPA, "$(T)GaussClockExtractionFieldTrigger")
+    field(CALC, "A")
 }
 
 record(ai, "$(T)TimInjFieldCounterFiltd") {
@@ -89,123 +89,32 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
 # 6: Sequence Number (must change from last cycle to do anything but default cycle)
 # This is to be used by the timing sequencer.
 record(waveform, "$(T)TimInjReq") {
-	field(DESC, "Injection Request Waveform")
-	field(FTVL, "LONG")
-	field(NELM, "7")
+       field(DESC, "Injection Request Waveform")
+       field(FTVL, "LONG")
+       field(NELM, "7")
 }
 
-record(aSub, "$(T)TimInjReq:sub") {
-	field(DESC, "Assembles pvs into request wf")
-	field(SNAM, "assemble_injreq")
-	field(LFLG, "IGNORE")
-	field(INPA, "$(T)TimTargetBucket")
-	field(INPB, "$(T)TimGunBunchCount")
-	field(INPC, "$(T)TimInjMode.RVAL")
-	field(INPD, "$(T)TimGunInhibit")
-	field(INPE, "$(T)TimSequenceNumber")
-	field(FTA, "LONG")
-	field(FTB, "LONG")
-	field(FTC, "LONG")
-	field(FTD, "LONG")
-	field(FTE, "LONG")
-	field(OUTA, "$(T)TimInjReq PP MS")
-	field(FTVA, "LONG")
-	field(NOVA, "7")
-}
-
-record(bo, "$(T)TimInjReqCommit") {
-	field(DESC, "Fill TimInjReq waveform")
-	field(FLNK, "$(T)TimInjReq:sub.PROC")
-	field(ZNAM, "Off")
-	field(ONAM, "On")
-	field(HIGH, "1")
-}
-
-record(longout, "$(T)TimTargetBucket") {
-	field(DESC, "bucket number")
-	field(DRVH, "328")
-	field(DRVL, "1")
-	field(HOPR, "328")
-	field(LOPR, "1")
-	field(VAL, "1")
-	field(PINI, "YES")
-}
-
-record(longout, "$(T)TimGunBunchCount") {
-	field(DESC, "# gun bunches")
-	field(DRVH, "16")
-	field(DRVL, "1")
-	field(HOPR, "16")
-	field(LOPR, "1")
-	field(VAL, "1")
-	field(PINI, "YES")
-}
-
-record(bo, "$(T)TimGunInhibit") {
-	field(DESC, "Master Inhibit of Gun Trigger")
-	field(ZNAM, "No Inhibit")
-	field(ONAM, "Inhibit")
-	field(PINI, "YES")
-	field(VAL, "0")
-}
-
-record(mbbo, "$(T)TimInjMode") {
-	field(DESC, "Injection Mode")
-	field(OMSL, "supervisory")
-	field(ZRST, "Default")
-	field(ONST, "Linac Tuning")
-	field(TWST, "BR Tuning")
-	field(THST, "BTS Tuning")
-	field(FRST, "SR Inj Prep")
-	field(FVST, "SR Injection")
-	field(ZRVL, "0")
-	field(ONVL, "10")
-	field(TWVL, "20")
-	field(THVL, "30")
-	field(FRVL, "41")
-	field(FVVL, "40")
-}
-
-record(longout, "$(T)TimSequenceNumber") {
-	field(DESC, "Sequence Number")
-}
-
-record(waveform, $(T)GunBunchToGunBias) {
-	field(DESC, "Gun Bias Waveform")
-	field(EGU, "V")
-	field(NELM, "16")
-	field(FTVL, "DOUBLE")
-}
+# FIXME: Is this still (ever?) necessary?
+#record(waveform, $(T)GunBunchToGunBias) {
+#	field(DESC, "Gun Bias Waveform")
+#	field(EGU, "V")
+#	field(NELM, "16")
+#	field(FTVL, "DOUBLE")
+#}
 
 record(waveform, $(T)GunBunchToInjFieldTrigger) {
-	field(DESC, "Injection Field Trigger Waveform")
-	field(EGU, "125*EvtClkTicks")
-	field(NELM, "16")
-	field(FTVL, "DOUBLE")
-}
-
-record(subArray, $(T)GunBunchDelay) {
-	field(DESC, "Delay due to #Gun Bunches")
-	field(EGU, "EvtClkTicks")
-	field(INP, "$(T)GunBunchToInjFieldTrigger PP")
-	field(DTYP, "Soft Channel")
-	field(MALM, "1")
-	field(INDX, "0")
-}
-
-record(calcout, "$(T)GunBunchIndex") {
-	field(INPA, "$(T)TimGunBunchCount PP")
-	field(OOPT, "On Change")
-	field(CALC, "A-1")
-	field(OUT, "$(T)GunBunchDelay.INDX")
+    field(DESC, "Injection Field Trigger Waveform")
+    field(EGU, "125*EvtClkTicks")
+    field(NELM, "16")
+    field(FTVL, "DOUBLE")
 }
 
 record(bi, $(T)TimPotentate) {
-	field(DESC, "Global timing enable/disable")
-	field(VAL, "1")
-	field(PINI, "YES")
-	field(ZNAM, "Disabled")
-	field(ONAM, "Enabled")
+    field(DESC, "Global timing enable/disable")
+    field(VAL, "1")
+    field(PINI, "YES")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
 }
 
 # EVR IOC records.
