@@ -29,7 +29,7 @@
             <td align="center" valign="middle">bi<br>
             </td>
             <td align="left" valign="middle">Enable/disable injection
-              cycles.&nbsp; The event generator INJ:injCycleEnable
+              cycles.&nbsp; The event generator <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html#injCycleEnable">INJ:injCycleEnable</a>
               record is set to zero when this record is zero or when the
               sequence program is unable to connect to all PVs. </td>
           </tr>
@@ -41,7 +41,7 @@
             <td align="left" valign="middle">Seven integer values
               describing the injection cycle parameters.&nbsp; A new
               value must be received by the start of each injection
-              cycle or a default injection cycle will be generated.<br>
+              cycle or a default injection cycle (event generator sequence 0) will be generated.<br>
             </td>
           </tr>
           <tr>
@@ -89,7 +89,7 @@
             <td align="center" valign="middle">longout<br>
             </td>
             <td align="left" valign="middle">Incremented for each
-              injection cycle that was unable to be requested. </td>
+              injection cycle request that was denied. </td>
           </tr>
           <tr>
             <td align="center" valign="middle">InjSeqFaultCode<br>
@@ -128,7 +128,7 @@
     <h3>Other Records<br>
     </h3>
     The timing state notation language program monitors the beam current
-    "SR:DCCT:AVG" record.<br>
+    "SR:DCCT:AVG" record.&nbsp; Injection cycles will be requested only when the value of this record is less than 510 mA.<br>
   
 
 </body></html>
