@@ -156,16 +156,16 @@ tsCompare(const void *a, const void *b)
 static void
 monotonicSequence(int count, int *tstampsAndEvents)
 {
-	int i, idx;
+    int i, idx;
     int prev = -1;
-	for (i = 0, idx = 0; i < count; i++, idx += 2) {
+    for (i = 0, idx = 0; i < count; i++, idx += 2) {
         int this = tstampsAndEvents[idx];
-		if (tstampsAndEvents[idx+2] <= this) {
-			tstampsAndEvents[idx+2] = this + 1;
-		}
+        if (tstampsAndEvents[idx+2] <= this) {
+            tstampsAndEvents[idx+2] = this + 1;
+        }
         tstampsAndEvents[idx] = (this - prev) - 1;
         prev = this;
-	}
+    }
 }
 
 #define END_OF_SEQUENCE_TICKS (1<<30)
@@ -218,6 +218,16 @@ ss ssTiming {
     }
 
     /*
+     * Wait for injection cycle to complete
+     */
+    state await_completion {
+        entry { if(debugFlag) printf("State: await_completion\n"); }
+        when (pvConnectCount() != pvAssignCount()) { } state missing_connection
+        when (potentate == 0) { } state no_potentate
+        when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) { } state await_start
+    }
+
+    /*
      * Wait for injection cycle to start
      */
     state await_start {
@@ -242,16 +252,6 @@ ss ssTiming {
         when ((evgSeqStatus & EVG_SEQ_STATUS_BUSY) == 0) {
             evgSequencerCurrentStarts = evgSequencerStarts;
         } state await_request
-    }
-
-    /*
-     * Wait for injection cycle to complete
-     */
-    state await_completion {
-        entry { if(debugFlag) printf("State: await_completion\n"); }
-        when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when (potentate == 0) { } state no_potentate
-        when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) { } state await_start
     }
 
     /*
@@ -335,7 +335,6 @@ ss ssTiming {
     state check_links {
         entry { if(debugFlag) printf("State: check_links\n"); }
         when ((pvStatus(allEVRvalid) != pvStatOK) || (allEVRvalid == 0)) {
-printf("pvStatus(allEVRvalid):%d  %d\n", pvStatus(allEVRvalid), allEVRvalid);
             faultCode = FC_BAD_EVR;
         } state increment_bad_count
 
