@@ -25,3 +25,10 @@ record(mbbo, "$(T)InjSeqFaultCode") {
     field(TEST, "Bad EVR/Link")
     field(ELST, "No EOS")
 }
+record(bo, "$(T)InjSeqDupTimestamp") {
+    field(DESC, "Duplicate time stamp detected")
+    field(ZNAM, "Unique")
+    field(ONAM, "Duplicate")
+    field(OSV,  "MINOR")
+    field(PINI, "YES")
+}

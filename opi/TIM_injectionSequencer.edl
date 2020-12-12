@@ -382,3 +382,26 @@ endGroup
 
 endObjectProperties
 
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 137
+w 148
+h 16
+font "helvetica-bold-r-14.0"
+fgColor index 20
+bgColor index 19
+useDisplayBg
+visPv "$(T)InjSeqDupTimestamp"
+visMin "1"
+visMax "2"
+value {
+  "Duplicate Timestamp!"
+}
+autoSize
+endObjectProperties
+

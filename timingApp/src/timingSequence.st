@@ -90,6 +90,8 @@ int badCount;
 assign badCount to "{T}InjSeqFailedCount";
 int faultCode;
 assign faultCode to "{T}InjSeqFaultCode";
+int duplicateTimestampFound;
+assign duplicateTimestampFound to "{T}InjSeqDupTimestamp";
 int startOverrunCount;
 assign startOverrunCount to "{T}InjSeqStartOverrunCount";
 
@@ -153,19 +155,23 @@ tsCompare(const void *a, const void *b)
  * Ensure monotonically increasing time stamps
  * and convert time stamps to delay.
  */
-static void
+static int
 monotonicSequence(int count, int *tstampsAndEvents)
 {
     int i, idx;
+    int ret = 1;
     int prev = -1;
     for (i = 0, idx = 0; i < count; i++, idx += 2) {
         int this = tstampsAndEvents[idx];
-        if (tstampsAndEvents[idx+2] <= this) {
+        if ((i < (count - 1)) && (tstampsAndEvents[idx+2] <= this)) {
+fprintf(stderr, "i:%d  this:%d  ev:%d ts:%d\n", i, this, tstampsAndEvents[idx+3], tstampsAndEvents[idx+2]);
+            ret = 0;
             tstampsAndEvents[idx+2] = this + 1;
         }
         tstampsAndEvents[idx] = (this - prev) - 1;
         prev = this;
     }
+    return ret;
 }
 
 #define END_OF_SEQUENCE_TICKS (1<<30)
@@ -176,6 +182,16 @@ monotonicSequence(int count, int *tstampsAndEvents)
 ss ssTiming {
     /*
      * Initial state
+     * Set up some stuff
+     */
+    state start {
+        when() {
+            duplicateTimestampFound = 0;
+            pvPut(duplicateTimestampFound);
+        } state await_connections
+    }
+
+    /*
      * Wait for connections to complete
      */
     state await_connections {
@@ -402,7 +418,10 @@ ss ssTiming {
                 state increment_bad_count;
             }
             qsort(evgSequence, nTStamps, 2*sizeof(int), tsCompare);
-            monotonicSequence(nTStamps, evgSequence);
+            if (!monotonicSequence(nTStamps, evgSequence)) {
+                duplicateTimestampFound = 1;
+                pvPut(duplicateTimestampFound);
+            }
         } state load_requested_sequence
     }
 
