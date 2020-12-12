@@ -4,7 +4,11 @@
     <title>TimingIOC</title>
   </head>
   <body>
-    <h1>Timing IOC</h1>
+    <h1>Dual Timing IOC</h1>
+<p>The dual timing IOC adds a state notation language program around the <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html">event
+        generator</a> support module to send injection sequence requests.<br>
+</p>
+
     <h2>Records</h2>
     <h2>Injection Sequence State Notation Language Program</h2>
     <h3>Timing Records</h3>
@@ -13,7 +17,7 @@
     </p>
     <blockquote> </blockquote>
     <blockquote>
-      <table width="80%" cellspacing="2" cellpadding="2" border="1">
+      <table style=" width: 80%;" cellspacing="2" cellpadding="2" border="1">
         <tbody>
           <tr>
             <td align="center" valign="middle"><b>Name</b><br>
@@ -24,9 +28,9 @@
             </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">TimPotentate<br>
+            <td style="text-align: center;">TimPotentate<br>
             </td>
-            <td align="center" valign="middle">bi<br>
+            <td style="text-align: center;">bi<br>
             </td>
             <td align="left" valign="middle">Enable/disable injection
               cycles.&nbsp; The event generator <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html#injCycleEnable">INJ:injCycleEnable</a>
@@ -34,20 +38,23 @@
               sequence program is unable to connect to all PVs. </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">TimInjReq<br>
+            <td style="text-align: center;">TimInjReq<br>
             </td>
-            <td align="center" valign="middle">waveform<br>
+            <td style="text-align: center;">waveform<br>
             </td>
             <td align="left" valign="middle">Seven integer values
               describing the injection cycle parameters.&nbsp; A new
               value must be received by the start of each injection
-              cycle or a default injection cycle (event generator sequence 0) will be generated.<br>
+              cycle or a default injection cycle (event generator 
+sequence 0) will be generated.&nbsp; The state notation language program
+ accepts updates of this record only when the event generator is idle 
+(not generating a sequence).<br>
             </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">GunBunchToInjFieldTrigger<br>
+            <td style="text-align: center;">GunBunchToInjFieldTrigger<br>
             </td>
-            <td align="center" valign="middle">waveform<br>
+            <td style="text-align: center;">waveform<br>
             </td>
             <td align="left" valign="middle">Integer values indexed by
               one less than the number of bunches contained in the
@@ -55,9 +62,9 @@
               modify the delays for the gun on and gun off events. </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">TimAllEVRvalid<br>
+            <td style="text-align: center;">TimAllEVRvalid<br>
             </td>
-            <td align="center" valign="middle">calc<br>
+            <td style="text-align: center;">calc<br>
             </td>
             <td align="left" valign="middle">Value is 1 when all event
               receivers are reporting valid input links and 0
@@ -66,49 +73,57 @@
               valid. </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">InjSeqDebug<br>
+            <td style="text-align: center;">InjSeqDebug<br>
             </td>
-            <td align="center" valign="middle">longout<br>
+            <td style="text-align: center;">longout<br>
             </td>
             <td align="left" valign="middle">Sets level of timing
               sequence program diagnostic messages.<br>
             </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">InjSeqSuccessCount<br>
+            <td style="text-align: center;">InjSeqSuccessCount<br>
             </td>
-            <td align="center" valign="middle">longout<br>
+            <td style="text-align: center;">longout<br>
             </td>
             <td align="left" valign="middle">Incremented for each
               injection cycle successfully requested.<br>
             </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">InjSeqFailedCount<br>
+            <td style="text-align: center;">InjSeqFailedCount<br>
             </td>
-            <td align="center" valign="middle">longout<br>
+            <td style="text-align: center;">longout<br>
             </td>
             <td align="left" valign="middle">Incremented for each
               injection cycle request that was denied. </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">InjSeqFaultCode<br>
+            <td style="text-align: center;">InjSeqFaultCode<br>
             </td>
-            <td align="center" valign="middle">mbbo<br>
+            <td style="text-align: center;">mbbo<br>
             </td>
             <td align="left" valign="middle">Status of most recent
               injection cycle request.<br>
             </td>
           </tr>
           <tr>
-            <td align="center" valign="middle">InjSeqStartOverrunCount<br>
+            <td style="text-align: center;">InjSeqStartOverrunCount<br>
             </td>
-            <td align="center" valign="middle">longout<br>
+            <td style="text-align: center;">longout<br>
             </td>
             <td align="left" valign="middle">Incremented each time that
               a TimInjReq was received too late to request an injection
               cycle. </td>
-          </tr>
+          </tr><tr>
+  <td style="text-align: center;">InjSeqDupTimestamp<br>
+  </td>
+  <td style="text-align: center;">bo<br>
+  </td>
+  <td style="vertical-align: middle; text-align: left;">Set when a sequence has two or more event request with the same time stamp.&nbsp; Cleared only upon request from a client.<br>
+  </td>
+</tr>
+
         </tbody>
       </table>
     </blockquote>
