@@ -26,7 +26,7 @@ evflag requestFlag;
 sync request requestFlag;
 unsigned int modeIndexes[255];
 %{
-typedef enum { /* Request waveform indices.  */
+typedef enum { /* Request waveform indices. */
         TARGET_BUCKET,
         GUN_BUNCHES,
         INJ_MODE,
