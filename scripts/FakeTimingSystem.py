@@ -7,7 +7,7 @@ import sys
 import time
 
 parser = argparse.ArgumentParser(description='Fake facility timing system to exercise dual event generator.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('-c', '--count', type=int, default=1, help='Number of cycles to requess')
+parser.add_argument('-c', '--count', type=int, default=1, help='Number of cycles to request')
 parser.add_argument('-e', '--evg', default='testEVG:', help='Event generator record name prefix')
 parser.add_argument('-m', '--monitor', action='store_true', help='Monitor and display event sequences')
 parser.add_argument('-t', '--test', default='test', help='Timing system test prefix')
