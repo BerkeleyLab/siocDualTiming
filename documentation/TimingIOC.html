@@ -20,11 +20,11 @@
       <table style=" width: 80%;" cellspacing="2" cellpadding="2" border="1">
         <tbody>
           <tr>
-            <td align="center" valign="middle"><b>Name</b><br>
+            <td valign="middle" align="center"><b>Name</b><br>
             </td>
-            <td align="center" valign="middle"><b>Type</b><br>
+            <td valign="middle" align="center"><b>Type</b><br>
             </td>
-            <td align="center" valign="middle"><b>Description</b><br>
+            <td valign="middle" align="center"><b>Description</b><br>
             </td>
           </tr>
           <tr>
@@ -32,7 +32,7 @@
             </td>
             <td style="text-align: center;">bi<br>
             </td>
-            <td align="left" valign="middle">Enable/disable injection
+            <td valign="middle" align="left">Enable/disable injection
               cycles.&nbsp; The event generator <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html#injCycleEnable">INJ:injCycleEnable</a>
               record is set to zero when this record is zero or when the
               sequence program is unable to connect to all PVs. </td>
@@ -42,7 +42,7 @@
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td align="left" valign="middle">Seven integer values
+            <td valign="middle" align="left">Seven integer values
               describing the injection cycle parameters.&nbsp; A new
               value must be received by the start of each injection
               cycle or a default injection cycle (event generator 
@@ -56,7 +56,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td align="left" valign="middle">Integer values indexed by
+            <td valign="middle" align="left">Integer values indexed by
               one less than the number of bunches contained in the
               current TimInjReq.&nbsp; The selected value is used to
               modify the delays for the gun on and gun off events. </td>
@@ -66,7 +66,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">calc<br>
             </td>
-            <td align="left" valign="middle">Value is 1 when all event
+            <td valign="middle" align="left">Value is 1 when all event
               receivers are reporting valid input links and 0
               otherwise.&nbsp; A non-default injection cycle will be
               requested only when all event receiver input links are
@@ -77,7 +77,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Sets level of timing
+            <td valign="middle" align="left">Sets level of timing
               sequence program diagnostic messages.<br>
             </td>
           </tr>
@@ -86,7 +86,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented for each
+            <td valign="middle" align="left">Incremented for each
               injection cycle successfully requested.<br>
             </td>
           </tr>
@@ -95,7 +95,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented for each
+            <td valign="middle" align="left">Incremented for each
               injection cycle request that was denied. </td>
           </tr>
           <tr>
@@ -103,7 +103,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">mbbo<br>
             </td>
-            <td align="left" valign="middle">Status of most recent
+            <td valign="middle" align="left">Status of most recent
               injection cycle request.<br>
             </td>
           </tr>
@@ -112,7 +112,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented each time that
+            <td valign="middle" align="left">Incremented each time that
               a TimInjReq was received too late to request an injection
               cycle. </td>
           </tr><tr>
@@ -127,8 +127,8 @@ sequence 0) will be generated.&nbsp; The state notation language program
         </tbody>
       </table>
     </blockquote>
-    <p><br>
-    </p>
+    <br>
+
     <h3>Event Generator Records</h3>
     <p>The timing state notation language program interacts with the <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html">event
         generator</a> through the following records.<br>
@@ -144,6 +144,30 @@ sequence 0) will be generated.&nbsp; The state notation language program
     </h3>
     The timing state notation language program monitors the beam current
     "SR:DCCT:AVG" record.&nbsp; Injection cycles will be requested only when the value of this record is less than 510 mA.<br>
+<h3>Operation<br>
+    </h3>
+
+    The state notation language program operation can be summarized as:<br>
+<ol>
+  <li>Wait for TimPotentate to be set.</li>
+  <li>Wait for the FPGA sequencer to reach its 'completion' event.</li>
+  <li>Wait for a client to provide a new TimInjReq waveform.&nbsp; If 
+too much time elapses in this state the sequencer transitions to state 
+2.</li>
+  <li>Validate the TimInjReq and confirm that the beam current is lower 
+than its limit an that all EVRs are reporting proper channel access 
+connections.&nbsp;&nbsp; If anything is wrong, transition to state 2.</li>
+  <li>Send the new event sequence to the FPGA.</li>
+  <li>Transition to state 2.<br>
+  </li>
+</ol>
+<p><br>
+All states also monitor TimPotentate and transition to state 1 if its 
+value is clear.&nbsp; There are several other sanity checks to ensure 
+that event sequences are sent to the FPGA only when all timing system 
+harware and software components are operational and valid.<br>
+</p>
+
   
 
 </body></html>
