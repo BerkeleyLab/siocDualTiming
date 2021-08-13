@@ -155,7 +155,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
 too much time elapses in this state the sequencer transitions to state 
 2.</li>
   <li>Validate the TimInjReq and confirm that the beam current is lower 
-than its limit an that all EVRs are reporting proper channel access 
+than its limit and that all EVRs are reporting proper channel access 
 connections.&nbsp;&nbsp; If anything is wrong, transition to state 2.</li>
   <li>Send the new event sequence to the FPGA.</li>
   <li>Transition to state 2.<br>
@@ -165,7 +165,7 @@ connections.&nbsp;&nbsp; If anything is wrong, transition to state 2.</li>
 All states also monitor TimPotentate and transition to state 1 if its 
 value is clear.&nbsp; There are several other sanity checks to ensure 
 that event sequences are sent to the FPGA only when all timing system 
-harware and software components are operational and valid.<br>
+hardware and software components are operational and valid.<br>
 </p>
 
   
