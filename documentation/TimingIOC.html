@@ -135,11 +135,11 @@ sequence 0) will be generated.&nbsp; The state notation language program
     </p>
     <blockquote>
       
-<p>$(P)$(R)EVG:E1:seqStatus<br>
-        $(P)$(R)EVG:E1:seqStarts<br>
-        $(P)$(R)EVG:INJ:injCycleEnable<br>
-        $(P)$(R)EVG:E1:SEQ1<br>
-        $(P)$(R)EVG:E1:SEQ1:enable</p>
+<p>$(P)$(R)E1:seqStatus<br>
+        $(P)$(R)E1:seqStarts<br>
+        $(P)$(R)INJ:injCycleEnable<br>
+        $(P)$(R)E1:SEQ1<br>
+        $(P)$(R)E1:SEQ1:enable</p>
 
     </blockquote>
     <h3>Other Records<br>
@@ -212,11 +212,11 @@ second event generator since the trigger events always occur at the same
 records associated with a swapout operation are:<br>
 </p>
 <div style="margin-left: 40px;">
-        $(P)$(R)EVG:E2:SEQ0<br>
+        $(P)$(R)E2:SEQ0<br>
 
-        $(P)$(R)EVG:E2:SEQ0:enable<br>
+        $(P)$(R)E2:SEQ0:enable<br>
 
-        $(P)$(R)EVG:swapoutTrigger</div>
+        $(P)$(R)swapoutTrigger</div>
 <p>Selection of the bunch trains to swap is handled by the kicker driver
  IOC since the kicker drivers have the required delay resolution and the
  event system does not.&nbsp; The EPICS client controlling swapout 
