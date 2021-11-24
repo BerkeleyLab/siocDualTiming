@@ -9,7 +9,7 @@
         generator</a> support module to send injection sequence requests.<br>
 </p>
 
-    <h2>Records</h2>
+    
     <h2>Injection Sequence State Notation Language Program</h2>
     <h3>Timing Records</h3>
     <p>Record names are prefixed with "$(T)".&nbsp; For production the
@@ -20,11 +20,11 @@
       <table style=" width: 80%;" cellspacing="2" cellpadding="2" border="1">
         <tbody>
           <tr>
-            <td valign="middle" align="center"><b>Name</b><br>
+            <td align="center" valign="middle"><b>Name</b><br>
             </td>
-            <td valign="middle" align="center"><b>Type</b><br>
+            <td align="center" valign="middle"><b>Type</b><br>
             </td>
-            <td valign="middle" align="center"><b>Description</b><br>
+            <td align="center" valign="middle"><b>Description</b><br>
             </td>
           </tr>
           <tr>
@@ -32,7 +32,7 @@
             </td>
             <td style="text-align: center;">bi<br>
             </td>
-            <td valign="middle" align="left">Enable/disable injection
+            <td align="left" valign="middle">Enable/disable injection
               cycles.&nbsp; The event generator <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html#injCycleEnable">INJ:injCycleEnable</a>
               record is set to zero when this record is zero or when the
               sequence program is unable to connect to all PVs. </td>
@@ -42,7 +42,7 @@
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td valign="middle" align="left">Seven integer values
+            <td align="left" valign="middle">Seven integer values
               describing the injection cycle parameters.&nbsp; A new
               value must be received by the start of each injection
               cycle or a default injection cycle (event generator 
@@ -56,7 +56,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td valign="middle" align="left">Integer values indexed by
+            <td align="left" valign="middle">Integer values indexed by
               one less than the number of bunches contained in the
               current TimInjReq.&nbsp; The selected value is used to
               modify the delays for the gun on and gun off events. </td>
@@ -66,7 +66,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">calc<br>
             </td>
-            <td valign="middle" align="left">Value is 1 when all event
+            <td align="left" valign="middle">Value is 1 when all event
               receivers are reporting valid input links and 0
               otherwise.&nbsp; A non-default injection cycle will be
               requested only when all event receiver input links are
@@ -77,7 +77,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td valign="middle" align="left">Sets level of timing
+            <td align="left" valign="middle">Sets level of timing
               sequence program diagnostic messages.<br>
             </td>
           </tr>
@@ -86,7 +86,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td valign="middle" align="left">Incremented for each
+            <td align="left" valign="middle">Incremented for each
               injection cycle successfully requested.<br>
             </td>
           </tr>
@@ -95,7 +95,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td valign="middle" align="left">Incremented for each
+            <td align="left" valign="middle">Incremented for each
               injection cycle request that was denied. </td>
           </tr>
           <tr>
@@ -103,7 +103,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">mbbo<br>
             </td>
-            <td valign="middle" align="left">Status of most recent
+            <td align="left" valign="middle">Status of most recent
               injection cycle request.<br>
             </td>
           </tr>
@@ -112,7 +112,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td valign="middle" align="left">Incremented each time that
+            <td align="left" valign="middle">Incremented each time that
               a TimInjReq was received too late to request an injection
               cycle. </td>
           </tr><tr>
@@ -134,11 +134,13 @@ sequence 0) will be generated.&nbsp; The state notation language program
         generator</a> through the following records.<br>
     </p>
     <blockquote>
-      <p>$(T)EVG:E1:seqStatus<br>
+      
+<p>$(T)EVG:E1:seqStatus<br>
         $(T)EVG:E1:seqStarts<br>
         $(T)EVG:INJ:injCycleEnable<br>
         $(T)EVG:E1:SEQ1<br>
         $(T)EVG:E1:SEQ1:enable</p>
+
     </blockquote>
     <h3>Other Records<br>
     </h3>
@@ -166,7 +168,25 @@ All states also monitor TimPotentate and transition to state 1 if its
 value is clear.&nbsp; There are several other sanity checks to ensure 
 that event sequences are sent to the FPGA only when all timing system 
 hardware and software components are operational and valid.<br>
+<br>
 </p>
+<h2>Accumulator/Storage Ring (AR/SR) Swapout</h2>
+<p>There is no corresponding state notation language program for the 
+second event generator since the trigger events always occur at the same
+ point relative to the AR/SR coincidence.&nbsp; The event generator 
+records associated with a swapout operation are:<br>
+</p>
+<div style="margin-left: 40px;">
+        $(T)EVG:E2:SEQ0<br>
+
+        $(T)EVG:E2:SEQ0:enable</div>
+<p>The selection of the bunch trains to swap are handled by the kicker 
+driver IOC since the kicker drivers have the required delay resolution 
+and the event system does not.<br>
+</p>
+<p>
+</p>
+
 
   
 
