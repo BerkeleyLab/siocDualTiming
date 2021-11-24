@@ -131,15 +131,15 @@ sequence 0) will be generated.&nbsp; The state notation language program
 
     <h3>Event Generator Records</h3>
     <p>The timing state notation language program interacts with the <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html">event
-        generator</a> through the following records.<br>
+        generator</a> through the following records.&nbsp; The startup script sets "P=$(T)" and "R=EVG:".<br>
     </p>
     <blockquote>
       
-<p>$(T)EVG:E1:seqStatus<br>
-        $(T)EVG:E1:seqStarts<br>
-        $(T)EVG:INJ:injCycleEnable<br>
-        $(T)EVG:E1:SEQ1<br>
-        $(T)EVG:E1:SEQ1:enable</p>
+<p>$(P)$(R)EVG:E1:seqStatus<br>
+        $(P)$(R)EVG:E1:seqStarts<br>
+        $(P)$(R)EVG:INJ:injCycleEnable<br>
+        $(P)$(R)EVG:E1:SEQ1<br>
+        $(P)$(R)EVG:E1:SEQ1:enable</p>
 
     </blockquote>
     <h3>Other Records<br>
@@ -212,13 +212,16 @@ second event generator since the trigger events always occur at the same
 records associated with a swapout operation are:<br>
 </p>
 <div style="margin-left: 40px;">
-        $(T)EVG:E2:SEQ0<br>
+        $(P)$(R)EVG:E2:SEQ0<br>
 
-        $(T)EVG:E2:SEQ0:enable</div>
+        $(P)$(R)EVG:E2:SEQ0:enable<br>
+
+        $(P)$(R)EVG:swapoutTrigger</div>
 <p>Selection of the bunch trains to swap is handled by the kicker driver
  IOC since the kicker drivers have the required delay resolution and the
  event system does not.&nbsp; The EPICS client controlling swapout 
-operations updates the kicker driver timing then enables E2:SEQ0.<br>
+operations updates the kicker driver timing then triggers a swapout 
+operation.<br>
 </p>
 <p>
 </p>
