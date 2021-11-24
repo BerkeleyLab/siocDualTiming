@@ -149,26 +149,60 @@ sequence 0) will be generated.&nbsp; The state notation language program
 <h3>Operation<br>
     </h3>
 
-    The state notation language program operation can be summarized as:<br>
-<ol>
-  <li>Wait for TimPotentate to be set.</li>
-  <li>Wait for the FPGA sequencer to reach its 'completion' event.</li>
-  <li>Wait for a client to provide a new TimInjReq waveform.&nbsp; If 
+    The state notation language program operation is summarized by the following table.<br>
+<br>
+<table style="text-align: left; width: 80%; margin-left: 40px;" cellspacing="2" cellpadding="2" border="1">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><span style="font-weight: bold;">State</span><br>
+      </td>
+      <td style="text-align: center;"><span style="font-weight: bold;">Actions</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">1<br>
+      </td>
+      <td style="text-align: left;">Wait for TimPotentate to be set.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">2<br>
+      </td>
+      <td style="text-align: left;">Wait for the FPGA sequencer to reach its '<a moz-do-not-send="true" href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/Firmware.html#DefaultSequenceCSV">completion</a>' event.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">3<br>
+      </td>
+      <td style="text-align: left;">Wait for a client to provide a new TimInjReq waveform.&nbsp; If 
 too much time elapses in this state the sequencer transitions to state 
-2.</li>
-  <li>Validate the TimInjReq and confirm that the beam current is lower 
+2.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">4<br>
+      </td>
+      <td style="text-align: left;">Validate the TimInjReq and confirm that the beam current is lower 
 than its limit and that all EVRs are reporting proper channel access 
-connections.&nbsp;&nbsp; If anything is wrong, transition to state 2.</li>
-  <li>Send the new event sequence to the FPGA.</li>
-  <li>Transition to state 2.<br>
-  </li>
-</ol>
-<p><br>
-All states also monitor TimPotentate and transition to state 1 if its 
+connections.&nbsp;&nbsp; If anything is wrong, transition to state 2.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">5<br>
+      </td>
+      <td style="text-align: left;">Send the new event sequence to the FPGA.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">6<br>
+      </td>
+      <td style="text-align: left;">Transition to state 2.</td>
+    </tr>
+  </tbody>
+</table>
+<div style="margin-left: 40px;"><br>
+
+</div>
+<ol style="margin-left: 40px;"></ol>All states also monitor TimPotentate and transition to state 1 if its 
 value is clear.&nbsp; There are several other sanity checks to ensure 
 that event sequences are sent to the FPGA only when all timing system 
 hardware and software components are operational and valid.<br>
-<br>
+<p><br>
 </p>
 <h2>Accumulator/Storage Ring (AR/SR) Swapout</h2>
 <p>There is no corresponding state notation language program for the 
