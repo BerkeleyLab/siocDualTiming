@@ -217,7 +217,8 @@ records associated with a swapout operation are:<br>
         $(T)EVG:E2:SEQ0:enable</div>
 <p>Selection of the bunch trains to swap is handled by the kicker driver
  IOC since the kicker drivers have the required delay resolution and the
- event system does not.<br>
+ event system does not.&nbsp; The EPICS client controlling swapout 
+operations updates the kicker drivers then enables E2:SEQ0.<br>
 </p>
 <p>
 </p>
