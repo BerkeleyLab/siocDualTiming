@@ -25,7 +25,6 @@ for i
 do
     case "$i" in
     *.edl)       E="$i"  ;;
-#    "")          T=""    ;;
     *)           T="$i"  ;;
     esac
 done
