@@ -21,22 +21,21 @@ getPath() {
     done 
 }
 
-ARGS="$@"
-
-EVG=`getPath EVG`
-export EDMDATAFILES=".:$EVG/opi"
-
-for i in $ARGS
+for i
 do
     case "$i" in
     *.edl)       E="$i"  ;;
-    *)           T="$i"  R=":" ;;
+#    "")          T=""    ;;
+    *)           T="$i"  ;;
     esac
 done
 
 case "$T" in
-    "") TARG="T=\"$T\"" ;;
-    *)  TARG="T=$T"     ;;
+    "") MARG="T=\"$T\",P=EVG,R=:" ;;
+    *)  MARG="T=$T,P=$T,R=EVG:"   ;;
 esac
 
-edm -eolc -x -m "${TARG}" "$E" &
+EVG=`getPath EVG`
+export EDMDATAFILES=".:$EVG/opi"
+
+edm -eolc -x -m "${MARG}" "$E" &
