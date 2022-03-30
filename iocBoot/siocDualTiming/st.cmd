@@ -67,4 +67,4 @@ epicsEnvShow >"/vxboot/PVenv/$(IOC).softioc"
 ###############################################################################
 # Start timing sequence program
 dbpf "$(T)InjSeqDebug" $(SEQ_DEBUG)
-seq timingSequence "P=$(T),R=EVG:,T=$(T)"
+seq timingSequence "P=$(T)EVG,R=:,T=$(T)"
