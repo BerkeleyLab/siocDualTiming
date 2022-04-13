@@ -47,6 +47,7 @@ iocInit
 # Update IOC data
 dbl >"/vxboot/PVnames/$(IOC)"
 epicsEnvShow >"/vxboot/PVenv/$(IOC).softioc"
+date
 
 ###############################################################################
 # Start timing sequence program
