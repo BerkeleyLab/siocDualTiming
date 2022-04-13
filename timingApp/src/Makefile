@@ -20,13 +20,11 @@ timing_DBD += timingSequence.dbd
 timing_DBD += eventGeneratorSup.dbd
 timing_DBD += drvAsynIPPort.dbd
 timing_DBD += asyn.dbd
-timing_DBD += asSupport.dbd
 timing_DBD += iocExit.dbd
 
 # Add all the support libraries needed by this IOC
 timing_LIBS += eventGeneratorSup
 timing_LIBS += asyn
-timing_LIBS += autosave
 timing_LIBS += iocExit
 timing_LIBS += seq
 

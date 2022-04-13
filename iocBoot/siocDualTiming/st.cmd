@@ -6,7 +6,6 @@ epicsEnvSet "T" "$(T=$(DUAL_TIMING_IOC_TEST=test))"
 epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=131.243.93.169)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
-epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)"
 
 ###############################################################################
 # Conditionals
@@ -39,25 +38,10 @@ dbLoadRecords("db/alsGblPVs.db","T=$(T)")
 dbLoadRecords("db/iocExit.db","IOC=$(IOC)")
 dbLoadRecords("db/asynRecord.db","P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=0,OMAX=0,IMAX=0")
 
-#############################################################################
-# Autosave/restore
-#var save_restoreDebug 6
-set_savefile_path("$(AUTOSAVE_PATH)")
-set_requestfile_path("$(AUTOSAVE_PATH)")
-set_pass0_restoreFile("autosave.sav")
-set_pass1_restoreFile("autosave.sav")
-save_restoreSet_status_prefix("$(IOC):")
-dbLoadRecords("db/save_restoreStatus.db", "P=$(IOC):")
-
 ###############################################################################
 # Start IOC
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
-
-###############################################################################
-# Autosave/restore
-makeAutosaveFileFromDbInfo("$(AUTOSAVE_PATH)/autosave.req", "autosaveFields_pass0")
-create_monitor_set("autosave.req", 300, "")
 
 ###############################################################################
 # Update IOC data
