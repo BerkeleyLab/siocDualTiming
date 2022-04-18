@@ -28,18 +28,20 @@ def testPatternCallback(pvname=None, value=None, **kws):
     if testPatternUpdated: print('New system overrun')
     testPatternUpdated = True
         
-def caget(pvname):
-    print(pvname, PV(pvname).get())
+def caget(pvname, expect):
+    value = PV(pvname).get()
+    if value != 1:
+        print("%s = %d, expect %d" % (value, expect))
+        sys.exit(2)
 
-caget('testTimPotentate')
-caget('testEVG:INJ:injCycleEnable')
-caget('testTimAllEVRvalid')
+caget('testTimPotentate', 1)
+caget('testEVG:INJ:injCycleEnable', 1)
+caget('testTimAllEVRvalid', 1)
 
 gunBunchToInjFieldTrigger = PV(args.old+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger = PV(args.new+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger.put(gunBunchToInjFieldTrigger.value,wait=True)
-print(testGunBunchToInjFieldTrigger.get())
-
+print(testGunBunchToInjFieldTrigger.pvname, testGunBunchToInjFieldTrigger.get())
 
 timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
 evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
