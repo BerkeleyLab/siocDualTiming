@@ -164,7 +164,6 @@ monotonicSequence(int count, int *tstampsAndEvents)
     for (i = 0, idx = 0; i < count; i++, idx += 2) {
         int this = tstampsAndEvents[idx];
         if ((i < (count - 1)) && (tstampsAndEvents[idx+2] <= this)) {
-fprintf(stderr, "i:%d  this:%d  ev:%d ts:%d\n", i, this, tstampsAndEvents[idx+3], tstampsAndEvents[idx+2]);
             ret = 0;
             tstampsAndEvents[idx+2] = this + 1;
         }
@@ -251,7 +250,7 @@ ss ssTiming {
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
-        } state await_precompletion
+                                                    } state await_precompletion
     }
 
     /*
