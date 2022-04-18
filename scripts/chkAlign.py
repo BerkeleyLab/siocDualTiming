@@ -22,12 +22,6 @@ def PV(pvname=None, **kws):
         sys.exit(1)
     return pv
 
-testPatternUpdated = False
-def testPatternCallback(pvname=None, value=None, **kws):
-    global testPatternUpdated
-    if testPatternUpdated: print('New system overrun')
-    testPatternUpdated = True
-        
 def caget(pvname, expect):
     value = PV(pvname).get()
     if value != 1:
@@ -48,8 +42,8 @@ evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form=
 evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
 
 testTimInjReq = PV(args.new+'TimInjReq')
-testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True)
-testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, callback=testPatternCallback)
+testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
+testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
 while True:
     #
@@ -58,6 +52,7 @@ while True:
     then = timInjReq.timestamp
     while timInjReq.timestamp == then: time.sleep(0.05)
     print(then, timInjReq.timestamp)
+    # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
     injReq = copy.copy(timInjReq.value)
     while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
     eventList = copy.copy(evCodes.value)
@@ -75,34 +70,42 @@ while True:
     # Request new timing cycle to match old
     #
     testPatternUpdated = False
-    testTimInjReq.put(injReq)
+    testTimInjReq.put(injReq, wait=True)
+
+    #
+    # Wait for new timing sequence
+    #
+    while testPattern.timestamp <= testTimInjReq.timestamp: time.sleep(0.05)
     while not testPatternUpdated: time.sleep(0.05)
     newPattern = copy.copy(testPattern.value)
 
+    #
+    # Show new and old sequences
+    #
     print(injReq)
-    oldDone = False
-    newDone = False
+    oldActive = True
+    newActive = True
     oldIndex = 0
     newIndex = 0
     oldTs = -1
-    while not oldDone or not newDone:
-        if newIndex >= (len(newPattern) - 1): newDone = True
-        if newDone:
-            print("%17s" % (""), end='')
-        else:
+    while oldActive or newActive:
+        if newIndex >= (len(newPattern) - 1): newActive = False
+        if newActive:
             print("%8d %3d     " % (newPattern[newIndex], newPattern[newIndex+1]), end='')
             if newPattern[newIndex+1] == 127:
-                newDone = True
+                newActive = False
             else:
                 newIndex += 2
-        if oldIndex >= len(delayList): oldDone = True
-        if not oldDone:
+        else:
+            print("%17s" % (""), end='')
+        if oldIndex >= len(delayList): oldActive = False
+        if oldActive:
             ts = delayList[oldIndex]
             gap = ts- oldTs - 1
             oldTs = ts
             print("%8d %3d" % (gap, eventList[oldIndex]), end='')
             if eventList[oldIndex] == 127:
-                oldDone = True
+                oldActive = False
             else:
                 oldIndex += 1
         print("")
