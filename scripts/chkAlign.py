@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 
-3
 # Show event streams from old and new timing systems
 #
 from __future__ import print_function
+import argparse
 import copy
 import epics
 import sys
 import time
+
+
+parser = argparse.ArgumentParser(description='Show event streams from old and new timing systems.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('-o', '--old', default='', help='Prefix for old timing system record names')
+parser.add_argument('-n', '--new', default='test', help='Prefix for new timing system record names')
+args = parser.parse_args()
 
 def PV(pvname=None, **kws):
     pv = epics.PV(pvname, **kws)
@@ -29,31 +35,31 @@ caget('testTimPotentate')
 caget('testEVG:INJ:injCycleEnable')
 caget('testTimAllEVRvalid')
 
-gunBunchToInjFieldTrigger = PV('GunBunchToInjFieldTrigger', auto_monitor=True)
-testGunBunchToInjFieldTrigger = PV('testGunBunchToInjFieldTrigger', auto_monitor=True)
+gunBunchToInjFieldTrigger = PV(args.old+'GunBunchToInjFieldTrigger', auto_monitor=True)
+testGunBunchToInjFieldTrigger = PV(args.new+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger.put(gunBunchToInjFieldTrigger.value,wait=True)
 print(testGunBunchToInjFieldTrigger.get())
 
 
-timInjReq = PV('TimInjReq', auto_monitor=True, form='time')
-evCodes = PV('LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
-evTimes = PV('LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
+timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
+evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
+evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
 
-testTimInjReq = PV('testTimInjReq')
-testSeqStatus = PV('testEVG:E1:seqStatus', auto_monitor=True)
-testPattern = PV('testEVG:E1:SEQ1', auto_monitor=True, callback=testPatternCallback)
+testTimInjReq = PV(args.new+'TimInjReq')
+testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True)
+testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, callback=testPatternCallback)
 
 while True:
     #
     # Wait for next update from old timing system
     #
     then = timInjReq.timestamp
-#    while timInjReq.timestamp == then: time.sleep(0.05)
+    while timInjReq.timestamp == then: time.sleep(0.05)
     print(then, timInjReq.timestamp)
     injReq = copy.copy(timInjReq.value)
-#    while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
+    while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
     eventList = copy.copy(evCodes.value)
-#    while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
+    while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
     delayList = copy.copy(evTimes.value)
 
     
