@@ -13,6 +13,7 @@ import time
 parser = argparse.ArgumentParser(description='Show event streams from old and new timing systems.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('-o', '--old', default='', help='Prefix for old timing system record names')
 parser.add_argument('-n', '--new', default='test', help='Prefix for new timing system record names')
+parser.add_argument('-i', '--internal', action='store_true', help="Use internall-generated timInjReq (and not the value from the  old system)")
 args = parser.parse_args()
 
 def PV(pvname=None, **kws):
@@ -45,19 +46,27 @@ testTimInjReq = PV(args.new+'TimInjReq')
 testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
+seq = 1000
 while True:
-    #
-    # Wait for next update from old timing system
-    #
-    then = timInjReq.timestamp
-    while timInjReq.timestamp == then: time.sleep(0.05)
-    print(then, timInjReq.timestamp)
-    # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
-    injReq = copy.copy(timInjReq.value)
-    while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
-    eventList = copy.copy(evCodes.value)
-    while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
-    delayList = copy.copy(evTimes.value)
+    if args.internal:
+        injReq = [1, 4, 40, 0, 1818324, 60231150, seq]
+        seq += 1
+        eventList = []
+        delayList = []
+    else:
+        #
+        # Wait for next update from old timing system
+        # Avoid equality check for floating point values
+        #
+        then = timInjReq.timestamp + 1e-6
+        while timInjReq.timestamp <= then: time.sleep(0.05)
+        print(then, timInjReq.timestamp)
+        # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
+        injReq = copy.copy(timInjReq.value)
+        while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
+        eventList = copy.copy(evCodes.value)
+        while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
+        delayList = copy.copy(evTimes.value)
 
     
     # 
@@ -69,14 +78,12 @@ while True:
     #
     # Request new timing cycle to match old
     #
-    testPatternUpdated = False
     testTimInjReq.put(injReq, wait=True)
 
     #
     # Wait for new timing sequence
     #
     while testPattern.timestamp <= testTimInjReq.timestamp: time.sleep(0.05)
-    while not testPatternUpdated: time.sleep(0.05)
     newPattern = copy.copy(testPattern.value)
 
     #
