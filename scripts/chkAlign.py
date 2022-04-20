@@ -52,7 +52,7 @@ testTimInjReq = PV(args.new+'TimInjReq')
 testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
-seq = 1000
+seq = int(time.time())
 while True:
     if args.internal:
         injReq = [1, 4, 40, 0, 1818324, 60231150, seq]
@@ -73,7 +73,6 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
-
     
     # 
     # Wait for end of new timing system cycle 
@@ -95,7 +94,7 @@ while True:
     #
     # Show new and old sequences
     #
-    print(injReq)
+    print('TimInjReq', injReq)
     oldActive = True
     newActive = True
     oldIndex = 0
