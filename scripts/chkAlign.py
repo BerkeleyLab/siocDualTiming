@@ -29,6 +29,12 @@ def caget(pvname, expect):
         print("%s = %d, expect %d" % (value, expect))
         sys.exit(2)
 
+def showVector(pv):
+    t = pv.get()
+    print(pv.pvname, '[', end='')
+    for f in t[0:-1]: print("%g " % (f), end='')
+    print("%g]" % (t[-1]));
+
 caget('testTimPotentate', 1)
 caget('testEVG:INJ:injCycleEnable', 1)
 caget('testTimAllEVRvalid', 1)
@@ -36,7 +42,7 @@ caget('testTimAllEVRvalid', 1)
 gunBunchToInjFieldTrigger = PV(args.old+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger = PV(args.new+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger.put(gunBunchToInjFieldTrigger.value,wait=True)
-print(testGunBunchToInjFieldTrigger.pvname, testGunBunchToInjFieldTrigger.get())
+showVector(testGunBunchToInjFieldTrigger)
 
 timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
 evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
