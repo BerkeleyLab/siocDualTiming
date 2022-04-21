@@ -24,8 +24,10 @@
 
 EVG        = /usr/local/epics/R3.15.4/modules/instrument/dualEventGenerator/head
 ASYN       = /usr/local/epics/R3.15.4/modules/soft/synApps_6_1/support/asyn-R4-36
-IOCEXIT    = /usr/local/epics/R3.15.4/modules/soft/iocExit/iocExit-2-0
 SNCSEQ     = /usr/local/epics/R3.15.4/modules/soft/synApps_6_1/support/seq-2-2-6
+RECCASTER  = /usr/local/epics/R3.15.4/modules/soft/recsync/client
+IOCSH_TOP  = /usr/local/epics/R3.15.4/modules/soft/iocsh
+devIocStats= /usr/local/epics/R3.15.4/modules/soft/iocStatsALS
 EPICS_BASE = /usr/local/epics/R3.15.4/base
 
 # These allow developers to override the RELEASE variable settings

@@ -6,6 +6,11 @@ epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=test)"
 epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=131.243.93.169)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
+epicsEnvSet DB_TOP "$(TOP)/db"
+epicsEnvSet ENGINEER "jmweber"
+epicsEnvSet LOCATION ""
+epicsEnvSet WIKI "DualEventGenerator"
+epicsEnvSet IOCNAME "$(IOC)"
 
 ###############################################################################
 # Conditionals
@@ -35,8 +40,8 @@ dbLoadRecords("db/alsGblPVs.db","T=$(T)")
 
 ##############################################################################
 # Load additional records
-dbLoadRecords("db/iocExit.db","IOC=$(IOC)")
-dbLoadRecords("db/asynRecord.db","P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=0,OMAX=0,IMAX=0")
+iocshLoad "$(IOCSH_TOP)/als_default.iocsh"
+dbLoadRecords "db/asynRecord.db" "P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=-1,IMAX=0,OMAX=0"
 
 ###############################################################################
 # Start IOC

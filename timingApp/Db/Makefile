@@ -12,9 +12,10 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 DB_INSTALLS += $(ASYN)/db/asynRecord.db
 DB_INSTALLS += $(EVG)/db/eventGenerator.db
-DB_INSTALLS += $(IOCEXIT)/db/iocExit.db
 DB += alsGblPVs.db
 DB += timing.db
+DB_INSTALLS += $(RECCASTER)/db/reccaster.db
+DB_INSTALLS += $(devIocStats)/db/ioc_stats.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
