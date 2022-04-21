@@ -32,7 +32,7 @@ def caget(pvname, expect):
 def showVector(pv):
     t = pv.get()
     print(pv.pvname, '[', end='')
-    for f in t[0:-1]: print("%g " % (f), end='')
+    for f in t[0:-1]: print("%.9g " % (f), end='')
     print("%g]" % (t[-1]));
 
 caget('testTimPotentate', 1)
@@ -47,6 +47,8 @@ showVector(testGunBunchToInjFieldTrigger)
 timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
 evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
 evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
+timInjFieldSyncDelay = PV('TimInjFieldSyncDelay', auto_monitor=True)
+timExtrFieldSyncDelay = PV('TimExtrFieldSyncDelay', auto_monitor=True)
 
 testTimInjReq = PV(args.new+'TimInjReq')
 testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
@@ -68,6 +70,8 @@ while True:
         while timInjReq.timestamp <= then: time.sleep(0.05)
         # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
         injReq = copy.copy(timInjReq.value)
+        injReq[4] = timInjFieldSyncDelay.value
+        injReq[5] = timExtrFieldSyncDelay.value
         while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
