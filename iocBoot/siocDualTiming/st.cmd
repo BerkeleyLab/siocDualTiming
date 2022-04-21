@@ -10,7 +10,7 @@ epicsEnvSet DB_TOP "$(TOP)/db"
 epicsEnvSet ENGINEER "jmweber"
 epicsEnvSet LOCATION ""
 epicsEnvSet WIKI "DualEventGenerator"
-epicsEnvSet IOCNAME "$(IOC)"
+epicsEnvSet IOCNAME "DualTiming"
 
 ###############################################################################
 # Conditionals
