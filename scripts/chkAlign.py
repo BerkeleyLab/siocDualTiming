@@ -93,7 +93,7 @@ while True:
     #
     # Show new and old sequences
     #
-    print('TimInjReq', injReq)
+    showVector(testTimInjReq)
     oldActive = True
     newActive = True
     oldIndex = 0
