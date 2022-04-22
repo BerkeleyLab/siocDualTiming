@@ -139,4 +139,4 @@ while True:
                     differenceCount += 1
                     match = False
         print("")
-    print("================================ %d" % (differenceCount))
+    print("=============================== Differences: %d" % (differenceCount))
