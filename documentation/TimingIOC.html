@@ -20,11 +20,11 @@
       <table style=" width: 80%;" cellspacing="2" cellpadding="2" border="1">
         <tbody>
           <tr>
-            <td align="center" valign="middle"><b>Name</b><br>
+            <td valign="middle" align="center"><b>Name</b><br>
             </td>
-            <td align="center" valign="middle"><b>Type</b><br>
+            <td valign="middle" align="center"><b>Type</b><br>
             </td>
-            <td align="center" valign="middle"><b>Description</b><br>
+            <td valign="middle" align="center"><b>Description</b><br>
             </td>
           </tr>
           <tr>
@@ -32,7 +32,7 @@
             </td>
             <td style="text-align: center;">bi<br>
             </td>
-            <td align="left" valign="middle">Enable/disable injection
+            <td style="text-align: left;">Enable/disable injection
               cycles.&nbsp; The event generator <a href="https://controls.als.lbl.gov/alscg/siocalsudualeventgenerator/documentation/EPICSnotes.html#injCycleEnable">INJ:injCycleEnable</a>
               record is set to zero when this record is zero or when the
               sequence program is unable to connect to all PVs. </td>
@@ -42,21 +42,37 @@
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td align="left" valign="middle">Seven integer values
+            <td style="text-align: left;">Five integer values
               describing the injection cycle parameters.&nbsp; A new
               value must be received by the start of each injection
               cycle or a default injection cycle (event generator 
 sequence 0) will be generated.&nbsp; The state notation language program
  accepts updates of this record only when the event generator is idle 
-(not generating a sequence).3<br>
+(not generating a sequence).&nbsp; For historical reasons there are seven elements of which two are now unused.<br>
             </td>
           </tr>
           <tr>
+  <td style="text-align: center;">TimInjFieldSyncDelay<br>
+  </td>
+  <td style="text-align: center;">–<br>
+  </td>
+  <td style="text-align: left;">Booster injection timing offset.<br>
+  </td>
+</tr>
+<tr>
+  <td style="text-align: center;">TimExtrFieldSyncDelay<br>
+  </td>
+  <td style="text-align: center;">–<br>
+  </td>
+  <td style="text-align: left;">Booster extraction timing offset.<br>
+  </td>
+</tr>
+<tr>
             <td style="text-align: center;">GunBunchToInjFieldTrigger<br>
             </td>
             <td style="text-align: center;">waveform<br>
             </td>
-            <td align="left" valign="middle">Integer values indexed by
+            <td style="text-align: left;">Integer values indexed by
               one less than the number of bunches contained in the
               current TimInjReq.&nbsp; The selected value is used to
               modify the delays for the gun on and gun off events. </td>
@@ -66,7 +82,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">calc<br>
             </td>
-            <td align="left" valign="middle">Value is 1 when all event
+            <td style="text-align: left;">Value is 1 when all event
               receivers are reporting valid input links and 0
               otherwise.&nbsp; A non-default injection cycle will be
               requested only when all event receiver input links are
@@ -77,7 +93,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Sets level of timing
+            <td style="text-align: left;">Sets level of timing
               sequence program diagnostic messages.<br>
             </td>
           </tr>
@@ -86,7 +102,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented for each
+            <td style="text-align: left;">Incremented for each
               injection cycle successfully requested.<br>
             </td>
           </tr>
@@ -95,7 +111,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented for each
+            <td style="text-align: left;">Incremented for each
               injection cycle request that was denied. </td>
           </tr>
           <tr>
@@ -103,7 +119,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">mbbo<br>
             </td>
-            <td align="left" valign="middle">Status of most recent
+            <td style="text-align: left;">Status of most recent
               injection cycle request.<br>
             </td>
           </tr>
@@ -112,7 +128,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
             </td>
             <td style="text-align: center;">longout<br>
             </td>
-            <td align="left" valign="middle">Incremented each time that
+            <td style="text-align: left;">Incremented each time that
               a TimInjReq was received too late to request an injection
               cycle. </td>
           </tr><tr>
@@ -120,7 +136,7 @@ sequence 0) will be generated.&nbsp; The state notation language program
   </td>
   <td style="text-align: center;">bo<br>
   </td>
-  <td style="vertical-align: middle; text-align: left;">Set when a sequence has two or more event requests with the same time stamp.&nbsp; Cleared only upon request from a client.<br>
+  <td style="text-align: left;">Set when a sequence has two or more event requests with the same time stamp.&nbsp; Cleared only upon request from a client.<br>
   </td>
 </tr>
 
