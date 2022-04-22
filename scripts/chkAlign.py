@@ -140,4 +140,4 @@ while True:
                     pass
                 else:
                     match = False
-    print("============ %s ============" % ("Match" if match else "Diff"))
+    print("===========%s===========" % ("========" if match else " Change "))
