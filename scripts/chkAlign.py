@@ -70,7 +70,6 @@ while True:
         # Wait for next update from old timing system
         #
         time.sleep(0.05)
-        seq = injReq[6]
         while timInjReq.value[6] == injReq[6]: time.sleep(0.05)
         injReq = copy.copy(timInjReq.value)
         injReq[4] = timInjFieldSyncDelay.value
