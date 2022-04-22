@@ -57,8 +57,7 @@ testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
 time.sleep(0.05)
-injReq = [1, 4, 40, 0, 1818324, 60231150,
-                      int(time.time()) if args.internal else timInjReq.value[6]]
+injReq = [1, 4, 40, 0, 1818324, 60231150, int(time.time())]
 differenceCount = 0
 while True:
     if args.internal:
@@ -70,6 +69,7 @@ while True:
         # Wait for next update from old timing system
         #
         time.sleep(0.05)
+        injReq[6] = timInjReq.value[6]
         while timInjReq.value[6] == injReq[6]: time.sleep(0.05)
         injReq = copy.copy(timInjReq.value)
         injReq[4] = timInjFieldSyncDelay.value
@@ -78,9 +78,9 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
-    
-    # 
-    # Wait for end of new timing system cycle 
+
+    #
+    # Wait for end of new timing system cycle
     #
     while (testSeqStatus.value & 0x10) == 0: time.sleep(0.05);
     while (testSeqStatus.value & 0x10) != 0: time.sleep(0.05);
