@@ -126,18 +126,15 @@ while True:
                 oldActive = False
             else:
                 oldIndex += 1
-        print("")
         if oldActive and newActive and match and (oldIndex > 1):
             oldGap = delayList[oldIndex+oldIndexOffset] - delayList[oldIndex+oldIndexOffset-1] - 1
-            if (newGap == oldGap) and \
-               (newEvent == eventList[oldIndex+oldIndexOffset]):
-                pass
-            else:
+            if (newGap != oldGap) or \
+               (newEvent != eventList[oldIndex+oldIndexOffset]):
                 oldGap = delayList[oldIndex] - delayList[oldIndex - 2] - 1
                 oldIndexOffset += 1
-                if (newGap == oldGap) and \
-                   (newEvent == eventList[oldIndex+oldIndexOffset]):
-                    pass
-                else:
+                if (newGap != oldGap) or \
+                   (newEvent != eventList[oldIndex+oldIndexOffset]):
+                    print(" --- CHANGE", end='')
                     match = False
-    print("===========%s===========" % ("========" if match else " Change "))
+        print("")
+    print("=============================")
