@@ -67,7 +67,8 @@ while True:
         # Wait for next update from old timing system
         # Avoid equality check for floating point values
         #
-        then = timInjReq.timestamp + 1e-6
+        time.sleep(0.05)
+        then = timInjReq.timestamp + 1e-3
         while timInjReq.timestamp <= then: time.sleep(0.05)
         injReq = copy.copy(timInjReq.value)
         injReq[4] = timInjFieldSyncDelay.value
