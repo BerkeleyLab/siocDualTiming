@@ -29,11 +29,13 @@ def caget(pvname, expect):
         print("%s = %d, expect %d" % (value, expect))
         sys.exit(2)
 
-def showVector(pv):
+def showVector(pv, showTime):
     t = pv.get()
     print(pv.pvname, '[', end='')
     for f in t[0:-1]: print("%.9g " % (f), end='')
-    print("%g]" % (t[-1]));
+    print("%g]" % (t[-1]), end='')
+    if showTime: print("  %s" % (time.ctime(pv.timestamp)), end='')
+    print("")
 
 caget('testTimPotentate', 1)
 caget('testEVG:INJ:injCycleEnable', 1)
@@ -42,7 +44,7 @@ caget('testTimAllEVRvalid', 1)
 gunBunchToInjFieldTrigger = PV(args.old+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger = PV(args.new+'GunBunchToInjFieldTrigger', auto_monitor=True)
 testGunBunchToInjFieldTrigger.put(gunBunchToInjFieldTrigger.value,wait=True)
-showVector(testGunBunchToInjFieldTrigger)
+showVector(testGunBunchToInjFieldTrigger, False)
 
 timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
 evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
@@ -54,22 +56,22 @@ testTimInjReq = PV(args.new+'TimInjReq')
 testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
-seq = int(time.time())
+time.sleep(0.05)
+injReq = [1, 4, 40, 0, 1818324, 60231150,
+                      int(time.time()) if args.internal else timInjReq.value[6]]
 differenceCount = 0
 while True:
     if args.internal:
-        injReq = [1, 4, 40, 0, 1818324, 60231150, seq]
-        seq += 1
+        injReq[6] += 1
         eventList = []
         delayList = []
     else:
         #
         # Wait for next update from old timing system
-        # Avoid equality check for floating point values
         #
         time.sleep(0.05)
-        then = timInjReq.timestamp + 1e-3
-        while timInjReq.timestamp <= then: time.sleep(0.05)
+        seq = injReq[6]
+        while timInjReq.value[6] == injReq[6]: time.sleep(0.05)
         injReq = copy.copy(timInjReq.value)
         injReq[4] = timInjFieldSyncDelay.value
         injReq[5] = timExtrFieldSyncDelay.value
@@ -98,7 +100,7 @@ while True:
     #
     # Show new and old sequences
     #
-    showVector(testTimInjReq)
+    showVector(testTimInjReq, True)
     oldActive = True
     newActive = True
     oldIndex = 0
