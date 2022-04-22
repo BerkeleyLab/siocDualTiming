@@ -68,7 +68,6 @@ while True:
         #
         then = timInjReq.timestamp + 1e-6
         while timInjReq.timestamp <= then: time.sleep(0.05)
-        # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
         injReq = copy.copy(timInjReq.value)
         injReq[4] = timInjFieldSyncDelay.value
         injReq[5] = timExtrFieldSyncDelay.value
