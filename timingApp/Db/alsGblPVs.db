@@ -4,32 +4,26 @@
 record(longout, $(T)TimInjFieldSyncDelaySP) {
     field(DESC, "Inj Field Delay SP in 4 * BROC")
     field(DTYP, "Soft Channel")
-    field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
     field(EGU, "4*BROC")
 }
 
 record(longout, "$(T)TimInjFieldEventDelay") {
     field(DESC, "Fine adjustment to Sync Delay")
     field(DTYP, "Soft Channel")
-    field(FLNK, "$(T)GaussClockInjectionFieldTrigger PP")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
     field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)GaussClockInjectionFieldTrigger") {
+    alias ("$(T)TimInjFieldSyncDelay")
+    field(DESC, "Inj delay in ticks")
     field(INPA, "$(T)TimInjFieldSyncDelaySP")
     field(INPB, "125")
     field(INPC, "$(T)TimInjFieldEventDelay")
     field(CALC, "(A*B)-C")
-    field(FLNK, "$(T)TimInjFieldSyncDelay PP")
+    field(FLNK, "$(T)TimInjFieldSyncDelay")
     field(EGU, "EvtClkTicks")
-}
-
-record(calc, "$(T)TimInjFieldSyncDelay")
-{
-    field(DESC, "Inj delay in ticks")
-    field(EGU, "EvtClkTicks")
-    field(INPA, "$(T)GaussClockInjectionFieldTrigger")
-    field(CALC, "A")
 }
 
 #
@@ -39,32 +33,26 @@ record(calc, "$(T)TimInjFieldSyncDelay")
 record(longout, $(T)TimExtrFieldSyncDelaySP) {
     field(DESC, "Extraction Field Dly in COIC cycles")
     field(DTYP, "Soft Channel")
-    field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
     field(EGU, "COIC cycles")
 }
 
 record(longout, "$(T)TimExtrFieldEventDelay") {
     field(DESC, "Fine adjustment to Sync Delay")
     field(DTYP, "Soft Channel")
-    field(FLNK, "$(T)GaussClockExtractionFieldTrigger PP")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
     field(EGU, "EvtClkTicks")
 }
 
 record(calc, "$(T)GaussClockExtractionFieldTrigger") {
+    alias("$(T)TimExtrFieldSyncDelay")
+    field(DESC, "ExtrInj delay in ticks")
     field(INPA, "$(T)TimExtrFieldSyncDelaySP")
     field(INPB, "10250")
     field(INPC, "$(T)TimExtrFieldEventDelay")
     field(CALC, "(A*B)-C")
-    field(FLNK, "$(T)TimExtrFieldSyncDelay PP")
+    field(FLNK, "$(T)TimExtrFieldSyncDelay")
     field(EGU, "EvtClkTicks")
-}
-
-record(calc, "$(T)TimExtrFieldSyncDelay")
-{
-    field(DESC, "ExtrInj delay in ticks")
-    field(EGU, "EvtClkTicks")
-    field(INPA, "$(T)GaussClockExtractionFieldTrigger")
-    field(CALC, "A")
 }
 
 record(ai, "$(T)TimInjFieldCounterFiltd") {
