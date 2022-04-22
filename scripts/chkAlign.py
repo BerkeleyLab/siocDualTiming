@@ -55,6 +55,7 @@ testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
 
 seq = int(time.time())
+differenceCount = 0
 while True:
     if args.internal:
         injReq = [1, 4, 40, 0, 1818324, 60231150, seq]
@@ -135,6 +136,7 @@ while True:
                 if (newGap != oldGap) or \
                    (newEvent != eventList[oldIndex+oldIndexOffset]):
                     print(" --- CHANGE", end='')
+                    differenceCount += 1
                     match = False
         print("")
-    print("=============================")
+    print("================================ %d" % (differenceCount))
