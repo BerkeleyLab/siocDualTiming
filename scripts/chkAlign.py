@@ -102,10 +102,14 @@ while True:
     oldIndex = 0
     newIndex = 0
     oldTs = -1
+    oldIndexOffset = -1
+    match = True
     while oldActive or newActive:
         if newIndex >= (len(newPattern) - 1): newActive = False
         if newActive:
-            print("%8d %3d     " % (newPattern[newIndex], newPattern[newIndex+1]), end='')
+            newGap = newPattern[newIndex]
+            newEvent = newPattern[newIndex+1]
+            print("%8d %3d     " % (newGap, newEvent), end='')
             if newPattern[newIndex+1] == 127:
                 newActive = False
             else:
@@ -115,12 +119,25 @@ while True:
         if oldIndex >= len(delayList): oldActive = False
         if oldActive:
             ts = delayList[oldIndex]
-            gap = ts- oldTs - 1
+            oldGap = ts- oldTs - 1
             oldTs = ts
-            print("%8d %3d" % (gap, eventList[oldIndex]), end='')
+            print("%8d %3d" % (oldGap, eventList[oldIndex]), end='')
             if eventList[oldIndex] == 127:
                 oldActive = False
             else:
                 oldIndex += 1
         print("")
-    print("======================================")
+        if oldActive and newActive and match and (oldIndex > 1):
+            oldGap = delayList[oldIndex+oldIndexOffset] - delayList[oldIndex+oldIndexOffset-1] - 1
+            if (newGap == oldGap) and \
+               (newEvent == eventList[oldIndex+oldIndexOffset]):
+                pass
+            else:
+                oldGap = delayList[oldIndex] - delayList[oldIndex - 2] - 1
+                oldIndexOffset += 1
+                if (newGap == oldGap) and \
+                   (newEvent == eventList[oldIndex+oldIndexOffset]):
+                    pass
+                else:
+                    match = False
+    print("============ %s ============" % ("Match" if match else "Diff"))
