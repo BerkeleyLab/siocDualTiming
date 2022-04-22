@@ -31,8 +31,8 @@ typedef enum { /* Request waveform indices. */
         GUN_BUNCHES,
         INJ_MODE,
         GUN_INHIBIT,
-        INJ_FIELD_SYNC_DELAY,  // FIXME: Moved to PV monitor, should be removed
-        EXTR_FIELD_SYNC_DELAY, // FIXME: Moved to PV monitor, should be removed
+        INJ_FIELD_SYNC_DELAY,
+        EXTR_FIELD_SYNC_DELAY,
         SEQUENCE,
 } REQUEST_FIELDS;
 }%
@@ -44,6 +44,8 @@ int bucket = 1;     /* Target bucket (1-328) */
 int bunches = 1;    /* Number of electron gun bunches (1-16) */
 int inhibit = 0;    /* Inhibit electron gun if set, even if mode allows gun */
 int mode = 0;       /* Type of injection sequence.  See eventListForMode() */
+int injFieldSync;   /* Injection field delay */
+int extrFieldSync;  /* Extraction field delay */
 
 /*
  * Storage ring current.
@@ -61,6 +63,7 @@ assign potentate to "{T}TimPotentate";
 monitor potentate;
 int injCycleEnable;
 assign injCycleEnable to "{P}{R}INJ:injCycleEnable";
+
 
 /*
  * Statistics
@@ -99,17 +102,7 @@ int debugFlag;
 assign debugFlag to "{T}InjSeqDebug";
 monitor debugFlag;
 
-/*
- * Field delays
- */
-int injFieldSync;
-assign injFieldSync to "{T}TimInjFieldSyncDelay";
-monitor injFieldSync;
-int extrFieldSync;
-assign extrFieldSync to "{T}TimExtrFieldSyncDelay";
-monitor extrFieldSync;
-
-/*
+/**
  * Mapping of # gun bunches to injection field trigger
  */
 double bunchesToField[MAX_BUNCHES];
@@ -303,6 +296,8 @@ ss ssTiming {
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
             sequence = request[SEQUENCE];
+            injFieldSync = request[INJ_FIELD_SYNC_DELAY];
+            extrFieldSync = request[EXTR_FIELD_SYNC_DELAY];
         } state validate_request
     }
 

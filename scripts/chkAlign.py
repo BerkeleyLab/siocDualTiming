@@ -49,15 +49,10 @@ evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form=
 evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
 timInjFieldSyncDelay = PV('TimInjFieldSyncDelay', auto_monitor=True)
 timExtrFieldSyncDelay = PV('TimExtrFieldSyncDelay', auto_monitor=True)
-testTimInjFieldSyncDelay = PV('testTimInjFieldSyncDelay', auto_monitor=True)
-testTimExtrFieldSyncDelay = PV('testTimExtrFieldSyncDelay', auto_monitor=True)
 
 testTimInjReq = PV(args.new+'TimInjReq')
 testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
 testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
-
-testTimInjFieldSyncDelay.put(timInjFieldSyncDelay.value, wait=True)
-testTimExtrFieldSyncDelay.put(timExtrFieldSyncDelay.value, wait=True)
 
 seq = int(time.time())
 while True:
@@ -75,6 +70,8 @@ while True:
         while timInjReq.timestamp <= then: time.sleep(0.05)
         # FIXME: Should there be a check for a real injection cycle (event 68) here?  I suspect that the semantics of the old system are such that the mere presence of record processing will indicate a true injection cycle.
         injReq = copy.copy(timInjReq.value)
+        injReq[4] = timInjFieldSyncDelay.value
+        injReq[5] = timExtrFieldSyncDelay.value
         while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
