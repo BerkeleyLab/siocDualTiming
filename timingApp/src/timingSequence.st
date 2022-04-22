@@ -395,7 +395,6 @@ ss ssTiming {
                     tstamp = highwater;
                 }
                 else {
-printf("%d %d\n", injFieldSync, extrFieldSync);
                     tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
                                    bunches, gunBunchesDelay, targetBucketDelay);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
