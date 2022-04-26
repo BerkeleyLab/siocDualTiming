@@ -98,7 +98,16 @@ while True:
     #
     # Wait for new timing sequence
     #
-    while testPattern.timestamp <= testTimInjReq.timestamp: time.sleep(0.05)
+    passCount = 0
+    while testPattern.timestamp <= testTimInjReq.timestamp:
+        if passCount >= 20:
+            passsCount = 100
+            break
+        time.sleep(0.05)
+        passCount += 1
+    if passCount == 100:
+        print("No new sequence")
+        continue
     newPattern = copy.copy(testPattern.value)
 
     #
