@@ -46,15 +46,15 @@ testGunBunchToInjFieldTrigger = PV(args.new+'GunBunchToInjFieldTrigger', auto_mo
 testGunBunchToInjFieldTrigger.put(gunBunchToInjFieldTrigger.value,wait=True)
 showVector(testGunBunchToInjFieldTrigger, False)
 
-timInjReq = PV(args.old+'TimInjReq', auto_monitor=True, form='time')
-evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True, form='time')
-evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True, form='time')
+timInjReq = PV(args.old+'TimInjReq', auto_monitor=True)
+evCodes = PV(args.old+'LI11:EVG1-SoftSeq:0:EvtCode-SP', auto_monitor=True)
+evTimes = PV(args.old+'LI11:EVG1-SoftSeq:0:Timestamp-SP', auto_monitor=True)
 timInjFieldSyncDelay = PV('TimInjFieldSyncDelay', auto_monitor=True)
 timExtrFieldSyncDelay = PV('TimExtrFieldSyncDelay', auto_monitor=True)
 
 testTimInjReq = PV(args.new+'TimInjReq')
-testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True, form='time')
-testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True, form='time')
+testSeqStatus = PV(args.new+'EVG:E1:seqStatus', auto_monitor=True)
+testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True)
 
 time.sleep(0.05)
 injReq = [1, 4, 40, 0, 1818324, 60231150, int(time.time())]
@@ -78,6 +78,11 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
+        if evCodes.timestamp > (timInjReq.timestamp + 1.2) \
+        or evTimes.timestamp > (timInjReq.timestamp + 1.2):
+            print("Overrun %.6f %.6f %.6f" % (timInjReq.timestamp,
+                                          evCodes.timestamp, evTimes.timestamp))
+            continue
 
     #
     # Wait for end of new timing system cycle
