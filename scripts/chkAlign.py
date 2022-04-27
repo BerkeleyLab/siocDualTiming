@@ -5,6 +5,7 @@
 from __future__ import print_function
 import argparse
 import copy
+import datetime
 import epics
 import sys
 import time
@@ -34,7 +35,9 @@ def showVector(pv, showTime):
     print(pv.pvname, '[', end='')
     for f in t[0:-1]: print("%.9g " % (f), end='')
     print("%g]" % (t[-1]), end='')
-    if showTime: print("  %s" % (time.ctime(pv.timestamp)), end='')
+    if showTime: print("  %s" % (
+                         datetime.datetime.fromtimestamp(pv.timestamp).strftime(
+                                               "%Y-%m-%d %H:%M:%S.%f")), end='')
     print("")
 
 caget('testTimPotentate', 1)
@@ -79,8 +82,8 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
-        if evCodes.timestamp > (timInjReq.timestamp + 1.2) \
-        or evTimes.timestamp > (timInjReq.timestamp + 1.2):
+        if evCodes.timestamp > (timInjReq.timestamp + 1.25) \
+        or evTimes.timestamp > (timInjReq.timestamp + 1.25):
             print("Overrun %.6f %.6f %.6f" % (timInjReq.timestamp,
                                           evCodes.timestamp, evTimes.timestamp))
             continue
