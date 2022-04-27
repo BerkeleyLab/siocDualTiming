@@ -58,6 +58,7 @@ testPattern = PV(args.new+'EVG:E1:SEQ1', auto_monitor=True)
 
 time.sleep(0.05)
 injReq = [1, 4, 40, 0, 1818324, 60231150, int(time.time())]
+matchCount = 0
 differenceCount = 0
 while True:
     if args.internal:
@@ -155,4 +156,6 @@ while True:
                     differenceCount += 1
                     match = False
         print("")
-    print("=============================== Differences: %d" % (differenceCount))
+    if match: matchCount += 1
+    print("==================== Matches: %d   Differences: %d" %
+                                                  (matchCount, differenceCount))
