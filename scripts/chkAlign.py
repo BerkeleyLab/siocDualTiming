@@ -63,6 +63,7 @@ time.sleep(0.05)
 injReq = [1, 4, 40, 0, 1818324, 60231150, int(time.time())]
 matchCount = 0
 differenceCount = 0
+overrunCount = 0
 while True:
     if args.internal:
         injReq[6] += 1
@@ -84,6 +85,7 @@ while True:
         delayList = copy.copy(evTimes.value)
         if evCodes.timestamp > (timInjReq.timestamp + 1.25) \
         or evTimes.timestamp > (timInjReq.timestamp + 1.25):
+            overrunCount += 1
             print("Overrun %.6f %.6f %.6f" % (timInjReq.timestamp,
                                           evCodes.timestamp, evTimes.timestamp))
             continue
@@ -160,5 +162,5 @@ while True:
                     match = False
         print("")
     if match: matchCount += 1
-    print("==================== Matches: %d   Differences: %d" %
-                                                  (matchCount, differenceCount))
+    print("================= Matches: %d   Differences: %d   Overruns: %d" %
+                                    (matchCount, differenceCount, overrunCount))
