@@ -83,8 +83,8 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
-        if evCodes.timestamp > (timInjReq.timestamp + 1.25) \
-        or evTimes.timestamp > (timInjReq.timestamp + 1.25):
+        if evCodes.timestamp > (timInjReq.timestamp + 1.32) \
+        or evTimes.timestamp > (timInjReq.timestamp + 1.32):
             overrunCount += 1
             print("Overrun %.6f %.6f %.6f" % (timInjReq.timestamp,
                                           evCodes.timestamp, evTimes.timestamp))
