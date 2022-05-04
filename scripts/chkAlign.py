@@ -83,8 +83,8 @@ while True:
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         delayList = copy.copy(evTimes.value)
-        if evCodes.timestamp > (timInjReq.timestamp + 1.32) \
-        or evTimes.timestamp > (timInjReq.timestamp + 1.32):
+        if evCodes.timestamp > (timInjReq.timestamp + 1.35) \
+        or evTimes.timestamp > (timInjReq.timestamp + 1.35):
             overrunCount += 1
             print("Overrun %.6f %.6f %.6f" % (timInjReq.timestamp,
                                           evCodes.timestamp, evTimes.timestamp))
@@ -157,7 +157,7 @@ while True:
                 oldIndexOffset += 1
                 if (newGap != oldGap) or \
                    (newEvent != eventList[oldIndex+oldIndexOffset]):
-                    print(" --- CHANGE", end='')
+                    print(" --- CHANGE (%d ticks)" % (newGap - oldGap), end='')
                     differenceCount += 1
                     match = False
         print("")
