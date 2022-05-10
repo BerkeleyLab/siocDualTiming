@@ -199,11 +199,20 @@ ss ssTiming {
             if(debugFlag) printf("State: await_connections\n");
             oldConnectCount = -1;
         }
-        when (pvConnectCount() == pvAssignCount()) { } state await_potentate
+        when (pvConnectCount() == pvAssignCount()) {
+            if (faultCode == FC_MISSING_CONNECTION) {
+                faultCode = FC_SUCCESS;
+                pvPut(faultCode);
+            }
+        } state await_potentate
         when (delay(10) && (pvConnectCount() != oldConnectCount)) {
             oldConnectCount = pvConnectCount();
             printf("Timing Sequencer: %d/%d connected\n", pvConnectCount(),
                                                           pvAssignCount());
+            if (faultCode == FC_SUCCESS) {
+                faultCode = FC_MISSING_CONNECTION;
+                pvPut(faultCode);
+            }
         } state await_connections
     }
 
