@@ -77,8 +77,8 @@ while True:
         injReq[6] = timInjReq.value[6]
         while timInjReq.value[6] == injReq[6]: time.sleep(0.05)
         injReq = copy.copy(timInjReq.value)
-        injReq[4] = timInjFieldSyncDelay.value
-        injReq[5] = timExtrFieldSyncDelay.value
+        injReq[4] = int(timInjFieldSyncDelay.value)
+        injReq[5] = int(timExtrFieldSyncDelay.value)
         while evCodes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
         eventList = copy.copy(evCodes.value)
         while evTimes.timestamp <= timInjReq.timestamp: time.sleep(0.05)
