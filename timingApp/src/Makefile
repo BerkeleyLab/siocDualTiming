@@ -20,15 +20,21 @@ timing_DBD += timingSequence.dbd
 timing_DBD += eventGeneratorSup.dbd
 timing_DBD += drvAsynIPPort.dbd
 timing_DBD += asyn.dbd
-timing_DBD += reccaster.dbd
-timing_DBD += devIocStats.dbd
 
 # Add all the support libraries needed by this IOC
 timing_LIBS += eventGeneratorSup
 timing_LIBS += asyn
-timing_LIBS += reccaster
-timing_LIBS += devIocStatsSeq
 timing_LIBS += seq
+
+ifneq ($(RECCASTER),)
+    timing_DBD += reccaster.dbd
+    timing_LIBS += reccaster
+endif
+
+ifneq ($(devIocStats),)
+    timing_DBD += devIocStats.dbd
+    timing_LIBS += devIocStatsSeq
+endif
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
 timing_SRCS += timingSequence.st

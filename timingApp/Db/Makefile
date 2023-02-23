@@ -14,8 +14,14 @@ DB_INSTALLS += $(ASYN)/db/asynRecord.db
 DB_INSTALLS += $(EVG)/db/eventGenerator.db
 DB += alsGblPVs.db
 DB += timing.db
+
+ifneq ($(RECCASTER),)
 DB_INSTALLS += $(RECCASTER)/db/reccaster.db
+endif
+
+ifneq ($(devIocStats),)
 DB_INSTALLS += $(devIocStats)/db/ioc_stats.db
+endif
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
