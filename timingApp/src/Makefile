@@ -52,5 +52,5 @@ include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 timingSequence.c: TimingLookups.h
-TimingLookups.h: ../TuningModeTriggers.csv ../parseTuningModeTriggers.py 
-	cd .. ; python parseTuningModeTriggers.py 
+TimingLookups.h: ../TuningModeTriggers.csv ../parseTuningModeTriggers.py
+	cd .. ; python parseTuningModeTriggers.py
