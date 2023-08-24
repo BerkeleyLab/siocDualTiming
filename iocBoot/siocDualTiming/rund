@@ -1,0 +1,2 @@
+#!/bin/sh
+screen -d -m -S siocDualTiming -c ./screenrc -L ./st.cmd

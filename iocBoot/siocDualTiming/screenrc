@@ -1,0 +1,3 @@
+logfile screenlog.%n
+logtstamp on
+logtstamp after 60
