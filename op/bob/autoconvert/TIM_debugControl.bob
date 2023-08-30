@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2023-08-30 14:06:31 by lrusso-->
+<display version="2.0.0">
+  <name>TIM debugControl</name>
+  <x>295</x>
+  <y>332</y>
+  <width>320</width>
+  <height>80</height>
+  <background_color>
+    <color name="GLOBAL canvas" red="200" green="200" blue="200">
+    </color>
+  </background_color>
+  <grid_visible>false</grid_visible>
+  <widget type="label" version="2.0.0">
+    <name>EDM activeXTextClass</name>
+    <text>$(T)Timing Sequencer</text>
+    <y>1</y>
+    <width>320</width>
+    <height>22</height>
+    <font>
+      <font family="Liberation Sans" style="REGULAR" size="18.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color name="black-14" red="0" green="0" blue="0">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color name="green-19" red="0" green="128" blue="0">
+      </color>
+    </background_color>
+    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="group" version="2.0.0">
+    <name>EDM Group 0</name>
+    <x>10</x>
+    <y>28</y>
+    <width>289</width>
+    <height>30</height>
+    <style>3</style>
+    <transparent>true</transparent>
+    <widget type="action_button" version="3.0.0">
+      <name>EDM activeMessageButtonClass</name>
+      <actions>
+        <action type="write_pv">
+          <pv_name>$(pv_name)</pv_name>
+          <value>2</value>
+          <description>Requests</description>
+        </action>
+      </actions>
+      <pv_name>$(T)InjSeqDebug</pv_name>
+      <text>Requests</text>
+      <x>219</x>
+      <y>5</y>
+      <width>65</width>
+      <height>20</height>
+      <foreground_color>
+        <color name="black-14" red="0" green="0" blue="0">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color name="cyan-31" red="0" green="224" blue="224">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>EDM activeMessageButtonClass</name>
+      <actions>
+        <action type="write_pv">
+          <pv_name>$(pv_name)</pv_name>
+          <value>1</value>
+          <description>States</description>
+        </action>
+      </actions>
+      <pv_name>$(T)InjSeqDebug</pv_name>
+      <text>States</text>
+      <x>144</x>
+      <y>5</y>
+      <width>65</width>
+      <height>20</height>
+      <foreground_color>
+        <color name="black-14" red="0" green="0" blue="0">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color name="cyan-31" red="0" green="224" blue="224">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="action_button" version="3.0.0">
+      <name>EDM activeMessageButtonClass</name>
+      <actions>
+        <action type="write_pv">
+          <pv_name>$(pv_name)</pv_name>
+          <value>0</value>
+          <description>Disable</description>
+        </action>
+      </actions>
+      <pv_name>$(T)InjSeqDebug</pv_name>
+      <text>Disable</text>
+      <x>69</x>
+      <y>5</y>
+      <width>65</width>
+      <height>20</height>
+      <foreground_color>
+        <color name="black-14" red="0" green="0" blue="0">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color name="cyan-31" red="0" green="224" blue="224">
+        </color>
+      </background_color>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <name>EDM activeXTextClass</name>
+      <text>Debug</text>
+      <x>5</x>
+      <y>8</y>
+      <width>64</width>
+      <height>17</height>
+      <foreground_color>
+        <color name="black-14" red="0" green="0" blue="0">
+        </color>
+      </foreground_color>
+      <background_color>
+        <color name="green-19" red="0" green="128" blue="0">
+        </color>
+      </background_color>
+      <horizontal_alignment>1</horizontal_alignment>
+      <vertical_alignment>1</vertical_alignment>
+    </widget>
+  </widget>
+</display>
