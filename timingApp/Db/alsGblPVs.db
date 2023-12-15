@@ -22,7 +22,6 @@ record(calc, "$(T)GaussClockInjectionFieldTrigger") {
     field(INPB, "125")
     field(INPC, "$(T)TimInjFieldEventDelay")
     field(CALC, "(A*B)-C")
-    field(FLNK, "$(T)TimInjFieldSyncDelay")
     field(EGU, "EvtClkTicks")
 }
 
@@ -51,7 +50,6 @@ record(calc, "$(T)GaussClockExtractionFieldTrigger") {
     field(INPB, "10250")
     field(INPC, "$(T)TimExtrFieldEventDelay")
     field(CALC, "(A*B)-C")
-    field(FLNK, "$(T)TimExtrFieldSyncDelay")
     field(EGU, "EvtClkTicks")
 }
 
