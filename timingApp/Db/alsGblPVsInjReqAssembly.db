@@ -83,7 +83,7 @@ record(aSub, "$(T)TimInjReq:sub") {
     field(FTF, "LONG")
     field(FTG, "LONG")
     field(OUTA, "$(T)TimInjReq PP MS")
-    field(FTVA, "LONG")
+    field(FTVA, "DOUBLE")
     field(NOVA, "7")
 }
 
