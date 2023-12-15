@@ -3,8 +3,10 @@
 T="test"
 E="TIM_injectionSequencer.edl"
 
+SCRIPTPATH=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+
 getPath() {
-    for d in . ..
+    for d in $SCRIPTPATH $SCRIPTPATH/.. $SCRIPTPATH/../..
     do
         if [ -r "$d/Makefile" -a -r "$d/configure/RELEASE" ]
         then
@@ -18,7 +20,7 @@ getPath() {
             )
             break
         fi
-    done 
+    done
 }
 
 for i
