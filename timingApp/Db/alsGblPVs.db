@@ -70,8 +70,8 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
 # 1: Number of Gun Bunches (1 to 16)
 # 2: Injection Mode Number (sets enables for setup, injection, tuning modes)
 # 3: Gun Inhibit (0: det. by Inj. Mode Number; 1: Disable the gun trigger)
-# 4: Reserved for future use
-# 5: Reserved for future use
+# 4: Injection Field Sync Delay
+# 5: Extraction Field Sync Delay
 # 6: Sequence Number (must change from last cycle to do anything but default cycle)
 # This is to be used by the timing sequencer.
 record(waveform, "$(T)TimInjReq") {
