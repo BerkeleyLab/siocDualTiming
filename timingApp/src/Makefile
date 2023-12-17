@@ -38,6 +38,7 @@ endif
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
 timing_SRCS += timingSequence.st
+timing_SRCS += assemble_injreq.c
 timing_SRCS += timing_registerRecordDeviceDriver.cpp
 
 # Build the main IOC entry point on workstation OSs.

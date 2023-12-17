@@ -1,1 +1,2 @@
 registrar(timingSequenceRegistrar)
+function(assemble_injreq)

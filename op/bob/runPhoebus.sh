@@ -1,9 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-T="test"
-E="TIM_injectionSequencer.edl"
+set -eu
 
-SCRIPTPATH=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+prefix="EVG:"
+bob="TIM_injectionSequencer.bob"
+
+SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
 
 getPath() {
     for d in $SCRIPTPATH $SCRIPTPATH/.. $SCRIPTPATH/../..
@@ -23,20 +25,18 @@ getPath() {
     done
 }
 
-for i
+for i in "$@"
 do
     case "$i" in
-    *.edl)       E="$i"  ;;
-    *)           T="$i"  ;;
+    *.bob)  bob="$i" ;;
+    *)      prefix="$i" ;;
     esac
 done
 
-case "$T" in
-    "") MARG="T=\"$T\",P=EVG,R=:" ;;
-    *)  MARG="T=$T,P=$T,R=EVG:"   ;;
-esac
-
+P=`echo "$prefix" | sed -ne '/\(.\).*/s//\1/p'`
+R=`echo "$prefix" | sed -ne '/.\(.*\)/s//\1/p'`
 EVG=`getPath EVG`
-export EDMDATAFILES=".:$EVG/opi"
 
-edm -eolc -x -m "${MARG}" "$E" &
+ln -sf $EVG/op/bob/autoconvert/*.bob autoconvert/
+
+#phoebus -resource file:${SCRIPTPATH}/autoconvert/${bob}?"P=${P}&R=${R}"

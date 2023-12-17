@@ -13,6 +13,7 @@ include $(TOP)/configure/CONFIG
 DB_INSTALLS += $(ASYN)/db/asynRecord.db
 DB_INSTALLS += $(EVG)/db/eventGenerator.db
 DB += alsGblPVs.db
+DB += alsGblPVsInjReqAssembly.db
 DB += timing.db
 
 ifneq ($(RECCASTER),)

@@ -1,0 +1,100 @@
+#
+# Records to asemble the injection request PV from
+# single PVs.
+#
+# Mainly for compatibility with existing applications
+
+record(longout, "$(T)TimTargetBucket") {
+    field(DESC, "Bucket number")
+    field(DRVH, "328")
+    field(DRVL, "1")
+    field(HOPR, "328")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(PINI, "YES")
+}
+
+record(longout, "$(T)TimGunBunchCount") {
+    field(DESC, "Number of gun bunches")
+    field(DRVH, "16")
+    field(DRVL, "1")
+    field(HOPR, "16")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(PINI, "YES")
+}
+
+record(mbbo, "$(T)TimInjMode") {
+    field(DESC, "Injection Mode")
+    field(OMSL, "supervisory")
+    field(ZRST, "Default")
+    field(ONST, "Linac Tuning")
+    field(TWST, "BR Tuning")
+    field(THST, "BTS Tuning")
+    field(FRST, "SR Inj Prep")
+    field(FVST, "SR Injection")
+    field(SXST, "SR Tuning")
+    field(ZRVL, "0")
+    field(ONVL, "10")
+    field(TWVL, "20")
+    field(THVL, "30")
+    field(FRVL, "41")
+    field(FVVL, "40")
+    field(SXVL, "42")
+}
+
+record(bo, "$(T)TimGunInhibit") {
+    field(DESC, "Master Inhibit of Gun Trigger")
+    field(ZNAM, "No Inhibit")
+    field(ONAM, "Inhibit")
+    field(OSV, "MAJOR")
+    field(PINI, "YES")
+    field(VAL, "0")
+}
+
+record(longout, "$(T)TimSequenceNumber") {
+    field(DESC, "Sequence Number")
+}
+
+record(bo, "$(T)TimInjReqCommit") {
+    field(DESC, "Fill TimInjReq waveform")
+    field(FLNK, "$(T)TimInjReq:sub.PROC")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(HIGH, "1")
+}
+
+record(aSub, "$(T)TimInjReq:sub") {
+    field(DESC, "Assembles pvs into request wf")
+    field(SNAM, "assemble_injreq")
+    field(LFLG, "IGNORE")
+    field(INPA, "$(T)TimTargetBucket")
+    field(INPB, "$(T)TimGunBunchCount")
+    field(INPC, "$(T)TimInjMode.RVAL")
+    field(INPD, "$(T)TimGunInhibit")
+    field(INPE, "$(T)TimInjFieldSyncDelay")
+    field(INPF, "$(T)TimExtrFieldSyncDelay")
+    field(INPG, "$(T)TimSequenceNumber")
+    field(FTA, "LONG")
+    field(FTB, "LONG")
+    field(FTC, "LONG")
+    field(FTD, "LONG")
+    field(FTE, "LONG")
+    field(FTF, "LONG")
+    field(FTG, "LONG")
+    field(OUTA, "$(T)TimInjReq PP MS")
+    field(FTVA, "DOUBLE")
+    field(NOVA, "7")
+}
+
+# This will add the field to $(T)TimInjReq
+# on alsGlbPVs Db file
+record(waveform, "$(T)TimInjReq") {
+    field(FLNK, "$(T)TimInjReqTime")
+}
+
+record(stringin, "$(T)TimInjReqTime") {
+    field(DESC, "Time of last Injection Request")
+    field(DTYP, "Soft Timestamp")
+    field(INP, "@%b %d, %Y %H:%M:%S")
+}
