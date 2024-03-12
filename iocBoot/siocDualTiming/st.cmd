@@ -2,7 +2,7 @@
 
 ###############################################################################
 # Set up environment
-epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=test)"
+epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=)"
 epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=131.243.93.169)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
