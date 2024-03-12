@@ -241,3 +241,72 @@ record(ao, $(T)GunBunchDelay-4) {
     field(FLNK, "$(T)GunBunchDelayToWF")
 }
 
+# PVs that are updated by the sequencer. They reflect the true status
+# sent to the FPGA sequencer
+record(longout, "$(T)TimTargetBucketMon") {
+    field(DESC, "Bucket number Monitor")
+    field(DRVH, "328")
+    field(DRVL, "1")
+    field(HOPR, "328")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)TimGunBunchCountMon") {
+    field(DESC, "Number of gun bunches Monitor")
+    field(DRVH, "16")
+    field(DRVL, "1")
+    field(HOPR, "16")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(mbbo, "$(T)TimInjModeMon") {
+    field(DESC, "Injection Mode Monitor")
+    field(OMSL, "supervisory")
+    field(ZRST, "Default")
+    field(ONST, "Linac Tuning")
+    field(TWST, "BR Tuning")
+    field(THST, "BTS Tuning")
+    field(FRST, "SR Inj Prep")
+    field(FVST, "SR Injection")
+    field(SXST, "SR Tuning")
+    field(ZRVL, "0")
+    field(ONVL, "10")
+    field(TWVL, "20")
+    field(THVL, "30")
+    field(FRVL, "41")
+    field(FVVL, "40")
+    field(SXVL, "42")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(bo, "$(T)TimGunInhibitMon") {
+    field(DESC, "Master Inhibit of Gun Trigger Monitor")
+    field(ZNAM, "No Inhibit")
+    field(ONAM, "Inhibit")
+    field(OSV, "MAJOR")
+    field(VAL, "0")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)GaussClockInjectionFieldTriggerMon") {
+    alias ("$(T)TimInjFieldSyncDelayMon")
+    field(DESC, "Inj delay in ticks monitor")
+    field(EGU, "EvtClkTicks")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)GaussClockExtractionFieldTriggerMon") {
+    alias("$(T)TimExtrFieldSyncDelayMon")
+    field(DESC, "ExtrInj delay in ticks monitor")
+    field(EGU, "EvtClkTicks")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)TimSequenceNumberMon") {
+    field(DESC, "Sequence Number Monitor")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
