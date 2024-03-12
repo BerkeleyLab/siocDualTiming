@@ -17,6 +17,7 @@ timing_DBD += base.dbd
 
 # Include dbd files from all support applications:
 timing_DBD += timingSequence.dbd
+timing_DBD += gunbunchdelays_wf.dbd
 timing_DBD += eventGeneratorSup.dbd
 timing_DBD += drvAsynIPPort.dbd
 timing_DBD += asyn.dbd
@@ -39,6 +40,7 @@ endif
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
 timing_SRCS += timingSequence.st
 timing_SRCS += assemble_injreq.c
+timing_SRCS += gunbunchdelays_wf.c
 timing_SRCS += timing_registerRecordDeviceDriver.cpp
 
 # Build the main IOC entry point on workstation OSs.
