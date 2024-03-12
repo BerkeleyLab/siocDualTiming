@@ -98,3 +98,91 @@ record(stringin, "$(T)TimInjReqTime") {
     field(DTYP, "Soft Timestamp")
     field(INP, "@%b %d, %Y %H:%M:%S")
 }
+
+# This will add the field to $(T)GunBunchToInjFieldTrigger
+# on alsGlbPVs Db file
+record(waveform, $(T)GunBunchToInjFieldTrigger) {
+    field(FLNK, "$(T)GunBunchDelayFromWF")
+}
+
+record(aSub, $(T)GunBunchDelayFromWF) {
+    field(DESC, "Propogate GunBunchDelay WF to records")
+    field(INPA, "$(T)TimGunBunchCount PP")
+    field(INPB, "$(T)GunBunchToInjFieldTrigger PP")
+    field(NOB, "16")
+    field(SNAM, "gunbunchdelay_from_wf")
+    field(OUTA, "$(T)GunBunchDelay PP")
+    field(OUTB, "$(T)GunBunchDelay-1 PP")
+    field(OUTC, "$(T)GunBunchDelay-2 PP")
+    field(OUTD, "$(T)GunBunchDelay-3 PP")
+    field(OUTE, "$(T)GunBunchDelay-4 PP")
+    field(FTA, "LONG")
+    field(FTB, "LONG")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "LONG")
+    field(FTVE, "LONG")
+}
+
+record(aSub, $(T)GunBunchDelayToWF) {
+    field(DESC, "Propogate GunBunchDelays to WF")
+    field(INAM, "init_gunbunchdelays")
+    field(INPA, "$(T)TimGunBunchCount PP")
+    field(INPB, "$(T)GunBunchDelay PP")
+    field(INPC, "$(T)GunBunchDelay-1 PP")
+    field(INPD, "$(T)GunBunchDelay-2 PP")
+    field(INPE, "$(T)GunBunchDelay-3 PP")
+    field(INPF, "$(T)GunBunchDelay-4 PP")
+    field(SNAM, "gunbunchdelay_to_wf")
+    field(OUTA, "$(T)GunBunchToInjFieldTrigger PP")
+    field(NOVA, "16")
+    field(FTA, "LONG")
+    field(FTB, "LONG")
+    field(FTC, "LONG")
+    field(FTD, "LONG")
+    field(FTE, "LONG")
+    field(FTF, "LONG")
+    field(FTVA, "LONG")
+}
+
+record(ao, $(T)GunBunchDelay) {
+    field(DESC, "Delay due to #Gun Bunches")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-1) {
+    field(DESC, "Delay when #Gun Bunches = 1")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-2) {
+    field(DESC, "Delay when #Gun Bunches = 2")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-3) {
+    field(DESC, "Delay when #Gun Bunches = 3")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-4) {
+    field(DESC, "Delay when #Gun Bunches = 4")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+

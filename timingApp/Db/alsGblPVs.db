@@ -82,10 +82,10 @@ record(waveform, "$(T)TimInjReq") {
 
 # FIXME: Is this still (ever?) necessary?
 #record(waveform, $(T)GunBunchToGunBias) {
-#	field(DESC, "Gun Bias Waveform")
-#	field(EGU, "V")
-#	field(NELM, "16")
-#	field(FTVL, "DOUBLE")
+#    field(DESC, "Gun Bias Waveform")
+#    field(EGU, "V")
+#    field(NELM, "16")
+#    field(FTVL, "DOUBLE")
 #}
 
 record(waveform, $(T)GunBunchToInjFieldTrigger) {
