@@ -52,6 +52,61 @@ record(bo, "$(T)TimGunInhibit") {
     field(VAL, "0")
 }
 
+# This setpoint is assumed to contain the event delay, which is then
+# subtracted below
+#
+record(longout, "$(T)TimInjFieldSyncDelaySP") {
+    field(DESC, "Inj Field Delay SP in 4 * BROC")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
+    field(EGU, "4*BROC")
+}
+
+record(longout, "$(T)TimInjFieldEventDelay") {
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
+    field(EGU, "EvtClkTicks")
+}
+
+record(calc, "$(T)GaussClockInjectionFieldTrigger") {
+    alias ("$(T)TimInjFieldSyncDelay")
+    field(DESC, "Inj delay in ticks")
+    field(INPA, "$(T)TimInjFieldSyncDelaySP")
+    field(INPB, "125")
+    field(INPC, "$(T)TimInjFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(EGU, "EvtClkTicks")
+}
+
+#
+# This setpoint is assumed to contain the event delay, which is then
+# subtracted below
+#
+record(longout, "$(T)TimExtrFieldSyncDelaySP") {
+    field(DESC, "Extraction Field Dly in COIC cycles")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
+    field(EGU, "COIC cycles")
+}
+
+record(longout, "$(T)TimExtrFieldEventDelay") {
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
+    field(EGU, "EvtClkTicks")
+}
+
+record(calc, "$(T)GaussClockExtractionFieldTrigger") {
+    alias("$(T)TimExtrFieldSyncDelay")
+    field(DESC, "ExtrInj delay in ticks")
+    field(INPA, "$(T)TimExtrFieldSyncDelaySP")
+    field(INPB, "10250")
+    field(INPC, "$(T)TimExtrFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(EGU, "EvtClkTicks")
+}
+
 record(longout, "$(T)TimSequenceNumber") {
     field(DESC, "Sequence Number")
 }
