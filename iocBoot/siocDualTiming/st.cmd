@@ -37,6 +37,7 @@ asynSetTraceMask("EVG01_SEQ",-1,0x1)
 dbLoadRecords("db/eventGenerator.db","P=$(T),R=EVG:,PORT=EVG01")
 dbLoadRecords("db/timing.db","P=$(T),R=EVG:,T=$(T)")
 dbLoadRecords("db/alsGblPVs.db","T=$(T)")
+dbLoadRecords("db/alsGblPVsInjReqAssembly.db","T=$(T)")
 
 ##############################################################################
 # Load additional records
