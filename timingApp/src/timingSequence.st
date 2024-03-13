@@ -52,19 +52,19 @@ int extrFieldSync;  /* Extraction field delay */
  */
 
 int sequenceMon = 0;   /* Sequence #: request ignored if no change from previous */
-assign sequenceMon to "${T}TimSequenceNumberMon";
+assign sequenceMon to "{T}TimSequenceNumberMon";
 int bucketMon = 1;     /* Target bucket (1-328) */
-assign bucketMon to "$(T)TimTargetBucketMon";
+assign bucketMon to "{T}TimTargetBucketMon";
 int bunchesMon = 1;    /* Number of electron gun bunches (1-16) */
-assign bunchesMon to "$(T)TimGunBunchCountMon";
+assign bunchesMon to "{T}TimGunBunchCountMon";
 int inhibitMon = 0;    /* Inhibit electron gun if set, even if mode allows gun */
-assign inhibitMon to "$(T)TimGunInhibitMon";
+assign inhibitMon to "{T}TimGunInhibitMon";
 int modeMon = 0;       /* Type of injection sequence.  See eventListForMode() */
-assign modeMon to "$(T)TimInjModeMon";
+assign modeMon to "{T}TimInjModeMon";
 int injFieldSyncMon;   /* Injection field delay */
-assign injFieldSyncMon to "$(T)TimInjFieldSyncDelayMon";
+assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
 int extrFieldSyncMon;  /* Extraction field delay */
-assign extrFieldSyncMon to "$(T)TimExtrFieldSyncDelayMon";
+assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
 
 /*
  * Storage ring current.
