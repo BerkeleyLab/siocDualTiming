@@ -48,6 +48,25 @@ int injFieldSync;   /* Injection field delay */
 int extrFieldSync;  /* Extraction field delay */
 
 /*
+ * Monitor of injection request values sent to FPGA sequencer.
+ */
+
+int sequenceMon = 0;   /* Sequence #: request ignored if no change from previous */
+assign sequenceMon to "{T}TimSequenceNumberMon";
+int bucketMon = 1;     /* Target bucket (1-328) */
+assign bucketMon to "{T}TimTargetBucketMon";
+int bunchesMon = 1;    /* Number of electron gun bunches (1-16) */
+assign bunchesMon to "{T}TimGunBunchCountMon";
+int inhibitMon = 0;    /* Inhibit electron gun if set, even if mode allows gun */
+assign inhibitMon to "{T}TimGunInhibitMon";
+int modeMon = 0;       /* Type of injection sequence.  See eventListForMode() */
+assign modeMon to "{T}TimInjModeMon";
+int injFieldSyncMon;   /* Injection field delay */
+assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
+int extrFieldSyncMon;  /* Extraction field delay */
+assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
+
+/*
  * Storage ring current.
  * Sequencer refuses to inject when this exceeds MAX_BEAM_CURRENT.
  */
@@ -463,6 +482,22 @@ ss ssTiming {
             pvPut(faultCode);
             goodCount++;
             pvPut(goodCount);
+
+            /* assign monitor values to injection parameters */
+            sequenceMon = sequence;
+            pvPut(sequenceMon);
+            bucketMon = bucket;
+            pvPut(bucketMon);
+            bunchesMon = bunches;
+            pvPut(bunchesMon);
+            inhibitMon = inhibit;
+            pvPut(inhibitMon);
+            modeMon = mode;
+            pvPut(modeMon);
+            injFieldSyncMon = injFieldSync;
+            pvPut(injFieldSyncMon);
+            extrFieldSyncMon = extrFieldSync;
+            pvPut(extrFieldSyncMon);
         } state await_start
     }
 

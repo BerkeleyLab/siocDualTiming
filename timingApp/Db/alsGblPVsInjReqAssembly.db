@@ -52,6 +52,61 @@ record(bo, "$(T)TimGunInhibit") {
     field(VAL, "0")
 }
 
+# This setpoint is assumed to contain the event delay, which is then
+# subtracted below
+#
+record(longout, "$(T)TimInjFieldSyncDelaySP") {
+    field(DESC, "Inj Field Delay SP in 4 * BROC")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
+    field(EGU, "4*BROC")
+}
+
+record(longout, "$(T)TimInjFieldEventDelay") {
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
+    field(EGU, "EvtClkTicks")
+}
+
+record(calc, "$(T)GaussClockInjectionFieldTrigger") {
+    alias ("$(T)TimInjFieldSyncDelay")
+    field(DESC, "Inj delay in ticks")
+    field(INPA, "$(T)TimInjFieldSyncDelaySP")
+    field(INPB, "125")
+    field(INPC, "$(T)TimInjFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(EGU, "EvtClkTicks")
+}
+
+#
+# This setpoint is assumed to contain the event delay, which is then
+# subtracted below
+#
+record(longout, "$(T)TimExtrFieldSyncDelaySP") {
+    field(DESC, "Extraction Field Dly in COIC cycles")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
+    field(EGU, "COIC cycles")
+}
+
+record(longout, "$(T)TimExtrFieldEventDelay") {
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
+    field(EGU, "EvtClkTicks")
+}
+
+record(calc, "$(T)GaussClockExtractionFieldTrigger") {
+    alias("$(T)TimExtrFieldSyncDelay")
+    field(DESC, "ExtrInj delay in ticks")
+    field(INPA, "$(T)TimExtrFieldSyncDelaySP")
+    field(INPB, "10250")
+    field(INPC, "$(T)TimExtrFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(EGU, "EvtClkTicks")
+}
+
 record(longout, "$(T)TimSequenceNumber") {
     field(DESC, "Sequence Number")
 }
@@ -97,4 +152,161 @@ record(stringin, "$(T)TimInjReqTime") {
     field(DESC, "Time of last Injection Request")
     field(DTYP, "Soft Timestamp")
     field(INP, "@%b %d, %Y %H:%M:%S")
+}
+
+# This will add the field to $(T)GunBunchToInjFieldTrigger
+# on alsGlbPVs Db file
+record(waveform, $(T)GunBunchToInjFieldTrigger) {
+    field(FLNK, "$(T)GunBunchDelayFromWF")
+}
+
+record(aSub, $(T)GunBunchDelayFromWF) {
+    field(DESC, "Propogate GunBunchDelay WF to records")
+    field(INPA, "$(T)TimGunBunchCount PP")
+    field(INPB, "$(T)GunBunchToInjFieldTrigger PP")
+    field(NOB, "16")
+    field(SNAM, "gunbunchdelay_from_wf")
+    field(OUTA, "$(T)GunBunchDelay PP")
+    field(OUTB, "$(T)GunBunchDelay-1 PP")
+    field(OUTC, "$(T)GunBunchDelay-2 PP")
+    field(OUTD, "$(T)GunBunchDelay-3 PP")
+    field(OUTE, "$(T)GunBunchDelay-4 PP")
+    field(FTA, "LONG")
+    field(FTB, "LONG")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "LONG")
+    field(FTVE, "LONG")
+}
+
+record(aSub, $(T)GunBunchDelayToWF) {
+    field(DESC, "Propogate GunBunchDelays to WF")
+    field(INAM, "init_gunbunchdelays")
+    field(INPA, "$(T)TimGunBunchCount PP")
+    field(INPB, "$(T)GunBunchDelay PP")
+    field(INPC, "$(T)GunBunchDelay-1 PP")
+    field(INPD, "$(T)GunBunchDelay-2 PP")
+    field(INPE, "$(T)GunBunchDelay-3 PP")
+    field(INPF, "$(T)GunBunchDelay-4 PP")
+    field(SNAM, "gunbunchdelay_to_wf")
+    field(OUTA, "$(T)GunBunchToInjFieldTrigger PP")
+    field(NOVA, "16")
+    field(FTA, "LONG")
+    field(FTB, "LONG")
+    field(FTC, "LONG")
+    field(FTD, "LONG")
+    field(FTE, "LONG")
+    field(FTF, "LONG")
+    field(FTVA, "LONG")
+}
+
+record(ao, $(T)GunBunchDelay) {
+    field(DESC, "Delay due to #Gun Bunches")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-1) {
+    field(DESC, "Delay when #Gun Bunches = 1")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-2) {
+    field(DESC, "Delay when #Gun Bunches = 2")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-3) {
+    field(DESC, "Delay when #Gun Bunches = 3")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+record(ao, $(T)GunBunchDelay-4) {
+    field(DESC, "Delay when #Gun Bunches = 4")
+    field(EGU, "4*BROC")
+    field(LINR, "SLOPE")
+    field(ESLO, "0.008")
+    field(FLNK, "$(T)GunBunchDelayToWF")
+}
+
+# PVs that are updated by the sequencer. They reflect the true status
+# sent to the FPGA sequencer
+record(longout, "$(T)TimTargetBucketMon") {
+    field(DESC, "Bucket number Monitor")
+    field(DRVH, "328")
+    field(DRVL, "1")
+    field(HOPR, "328")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)TimGunBunchCountMon") {
+    field(DESC, "Number of gun bunches Monitor")
+    field(DRVH, "16")
+    field(DRVL, "1")
+    field(HOPR, "16")
+    field(LOPR, "1")
+    field(VAL, "1")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(mbbo, "$(T)TimInjModeMon") {
+    field(DESC, "Injection Mode Monitor")
+    field(OMSL, "supervisory")
+    field(ZRST, "Default")
+    field(ONST, "Linac Tuning")
+    field(TWST, "BR Tuning")
+    field(THST, "BTS Tuning")
+    field(FRST, "SR Inj Prep")
+    field(FVST, "SR Injection")
+    field(SXST, "SR Tuning")
+    field(ZRVL, "0")
+    field(ONVL, "10")
+    field(TWVL, "20")
+    field(THVL, "30")
+    field(FRVL, "41")
+    field(FVVL, "40")
+    field(SXVL, "42")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(bo, "$(T)TimGunInhibitMon") {
+    field(DESC, "Master Inhibit of Gun Trigger Monitor")
+    field(ZNAM, "No Inhibit")
+    field(ONAM, "Inhibit")
+    field(OSV, "MAJOR")
+    field(VAL, "0")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)GaussClockInjectionFieldTriggerMon") {
+    alias ("$(T)TimInjFieldSyncDelayMon")
+    field(DESC, "Inj delay in ticks monitor")
+    field(EGU, "EvtClkTicks")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)GaussClockExtractionFieldTriggerMon") {
+    alias("$(T)TimExtrFieldSyncDelayMon")
+    field(DESC, "ExtrInj delay in ticks monitor")
+    field(EGU, "EvtClkTicks")
+    field(TSEL, "$(T)TimInjReq.TIME")
+}
+
+record(longout, "$(T)TimSequenceNumberMon") {
+    field(DESC, "Sequence Number Monitor")
+    field(TSEL, "$(T)TimInjReq.TIME")
 }
