@@ -271,7 +271,8 @@ ss ssTiming {
             if(debugFlag) printf("State: await_potentate\n");
         }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when (potentate != 0) { } state inj_cycle_disable
+        when (injCycleEnable != 0) { } state inj_cycle_disable
+        when (potentate != 0) { } state await_request
     }
 
     /*
@@ -281,13 +282,15 @@ ss ssTiming {
     state inj_cycle_disable {
         entry {
             if(debugFlag) printf("State: inj_cycle_disable\n");
-        }
-        when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when () {
             /* Operate in single shot mode only*/
             injCycleEnable = 0;
             pvPut(injCycleEnable, SYNC);
-        } state await_request
+            /* Counter might be out-of-sync if injCycleEnable was 1 */
+            evgSequencerCurrentStarts = evgSequencerStarts;
+        }
+        when (pvConnectCount() != pvAssignCount()) { } state missing_connection
+        when (potentate == 0) { } state await_potentate
+        when () { } state await_request
     }
 
     /*
