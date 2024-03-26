@@ -38,32 +38,32 @@ typedef enum { /* Request waveform indices. */
 }%
 
 /* Values extracted from injection request waveform: */
-int sequence = 0;   /* Sequence #: request ignored if no change from previous */
+int sequence = 0;       /* Sequence #: request ignored if no change from previous */
 int lastSequence = -1;
-int bucket = 1;     /* Target bucket (1-328) */
-int bunches = 1;    /* Number of electron gun bunches (1-16) */
-int inhibit = 0;    /* Inhibit electron gun if set, even if mode allows gun */
-int mode = 0;       /* Type of injection sequence.  See eventListForMode() */
-int injFieldSync;   /* Injection field delay */
-int extrFieldSync;  /* Extraction field delay */
+int bucket = 1;         /* Target bucket (1-328) */
+int bunches = 1;        /* Number of electron gun bunches (1-16) */
+int inhibit = 0;        /* Inhibit electron gun if set, even if mode allows gun */
+int mode = 0;           /* Type of injection sequence.  See eventListForMode() */
+int injFieldSync = 0;   /* Injection field delay */
+int extrFieldSync = 0;  /* Extraction field delay */
 
 /*
  * Monitor of injection request values sent to FPGA sequencer.
  */
 
-int sequenceMon = 0;   /* Sequence #: request ignored if no change from previous */
+int sequenceMon = 0;        /* Sequence #: request ignored if no change from previous */
 assign sequenceMon to "{T}TimSequenceNumberMon";
-int bucketMon = 1;     /* Target bucket (1-328) */
+int bucketMon = 1;          /* Target bucket (1-328) */
 assign bucketMon to "{T}TimTargetBucketMon";
-int bunchesMon = 1;    /* Number of electron gun bunches (1-16) */
+int bunchesMon = 1;         /* Number of electron gun bunches (1-16) */
 assign bunchesMon to "{T}TimGunBunchCountMon";
-int inhibitMon = 0;    /* Inhibit electron gun if set, even if mode allows gun */
+int inhibitMon = 0;         /* Inhibit electron gun if set, even if mode allows gun */
 assign inhibitMon to "{T}TimGunInhibitMon";
-int modeMon = 0;       /* Type of injection sequence.  See eventListForMode() */
+int modeMon = 0;            /* Type of injection sequence.  See eventListForMode() */
 assign modeMon to "{T}TimInjModeMon";
-int injFieldSyncMon;   /* Injection field delay */
+int injFieldSyncMon = 0;    /* Injection field delay */
 assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
-int extrFieldSyncMon;  /* Extraction field delay */
+int extrFieldSyncMon = 0;   /* Extraction field delay */
 assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
 
 /*
