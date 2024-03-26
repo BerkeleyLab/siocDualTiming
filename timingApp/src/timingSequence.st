@@ -285,12 +285,10 @@ ss ssTiming {
             /* Operate in single shot mode only*/
             injCycleEnable = 0;
             pvPut(injCycleEnable, SYNC);
-            /* Counter might be out-of-sync if injCycleEnable was 1 */
-            evgSequencerCurrentStarts = evgSequencerStarts;
         }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state await_potentate
-        when () { } state await_request
+        when () { } state await_precompletion
     }
 
     /*
