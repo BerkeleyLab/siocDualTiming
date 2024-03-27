@@ -272,7 +272,7 @@ ss ssTiming {
         }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (injCycleEnable != 0) { } state inj_cycle_disable
-        when (potentate != 0) { } state await_request
+        when (potentate != 0) { } state await_precompletion
     }
 
     /*
