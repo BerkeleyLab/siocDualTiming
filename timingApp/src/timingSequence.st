@@ -550,6 +550,6 @@ ss ssTiming {
             pvPut(faultCode);
             badCount++;
             pvPut(badCount);
-        } state default_sequence
+        } state await_precompletion
     }
 }
