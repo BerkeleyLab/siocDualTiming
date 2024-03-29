@@ -47,6 +47,13 @@ int mode = 0;           /* Type of injection sequence.  See eventListForMode() *
 int injFieldSync = 0;   /* Injection field delay */
 int extrFieldSync = 0;  /* Extraction field delay */
 
+int injFieldSyncDelay = 0;
+assign injFieldSyncDelay to "{T}TimInjFieldSyncDelay";
+monitor injFieldSyncDelay;
+int extrFieldSyncDelay = 0;
+assign extrFieldSyncDelay to "{T}TimExtrFieldSyncDelay";
+monitor extrFieldSyncDelay;
+
 /*
  * Monitor of injection request values sent to FPGA sequencer.
  */
@@ -348,8 +355,8 @@ ss ssTiming {
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
             sequence = request[SEQUENCE];
-            injFieldSync = request[INJ_FIELD_SYNC_DELAY];
-            extrFieldSync = request[EXTR_FIELD_SYNC_DELAY];
+            injFieldSync = injFieldSyncDelay;
+            extrFieldSync = extrFieldSyncDelay;
         } state validate_request
     }
 
