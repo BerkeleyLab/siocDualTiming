@@ -241,6 +241,8 @@ ss ssTiming {
         }
         when() {
             mode = 0;
+            injFieldSync = injFieldSyncDelay;
+            extrFieldSync = extrFieldSyncDelay;
         } state create_requested_sequence
     }
 
