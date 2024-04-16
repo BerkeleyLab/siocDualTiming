@@ -1,4 +1,5 @@
-#!../../bin/linux-x86_64/timing
+#!../../bin/RL8-x86_64/timing
+##!../../bin/linux-x86_64/timing
 
 ###############################################################################
 # Set up environment
@@ -8,7 +9,7 @@ epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=192.168.1.146)"
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
 epicsEnvSet DB_TOP "$(TOP)/db"
 epicsEnvSet ENGINEER "jmweber"
-epicsEnvSet LOCATION ""
+epicsEnvSet LOCATION "SoftIOC"
 epicsEnvSet WIKI "DualEventGenerator"
 epicsEnvSet IOCNAME "DualTiming"
 
@@ -51,8 +52,8 @@ iocInit
 
 ###############################################################################
 # Update IOC data
-dbl >"/vxboot/PVnames/$(IOC)"
-epicsEnvShow >"/vxboot/PVenv/$(IOC).softioc"
+dbl >"/vxboot/PVnames/$(IOCNAME)"
+epicsEnvShow >"/vxboot/PVenv/$(IOCNAME).softioc"
 date
 
 ###############################################################################
