@@ -32,15 +32,24 @@ ifneq ($(RECCASTER),)
     timing_LIBS += reccaster
 endif
 
-ifneq ($(devIocStats),)
+ifneq ($(CAPUTLOG),)
+    timing_DBD += caPutLog.dbd
+    timing_LIBS += caPutLog
+endif
+
+ifneq ($(CALC),)
+    timing_DBD += calc.dbd
+    timing_LIBS += calc
+endif
+
+ifneq ($(AUTOSAVE),)
+    timing_DBD += asSupport.dbd
+    timing_LIBS += autosave
+endif
+
+ifneq ($(IOCSTATS),)
     timing_DBD += devIocStats.dbd
-timing_DBD += caPutLog.dbd
-timing_DBD += asSupport.dbd
-timing_DBD += calc.dbd
     timing_LIBS += devIocStatsSeq
-timing_LIBS += caPutLog
-timing_LIBS += autosave
-timing_LIBS += calc
 endif
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
