@@ -20,8 +20,8 @@ ifneq ($(RECCASTER),)
 DB_INSTALLS += $(RECCASTER)/db/reccaster.db
 endif
 
-ifneq ($(devIocStats),)
-DB_INSTALLS += $(devIocStats)/db/ioc_stats.db
+ifneq ($(IOCSTATS),)
+DB_INSTALLS += $(IOCSTATS)/db/ioc_stats.db
 endif
 
 #----------------------------------------------------
