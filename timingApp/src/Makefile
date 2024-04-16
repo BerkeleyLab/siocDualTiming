@@ -34,7 +34,13 @@ endif
 
 ifneq ($(devIocStats),)
     timing_DBD += devIocStats.dbd
+timing_DBD += caPutLog.dbd
+timing_DBD += asSupport.dbd
+timing_DBD += calc.dbd
     timing_LIBS += devIocStatsSeq
+timing_LIBS += caPutLog
+timing_LIBS += autosave
+timing_LIBS += calc
 endif
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd
@@ -45,6 +51,13 @@ timing_SRCS += timing_registerRecordDeviceDriver.cpp
 
 # Build the main IOC entry point on workstation OSs.
 timing_SRCS_DEFAULT += timingMain.cpp
+
+ifdef EPICS_QSRV_MAJOR_VERSION
+    timing_LIBS += qsrv
+    timing_LIBS += $(EPICS_BASE_PVA_CORE_LIBS)
+    timing_DBD += PVAServerRegister.dbd
+    timing_DBD += qsrv.dbd
+endif
 
 # Finally link to the EPICS Base libraries
 timing_LIBS += $(EPICS_BASE_IOC_LIBS)

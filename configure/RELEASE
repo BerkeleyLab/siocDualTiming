@@ -22,13 +22,16 @@
 # Build variables that are NOT used in paths should be set in
 # the CONFIG_SITE file.
 
-EVG        = /usr/local/epics/R3.15.4/modules/instrument/dualEventGenerator/head
-ASYN       = /usr/local/epics/R3.15.4/modules/soft/synApps_6_1/support/asyn-R4-36
-SNCSEQ     = /usr/local/epics/R3.15.4/modules/soft/synApps_6_1/support/seq-2-2-6
-RECCASTER  = /usr/local/epics/R3.15.4/modules/soft/recsync/client
-IOCSH_TOP  = /usr/local/epics/R3.15.4/modules/soft/iocsh
-devIocStats= /usr/local/epics/R3.15.4/modules/soft/iocStatsALS
-EPICS_BASE = /usr/local/epics/R3.15.4/base
+EVG        = /usr/local/epics/R7.0.7/modules/instrument/dualEventGenerator/head
+ASYN       = /usr/local/epics/R7.0.7/modules/soft/synApps/support/asyn-R4-42
+SNCSEQ     = /usr/local/epics/R7.0.7/modules/soft/synApps/support/seq-2-2-9
+RECCASTER  = /usr/local/epics/R7.0.7/modules/soft/recsync/client
+IOCSH_TOP  = /usr/local/epics/R7.0.7/modules/soft/iocsh
+IOCSTATS   = /usr/local/epics/R7.0.7/modules/soft/iocStatsALS
+AUTOSAVE   = /usr/local/epics/R7.0.7/modules/soft/synApps/support/autosave-R5-10-2
+CALC       = /usr/local/epics/R7.0.7/modules/soft/synApps/support/calc-R3-7-4
+CAPUTLOG   = /usr/local/epics/R7.0.7/modules/soft/caPutLog
+EPICS_BASE = /usr/local/epics/R7.0.7/base
 
 # These allow developers to override the RELEASE variable settings
 # without having to modify the configure/RELEASE file itself.
