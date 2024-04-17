@@ -39,4 +39,4 @@ EVG=`getPath EVG`
 
 ln -sf $EVG/op/bob/autoconvert/*.bob autoconvert/
 
-#phoebus -resource file:${SCRIPTPATH}/autoconvert/${bob}?"P=${P}&R=${R}"
+phoebus -resource file:${SCRIPTPATH}/autoconvert/${bob}?"P=${P}&R=${R}&T=${P}${R}"

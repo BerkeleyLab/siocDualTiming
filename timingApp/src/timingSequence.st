@@ -38,32 +38,39 @@ typedef enum { /* Request waveform indices. */
 }%
 
 /* Values extracted from injection request waveform: */
-int sequence = 0;   /* Sequence #: request ignored if no change from previous */
+int sequence = 0;       /* Sequence #: request ignored if no change from previous */
 int lastSequence = -1;
-int bucket = 1;     /* Target bucket (1-328) */
-int bunches = 1;    /* Number of electron gun bunches (1-16) */
-int inhibit = 0;    /* Inhibit electron gun if set, even if mode allows gun */
-int mode = 0;       /* Type of injection sequence.  See eventListForMode() */
-int injFieldSync;   /* Injection field delay */
-int extrFieldSync;  /* Extraction field delay */
+int bucket = 1;         /* Target bucket (1-328) */
+int bunches = 1;        /* Number of electron gun bunches (1-16) */
+int inhibit = 0;        /* Inhibit electron gun if set, even if mode allows gun */
+int mode = 0;           /* Type of injection sequence.  See eventListForMode() */
+int injFieldSync = 0;   /* Injection field delay */
+int extrFieldSync = 0;  /* Extraction field delay */
+
+int injFieldSyncDelay = 0;
+assign injFieldSyncDelay to "{T}TimInjFieldSyncDelay";
+monitor injFieldSyncDelay;
+int extrFieldSyncDelay = 0;
+assign extrFieldSyncDelay to "{T}TimExtrFieldSyncDelay";
+monitor extrFieldSyncDelay;
 
 /*
  * Monitor of injection request values sent to FPGA sequencer.
  */
 
-int sequenceMon = 0;   /* Sequence #: request ignored if no change from previous */
+int sequenceMon = 0;        /* Sequence #: request ignored if no change from previous */
 assign sequenceMon to "{T}TimSequenceNumberMon";
-int bucketMon = 1;     /* Target bucket (1-328) */
+int bucketMon = 1;          /* Target bucket (1-328) */
 assign bucketMon to "{T}TimTargetBucketMon";
-int bunchesMon = 1;    /* Number of electron gun bunches (1-16) */
+int bunchesMon = 1;         /* Number of electron gun bunches (1-16) */
 assign bunchesMon to "{T}TimGunBunchCountMon";
-int inhibitMon = 0;    /* Inhibit electron gun if set, even if mode allows gun */
+int inhibitMon = 0;         /* Inhibit electron gun if set, even if mode allows gun */
 assign inhibitMon to "{T}TimGunInhibitMon";
-int modeMon = 0;       /* Type of injection sequence.  See eventListForMode() */
+int modeMon = 0;            /* Type of injection sequence.  See eventListForMode() */
 assign modeMon to "{T}TimInjModeMon";
-int injFieldSyncMon;   /* Injection field delay */
+int injFieldSyncMon = 0;    /* Injection field delay */
 assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
-int extrFieldSyncMon;  /* Extraction field delay */
+int extrFieldSyncMon = 0;   /* Extraction field delay */
 assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
 
 /*
@@ -80,9 +87,22 @@ monitor beamcurrent;
 int potentate;
 assign potentate to "{T}TimPotentate";
 monitor potentate;
+
+/*
+ * If set to 1, makes the FPGA generate the default sequence
+ * if it doesn't receive a request within the alloted time slot
+ */
 int injCycleEnable;
 assign injCycleEnable to "{P}{R}INJ:injCycleEnable";
+monitor injCycleEnable;
 
+/*
+ * This request a single shot sequence and doesn't
+ * make the FPGA generate any default sequence if
+ * it doesn't receive a new request.
+ */
+int injSingleShot;
+assign injSingleShot to "{P}{R}INJ:singleShot";
 
 /*
  * Statistics
@@ -206,7 +226,24 @@ ss ssTiming {
         when() {
             duplicateTimestampFound = 0;
             pvPut(duplicateTimestampFound);
+            /* Operate in single shot mode only*/
+            injCycleEnable = 0;
+            pvPut(injCycleEnable, SYNC);
         } state await_connections
+    }
+
+    /*
+     * Request default sequence
+     */
+    state default_sequence {
+        entry {
+            if(debugFlag) printf("State: default_sequence\n");
+        }
+        when() {
+            mode = 0;
+            injFieldSync = injFieldSyncDelay;
+            extrFieldSync = extrFieldSyncDelay;
+        } state create_requested_sequence
     }
 
     /*
@@ -236,38 +273,31 @@ ss ssTiming {
     }
 
     /*
-     * Wait for injection cycles to be enabled
+     * Wait for potentate
      */
     state await_potentate {
         entry {
             if(debugFlag) printf("State: await_potentate\n");
         }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when (potentate != 0) {
-            injCycleEnable = 1;
+        when (injCycleEnable != 0) { } state inj_cycle_disable
+        when (potentate != 0) { } state await_precompletion
+    }
+
+    /*
+     * Wait for injection cycles to be disabled. Only operate in
+     * single shot
+     */
+    state inj_cycle_disable {
+        entry {
+            if(debugFlag) printf("State: inj_cycle_disable\n");
+            /* Operate in single shot mode only*/
+            injCycleEnable = 0;
             pvPut(injCycleEnable, SYNC);
-        } state sync_await_start
-    }
-
-    /*
-     * Initial synchronization
-     */
-    state sync_await_start {
-        entry { if(debugFlag) printf("State: sync_await_start\n"); }
+        }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when (potentate == 0) { } state no_potentate
-        when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
-        } state await_completion
-    }
-
-    /*
-     * Wait for injection cycle to complete
-     */
-    state await_completion {
-        entry { if(debugFlag) printf("State: await_completion\n"); }
-        when (pvConnectCount() != pvAssignCount()) { } state missing_connection
-        when (potentate == 0) { } state no_potentate
-        when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) { } state await_start
+        when (potentate == 0) { } state await_potentate
+        when () { } state await_precompletion
     }
 
     /*
@@ -277,6 +307,7 @@ ss ssTiming {
         entry { if(debugFlag) printf("State: await_start\n"); }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
+        when (injCycleEnable != 0) { } state inj_cycle_disable
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
                                                     } state await_precompletion
     }
@@ -288,6 +319,7 @@ ss ssTiming {
         entry { if(debugFlag) printf("State: await_precompletion\n"); }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
+        when (injCycleEnable != 0) { } state inj_cycle_disable
         when (efTestAndClear(requestFlag)) {
             /* Ignore requests outside expected window */
         } state await_precompletion
@@ -304,9 +336,10 @@ ss ssTiming {
         entry { if(debugFlag) printf("State: await_request\n"); }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
+        when (injCycleEnable != 0) { } state inj_cycle_disable
         when (delay(REQUEST_WINDOW)) {
             /* No request, default cycle will be emitted */
-        } state await_completion
+        } state default_sequence
 
         when (evgSequencerStarts != evgSequencerCurrentStarts) {
             faultCode = FC_START_OVERRUN;
@@ -317,15 +350,15 @@ ss ssTiming {
         when (efTestAndClear(requestFlag)) {
             if (sequence == request[SEQUENCE]) {
                 /* No request, or perhaps it was truncated */
-                state await_completion;
+                state default_sequence;
             }
             bucket   = request[TARGET_BUCKET];
             bunches  = request[GUN_BUNCHES];
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
             sequence = request[SEQUENCE];
-            injFieldSync = request[INJ_FIELD_SYNC_DELAY];
-            extrFieldSync = request[EXTR_FIELD_SYNC_DELAY];
+            injFieldSync = injFieldSyncDelay;
+            extrFieldSync = extrFieldSyncDelay;
         } state validate_request
     }
 
@@ -467,6 +500,7 @@ ss ssTiming {
         }
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
+        when (injCycleEnable != 0) { } state inj_cycle_disable
         when (evgSequencerStarts != evgSequencerCurrentStarts) {
             faultCode = FC_START_OVERRUN;
             startOverrunCount++;
@@ -477,6 +511,8 @@ ss ssTiming {
             pvPut(evgSequence);
             evgSeqEnable = 1;
             pvPut(evgSeqEnable);
+            injSingleShot = 1;
+            pvPut(injSingleShot);
             lastSequence = sequence;
             faultCode = FC_SUCCESS;
             pvPut(faultCode);
@@ -523,6 +559,6 @@ ss ssTiming {
             pvPut(faultCode);
             badCount++;
             pvPut(badCount);
-        } state await_completion
+        } state await_precompletion
     }
 }
