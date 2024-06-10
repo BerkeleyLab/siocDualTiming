@@ -255,6 +255,7 @@ ss ssTiming {
             if(debugFlag) printf("State: await_connections\n");
             oldConnectCount = -1;
         }
+        when (injCycleEnable != 0) { } state inj_cycle_disable
         when (pvConnectCount() == pvAssignCount()) {
             if (faultCode == FC_MISSING_CONNECTION) {
                 faultCode = FC_SUCCESS;
