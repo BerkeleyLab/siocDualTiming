@@ -1,2 +1,3 @@
 registrar(timingSequenceRegistrar)
 function(assemble_injreq)
+function(split_injreq)

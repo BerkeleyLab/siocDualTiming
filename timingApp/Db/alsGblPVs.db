@@ -26,14 +26,6 @@ record(waveform, "$(T)TimInjReq") {
        field(FLNK, "$(T)TimInjReqRbk")
 }
 
-record(waveform, "$(T)TimInjReqRbk") {
-       field(DESC, "Injection Request Waveform Readback")
-       field(INP,  "$(T)TimInjReq NPP MSS")
-       field(FTVL, "LONG")
-       field(NELM, "7")
-       field(TSEL, "$(T)TimInjReq.TIME")
-}
-
 # FIXME: Is this still (ever?) necessary?
 record(waveform, $(T)GunBunchToGunBias) {
     field(DESC, "Gun Bias Waveform")
