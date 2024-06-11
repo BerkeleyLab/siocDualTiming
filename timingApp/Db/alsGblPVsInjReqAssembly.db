@@ -162,6 +162,30 @@ record(waveform, "$(T)TimInjReqRbk") {
     field(FTVL, "LONG")
     field(NELM, "7")
     field(TSEL, "$(T)TimInjReq.TIME")
+    field(FLNK, "$(T)TimInjReqToPVs:sub")
+}
+
+record(aSub, "$(T)TimInjReqToPVs:sub") {
+    field(DESC, "Splits request wf into PVs")
+    field(SNAM, "split_injreq")
+    field(LFLG, "IGNORE")
+    field(INPA, "$(T)TimInjReq NPP MS")
+    field(FTA, "DOUBLE")
+    field(NOA, "7")
+    field(OUTA, "$(T)TimTargetBucket PP MS")
+    field(OUTB, "$(T)TimGunBunchCount PP MS")
+    field(OUTC, "$(T)TimInjMode PP MS")
+    field(OUTD, "$(T)TimGunInhibit PP MS")
+    field(OUTE, "0")
+    field(OUTF, "0")
+    field(OUTG, "$(T)TimSequenceNumber PP MS")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "LONG")
+    field(FTVE, "LONG")
+    field(FTVF, "LONG")
+    field(FTVG, "LONG")
 }
 
 # This will add the field to $(T)GunBunchToInjFieldTrigger
