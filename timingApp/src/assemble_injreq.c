@@ -34,6 +34,7 @@ static long assemble_injreq(aSubRecord *prec) {
 
 static long split_injreq(aSubRecord *prec) {
     double *a;
+    double injModeVal;
     long *vala, *valb, *valc, *vald, *vale, *valf, *valg;
 
     //printf("split_injreq\n");
@@ -50,13 +51,45 @@ static long split_injreq(aSubRecord *prec) {
     //printf("a[0]=%ld a[1]=%ld a[2]=%ld a[3]=%ld a[4]=%ld a[5]=%ld a[6]=%ld\n",
     //        a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
 
-    *vala = a[0];  // Target Bucket
-    *valb = a[1];  // # Gun Bunches
-    *valc = a[2];  // Injection Mode
-    *vald = a[3];  // Gun Inhibit
-    *vale = a[4];  // Future use
-    *valf = a[5];  // Future use
-    *valg = a[6];  // sequence #
+    // Convert injection mode RVAL to VAL
+    // record(mbbo, "$(T)TimInjMode") {
+    //     field(DESC, "Injection Mode")
+    //     field(OMSL, "supervisory")
+    //     field(ZRST, "Default")
+    //     field(ONST, "Linac Tuning")
+    //     field(TWST, "BR Tuning")
+    //     field(THST, "BTS Tuning")
+    //     field(FRST, "SR Inj Prep")
+    //     field(FVST, "SR Injection")
+    //     field(SXST, "SR Tuning")
+    //     field(ZRVL, "0")
+    //     field(ONVL, "10")
+    //     field(TWVL, "20")
+    //     field(THVL, "30")
+    //     field(FRVL, "41")
+    //     field(FVVL, "40")
+    //     field(SXVL, "42")
+    // }
+    switch((int)a[2]) {
+        case 0:  injModeVal = 0; break;
+        case 10: injModeVal = 1; break;
+        case 20: injModeVal = 2; break;
+        case 30: injModeVal = 3; break;
+        // Mode 4 (SR injection prep) is 41
+        case 41: injModeVal = 4; break;
+        // Mode 5 (SR injection) is 40
+        case 40: injModeVal = 5; break;
+        case 42: injModeVal = 6; break;
+        default: injModeVal = 0; break;
+    }
+
+    *vala = a[0];       // Target Bucket
+    *valb = a[1];       // # Gun Bunches
+    *valc = injModeVal; // Injection Mode
+    *vald = a[3];       // Gun Inhibit
+    *vale = a[4];       // Future use
+    *valf = a[5];       // Future use
+    *valg = a[6];       // sequence #
 
     return 0;
 }
