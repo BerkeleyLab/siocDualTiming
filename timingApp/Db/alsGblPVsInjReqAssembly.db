@@ -152,6 +152,16 @@ record(stringin, "$(T)TimInjReqTime") {
     field(DESC, "Time of last Injection Request")
     field(DTYP, "Soft Timestamp")
     field(INP, "@%b %d, %Y %H:%M:%S")
+    field(TSEL, "$(T)TimInjReq.TIME")
+    field(FLNK, "$(T)TimInjReqRbk")
+}
+
+record(waveform, "$(T)TimInjReqRbk") {
+    field(DESC, "Injection Request Waveform Readback")
+    field(INP,  "$(T)TimInjReq NPP MSS")
+    field(FTVL, "LONG")
+    field(NELM, "7")
+    field(TSEL, "$(T)TimInjReq.TIME")
 }
 
 # This will add the field to $(T)GunBunchToInjFieldTrigger
