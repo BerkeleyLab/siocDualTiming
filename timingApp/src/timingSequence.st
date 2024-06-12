@@ -213,6 +213,10 @@ monotonicSequence(int count, int *tstampsAndEvents)
 }
 
 #define END_OF_SEQUENCE_TICKS (1<<30)
+/*
+ * approx. 1.35s
+ */
+#define DELAY_END             168740000
 #include "TimingLookups.h"
 
 }%
@@ -440,6 +444,7 @@ ss ssTiming {
                 state increment_bad_count;
             }
             gunBunchesDelay = bunchesToField[bunches-1];
+            memset(evgSequence, 0, sizeof(evgSequence[0])*MAX_SEQUENCE_LENGTH);
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
                 int event = e[i];
                 int tstamp;
@@ -449,7 +454,7 @@ ss ssTiming {
                     }
                 }
                 if (event == SEQUENCE_END_EVTCODE) {
-                    tstamp = highwater;
+                    tstamp = DELAY_END;
                 }
                 else {
                     tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
