@@ -213,6 +213,10 @@ monotonicSequence(int count, int *tstampsAndEvents)
 }
 
 #define END_OF_SEQUENCE_TICKS (1<<30)
+/*
+ * approx. 1.35s
+ */
+#define DELAY_END             168740000
 #include "TimingLookups.h"
 
 }%
@@ -449,7 +453,7 @@ ss ssTiming {
                     }
                 }
                 if (event == SEQUENCE_END_EVTCODE) {
-                    tstamp = highwater;
+                    tstamp = DELAY_END;
                 }
                 else {
                     tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
