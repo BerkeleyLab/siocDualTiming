@@ -45,10 +45,25 @@ dbLoadRecords("db/alsGblPVsInjReqAssembly.db","T=$(T)")
 iocshLoad "$(IOCSH_TOP)/als_default.iocsh"
 dbLoadRecords "db/asynRecord.db" "P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=-1,IMAX=0,OMAX=0"
 
+#############################################################################
+# Autosave/restore
+#var save_restoreDebug 6
+set_savefile_path("$(AUTOSAVE_PATH)")
+set_requestfile_path("$(AUTOSAVE_PATH)")
+set_pass0_restoreFile("autosave.sav")
+set_pass1_restoreFile("autosave.sav")
+save_restoreSet_status_prefix("$(IOC):")
+dbLoadRecords("db/save_restoreStatus.db", "P=$(IOC):")
+
 ###############################################################################
 # Start IOC
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
+
+###############################################################################
+# Autosave/restore
+makeAutosaveFileFromDbInfo("$(AUTOSAVE_PATH)/autosave.req", "autosaveFields_pass0")
+create_monitor_set("autosave.req", 300, "")
 
 ###############################################################################
 # Update IOC data
