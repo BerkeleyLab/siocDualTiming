@@ -444,7 +444,7 @@ ss ssTiming {
                 state increment_bad_count;
             }
             gunBunchesDelay = bunchesToField[bunches-1];
-            memset(evgSequence, 0, sizeof(evgSequence[0])*MAX_SEQUENCE_LENGTH);
+            memset(evgSequence, 0, sizeof(evgSequence[0])*EVG_SEQUENCE_CAPACITY);
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
                 int event = e[i];
                 int tstamp;
