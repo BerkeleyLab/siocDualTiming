@@ -94,17 +94,17 @@ monitor beamcurrent;
  * D = [0, 200, 400, 600]
  */
 
-long   boExtrDelay;
+int boExtrDelay;
 assign boExtrDelay to "B0215:EVR1-Out:UDC0:Delay-SP";
 
 double boExtrDelayRemainder;
 assign boExtrDelayRemainder to "B0215:TimSeqRemainder";
 
-long    boExtrDelayOffset;
-assign  boExtrDelayOffset to "B0215:TimSeqFineDelayOffst";
+int boExtrDelayOffset;
+assign boExtrDelayOffset to "B0215:TimSeqFineDelayOffst";
 monitor boExtrDelayOffset;
 
-long   boExtrFineDelay;
+int boExtrFineDelay;
 assign boExtrFineDelay to "B0215:TimSeqFineDelay";
 
 /*
@@ -113,7 +113,7 @@ assign boExtrFineDelay to "B0215:TimSeqFineDelay";
  */
 #define BO_EXTR_FINE_DELAY_LT_SIZE  4
 #define BO_EXTR_FINE_DELAY_STEP     200
-long boExtrFineDelayLookupTable[BO_EXTR_FINE_DELAY_LT_SIZE] = {
+int boExtrFineDelayLookupTable[BO_EXTR_FINE_DELAY_LT_SIZE] = {
     0*BO_EXTR_FINE_DELAY_STEP,
     1*BO_EXTR_FINE_DELAY_STEP,
     2*BO_EXTR_FINE_DELAY_STEP,
