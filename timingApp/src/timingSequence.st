@@ -82,6 +82,44 @@ assign beamcurrent to "SR:DCCT:AVG";
 monitor beamcurrent;
 
 /*
+ * Soft sequence timestamp remainder which is used to set
+ * the fine delay PV B0215:EVR1-Out:UDC0:Delay-SP .
+ * D = 4 * S * R, where:
+ * D is the fine delay setpoint value (10ps steps)
+ * S is a scaling factor
+ * R is the target bucket delay remainder
+ * Initially, S can be set to 200, which will give precise 2ns steps
+ *  for the possible values of the remainder:
+ * R = [0, 0.25, 0.5, 0.75]
+ * D = [0, 200, 400, 600]
+ */
+
+long   boExtrDelay;
+assign boExtrDelay to "B0215:EVR1-Out:UDC0:Delay-SP";
+
+double boExtrDelayRemainder;
+assign boExtrDelayRemainder to "B0215:TimSeqRemainder";
+
+long    boExtrDelayOffset;
+assign  boExtrDelayOffset to "B0215:TimSeqFineDelayOffst";
+monitor boExtrDelayOffset;
+
+long   boExtrFineDelay;
+assign boExtrFineDelay to "B0215:TimSeqFineDelay";
+
+/*
+ * lookup table which corespons to the remainder
+ * {0, 0.25, 0.5, 0.75}
+ */
+#define BO_EXTR_FINE_DELAY_LT_SIZE  4
+#define BO_EXTR_FINE_DELAY_STEP     200
+long boExtrFineDelayLookupTable[BO_EXTR_FINE_DELAY_LT_SIZE] = {
+    0*BO_EXTR_FINE_DELAY_STEP,
+    1*BO_EXTR_FINE_DELAY_STEP,
+    2*BO_EXTR_FINE_DELAY_STEP,
+    3*BO_EXTR_FINE_DELAY_STEP};
+
+/*
  * Overall timing system enable/disable
  */
 int potentate;
@@ -430,10 +468,17 @@ ss ssTiming {
         entry { if(debugFlag) printf("State: create_requested_sequence\n"); }
         when () {
             %%const unsigned char *e;
-            int targetBucketDelay = (125 * ((bucket * 21) % 328)) / 4;
+            int targetBucketDelayRaw = 125 * ((bucket * 21) % 328);
+            int targetBucketDelay = targetBucketDelayRaw / 4;
+            int targetBucketDelayRem = targetBucketDelayRaw % 4;
             int i, nTStamps;
             int highwater = 0;
             int foundEOS = 0;
+
+            /*
+             * Calculate fine delay for booster extraction kicker
+             */
+            boExtrFineDelay = boExtrFineDelayLookupTable[targetBucketDelayRem];
 
             /*
              * Get time stamp for each event and merge into common array
@@ -514,6 +559,14 @@ ss ssTiming {
         } state increment_bad_count
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
+
+            pvPut(boExtrFineDelay);
+            boExtrDelay = boExtrFineDelay + boExtrDelayOffset;
+            pvPut(boExtrDelay);
+            boExtrDelayRemainder = (double) boExtrFineDelay /
+                BO_EXTR_FINE_DELAY_STEP / BO_EXTR_FINE_DELAY_LT_SIZE;
+            pvPut(boExtrDelayRemainder);
+
             pvPut(evgSequence);
             evgSeqEnable = 1;
             pvPut(evgSeqEnable);
