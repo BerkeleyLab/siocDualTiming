@@ -1,3 +1,16 @@
+record(ao, "TimCycleDelay") {
+    field(DESC,"Additional delay for end of cycle")
+    field(DRVH, "15")
+    field(DRVL, "0")
+    field(HOPR, "15")
+    field(LOPR, "0")
+    field(PINI, "YES")
+    field(VAL,  "0")
+    field(LINR, "LINEAR")
+    field(ASLO, "8e-09")
+    field(EGU,  "s")
+}
+
 record(ai, "$(T)TimInjFieldCounterFiltd") {
    field(DTYP, "Raw Soft Channel")
    field(INP, "irm:150:CounterValue CPP MS")
