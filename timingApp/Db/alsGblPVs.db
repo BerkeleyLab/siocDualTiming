@@ -64,3 +64,16 @@ record(calc, "$(T)TimAllEVRvalid") {
     field(LOLO, "0")
     field(LLSV, "MAJOR")
 }
+
+# BR extraction calc. PVs
+record(ai,"B0215:TimSeqRemainder") {
+    info(archive,"Slow")
+}
+
+record(longin,"B0215:TimSeqFineDelay") {
+    info(archive,"Slow")
+}
+
+record(longin,"B0215:TimSeqFineDelayOffst") {
+    info(archive,"Slow")
+}
