@@ -17,6 +17,13 @@ option +d;
 %%#include <stdlib.h>
 
 /*
+ * Additional ticks for end of cycle
+ */
+int endOfCycleDelay;
+assign endOfCycleDelay to "TimCycleDelay";
+monitor endOfCycleDelay;
+
+/*
  * Injection request waveform.
  */
 int request[7];
@@ -499,7 +506,7 @@ ss ssTiming {
                     }
                 }
                 if (event == SEQUENCE_END_EVTCODE) {
-                    tstamp = DELAY_END;
+                    tstamp = DELAY_END + endOfCycleDelay;
                 }
                 else {
                     tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
