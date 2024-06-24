@@ -60,6 +60,8 @@ record(longout, "$(T)TimInjFieldSyncDelaySP") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
     field(EGU, "4*BROC")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(longout, "$(T)TimInjFieldEventDelay") {
@@ -88,6 +90,8 @@ record(longout, "$(T)TimExtrFieldSyncDelaySP") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
     field(EGU, "COIC cycles")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(longout, "$(T)TimExtrFieldEventDelay") {
@@ -241,6 +245,8 @@ record(ao, $(T)GunBunchDelay) {
     field(LINR, "SLOPE")
     field(ESLO, "0.008")
     field(FLNK, "$(T)GunBunchDelayToWF")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, $(T)GunBunchDelay-1) {
@@ -249,6 +255,8 @@ record(ao, $(T)GunBunchDelay-1) {
     field(LINR, "SLOPE")
     field(ESLO, "0.008")
     field(FLNK, "$(T)GunBunchDelayToWF")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, $(T)GunBunchDelay-2) {
@@ -257,6 +265,8 @@ record(ao, $(T)GunBunchDelay-2) {
     field(LINR, "SLOPE")
     field(ESLO, "0.008")
     field(FLNK, "$(T)GunBunchDelayToWF")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, $(T)GunBunchDelay-3) {
@@ -265,6 +275,8 @@ record(ao, $(T)GunBunchDelay-3) {
     field(LINR, "SLOPE")
     field(ESLO, "0.008")
     field(FLNK, "$(T)GunBunchDelayToWF")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, $(T)GunBunchDelay-4) {
@@ -273,6 +285,8 @@ record(ao, $(T)GunBunchDelay-4) {
     field(LINR, "SLOPE")
     field(ESLO, "0.008")
     field(FLNK, "$(T)GunBunchDelayToWF")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 # PVs that are updated by the sequencer. They reflect the true status

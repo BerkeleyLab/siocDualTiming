@@ -21,10 +21,12 @@ timing_DBD += gunbunchdelays_wf.dbd
 timing_DBD += eventGeneratorSup.dbd
 timing_DBD += drvAsynIPPort.dbd
 timing_DBD += asyn.dbd
+timing_DBD += asSupport.dbd
 
 # Add all the support libraries needed by this IOC
 timing_LIBS += eventGeneratorSup
 timing_LIBS += asyn
+timing_LIBS += autosave
 timing_LIBS += seq
 
 ifneq ($(RECCASTER),)
@@ -50,6 +52,11 @@ endif
 ifneq ($(IOCSTATS),)
     timing_DBD += devIocStats.dbd
     timing_LIBS += devIocStatsSeq
+endif
+
+ifneq ($(IOCEXIT),)
+    timing_DBD += iocExit.dbd
+    timing_LIBS += iocExit
 endif
 
 # timing_registerRecordDeviceDriver.cpp derives from timing.dbd

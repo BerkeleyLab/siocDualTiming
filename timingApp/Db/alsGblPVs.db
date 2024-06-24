@@ -15,15 +15,15 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
 # 1: Number of Gun Bunches (1 to 16)
 # 2: Injection Mode Number (sets enables for setup, injection, tuning modes)
 # 3: Gun Inhibit (0: det. by Inj. Mode Number; 1: Disable the gun trigger)
-# 4: Injection Field Sync Delay
-# 5: Extraction Field Sync Delay
+# 4: Reserved for future use
+# 5: Reserved for future use
 # 6: Sequence Number (must change from last cycle to do anything but default cycle)
 # This is to be used by the timing sequencer.
 record(waveform, "$(T)TimInjReq") {
-       field(DESC, "Injection Request Waveform")
-       field(FTVL, "LONG")
-       field(NELM, "7")
-       field(FLNK, "$(T)TimInjReqRbk")
+    field(DESC, "Injection Request Waveform")
+    field(FTVL, "LONG")
+    field(NELM, "7")
+    field(FLNK, "$(T)TimInjReqRbk")
 }
 
 # FIXME: Is this still (ever?) necessary?
@@ -32,6 +32,8 @@ record(waveform, $(T)GunBunchToGunBias) {
     field(EGU, "V")
     field(NELM, "16")
     field(FTVL, "DOUBLE")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(waveform, $(T)GunBunchToInjFieldTrigger) {
@@ -39,6 +41,8 @@ record(waveform, $(T)GunBunchToInjFieldTrigger) {
     field(EGU, "125*EvtClkTicks")
     field(NELM, "16")
     field(FTVL, "DOUBLE")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(bi, $(T)TimPotentate) {
