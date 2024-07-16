@@ -9,18 +9,21 @@ record(ao, "TimCycleDelay") {
     field(LINR, "LINEAR")
     field(ASLO, "8e-09")
     field(EGU,  "s")
+    info(archive,"Slow")
 }
 
 record(ai, "$(T)TimInjFieldCounterFiltd") {
-   field(DTYP, "Raw Soft Channel")
-   field(INP, "irm:150:CounterValue CPP MS")
-   field(SMOO, "0.9")
+    field(DTYP, "Raw Soft Channel")
+    field(INP, "irm:150:CounterValue CPP MS")
+    field(SMOO, "0.9")
+    info(archive,"Slow")
 }
 
 record(ai, "$(T)TimExtrFieldCounterFiltd") {
-   field(DTYP, "Raw Soft Channel")
-   field(INP, "irm:151:CounterValue CPP MS")
-   field(SMOO, "0.9")
+    field(DTYP, "Raw Soft Channel")
+    field(INP, "irm:151:CounterValue CPP MS")
+    field(SMOO, "0.9")
+    info(archive,"Slow")
 }
 
 # Injection Request Waveform: 7 elements meaning:
@@ -37,6 +40,7 @@ record(waveform, "$(T)TimInjReq") {
     field(FTVL, "LONG")
     field(NELM, "7")
     field(FLNK, "$(T)TimInjReqRbk")
+    info(archive,"Slow")
 }
 
 # FIXME: Is this still (ever?) necessary?
@@ -47,6 +51,7 @@ record(waveform, $(T)GunBunchToGunBias) {
     field(FTVL, "DOUBLE")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(waveform, $(T)GunBunchToInjFieldTrigger) {
@@ -64,6 +69,7 @@ record(bi, $(T)TimPotentate) {
     field(PINI, "YES")
     field(ZNAM, "Disabled")
     field(ONAM, "Enabled")
+    info(archive,"Slow")
 }
 
 # EVR IOC records.
