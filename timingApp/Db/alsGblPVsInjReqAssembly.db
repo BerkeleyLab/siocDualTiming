@@ -12,6 +12,7 @@ record(longout, "$(T)TimTargetBucket") {
     field(LOPR, "1")
     field(VAL, "1")
     field(PINI, "YES")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimGunBunchCount") {
@@ -22,6 +23,7 @@ record(longout, "$(T)TimGunBunchCount") {
     field(LOPR, "1")
     field(VAL, "1")
     field(PINI, "YES")
+    info(archive,"Slow")
 }
 
 record(mbbo, "$(T)TimInjMode") {
@@ -41,6 +43,7 @@ record(mbbo, "$(T)TimInjMode") {
     field(FRVL, "41")
     field(FVVL, "40")
     field(SXVL, "42")
+    info(archive,"Slow")
 }
 
 record(bo, "$(T)TimGunInhibit") {
@@ -50,6 +53,7 @@ record(bo, "$(T)TimGunInhibit") {
     field(OSV, "MAJOR")
     field(PINI, "YES")
     field(VAL, "0")
+    info(archive,"Slow")
 }
 
 # This setpoint is assumed to contain the event delay, which is then
@@ -62,6 +66,7 @@ record(longout, "$(T)TimInjFieldSyncDelaySP") {
     field(EGU, "4*BROC")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimInjFieldEventDelay") {
@@ -69,6 +74,7 @@ record(longout, "$(T)TimInjFieldEventDelay") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
     field(EGU, "EvtClkTicks")
+    info(archive,"Slow")
 }
 
 record(calc, "$(T)GaussClockInjectionFieldTrigger") {
@@ -79,6 +85,7 @@ record(calc, "$(T)GaussClockInjectionFieldTrigger") {
     field(INPC, "$(T)TimInjFieldEventDelay")
     field(CALC, "(A*B)-C")
     field(EGU, "EvtClkTicks")
+    info(archive,"Slow")
 }
 
 #
@@ -92,6 +99,7 @@ record(longout, "$(T)TimExtrFieldSyncDelaySP") {
     field(EGU, "COIC cycles")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimExtrFieldEventDelay") {
@@ -99,6 +107,7 @@ record(longout, "$(T)TimExtrFieldEventDelay") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
     field(EGU, "EvtClkTicks")
+    info(archive,"Slow")
 }
 
 record(calc, "$(T)GaussClockExtractionFieldTrigger") {
@@ -109,10 +118,12 @@ record(calc, "$(T)GaussClockExtractionFieldTrigger") {
     field(INPC, "$(T)TimExtrFieldEventDelay")
     field(CALC, "(A*B)-C")
     field(EGU, "EvtClkTicks")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimSequenceNumber") {
     field(DESC, "Sequence Number")
+    info(archive,"Slow")
 }
 
 record(bo, "$(T)TimInjReqCommit") {
@@ -121,6 +132,7 @@ record(bo, "$(T)TimInjReqCommit") {
     field(ZNAM, "Off")
     field(ONAM, "On")
     field(HIGH, "1")
+    info(archive,"Slow")
 }
 
 record(aSub, "$(T)TimInjReq:sub") {
@@ -158,6 +170,7 @@ record(stringin, "$(T)TimInjReqTime") {
     field(INP, "@%b %d, %Y %H:%M:%S")
     field(TSEL, "$(T)TimInjReq.TIME")
     field(FLNK, "$(T)TimInjReqRbk")
+    info(archive,"Slow")
 }
 
 record(waveform, "$(T)TimInjReqRbk") {
@@ -167,6 +180,7 @@ record(waveform, "$(T)TimInjReqRbk") {
     field(NELM, "7")
     field(TSEL, "$(T)TimInjReq.TIME")
     field(FLNK, "$(T)TimInjReqToPVs:sub")
+    info(archive,"Slow")
 }
 
 record(aSub, "$(T)TimInjReqToPVs:sub") {
@@ -247,6 +261,7 @@ record(ao, $(T)GunBunchDelay) {
     field(FLNK, "$(T)GunBunchDelayToWF")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(ao, $(T)GunBunchDelay-1) {
@@ -257,6 +272,7 @@ record(ao, $(T)GunBunchDelay-1) {
     field(FLNK, "$(T)GunBunchDelayToWF")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(ao, $(T)GunBunchDelay-2) {
@@ -267,6 +283,7 @@ record(ao, $(T)GunBunchDelay-2) {
     field(FLNK, "$(T)GunBunchDelayToWF")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(ao, $(T)GunBunchDelay-3) {
@@ -277,6 +294,7 @@ record(ao, $(T)GunBunchDelay-3) {
     field(FLNK, "$(T)GunBunchDelayToWF")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 record(ao, $(T)GunBunchDelay-4) {
@@ -287,6 +305,7 @@ record(ao, $(T)GunBunchDelay-4) {
     field(FLNK, "$(T)GunBunchDelayToWF")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
 }
 
 # PVs that are updated by the sequencer. They reflect the true status
@@ -299,6 +318,7 @@ record(longout, "$(T)TimTargetBucketMon") {
     field(LOPR, "1")
     field(VAL, "1")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimGunBunchCountMon") {
@@ -309,6 +329,7 @@ record(longout, "$(T)TimGunBunchCountMon") {
     field(LOPR, "1")
     field(VAL, "1")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(mbbo, "$(T)TimInjModeMon") {
@@ -329,6 +350,7 @@ record(mbbo, "$(T)TimInjModeMon") {
     field(FVVL, "40")
     field(SXVL, "42")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(bo, "$(T)TimGunInhibitMon") {
@@ -338,6 +360,7 @@ record(bo, "$(T)TimGunInhibitMon") {
     field(OSV, "MAJOR")
     field(VAL, "0")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)GaussClockInjectionFieldTriggerMon") {
@@ -345,6 +368,7 @@ record(longout, "$(T)GaussClockInjectionFieldTriggerMon") {
     field(DESC, "Inj delay in ticks monitor")
     field(EGU, "EvtClkTicks")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)GaussClockExtractionFieldTriggerMon") {
@@ -352,9 +376,11 @@ record(longout, "$(T)GaussClockExtractionFieldTriggerMon") {
     field(DESC, "ExtrInj delay in ticks monitor")
     field(EGU, "EvtClkTicks")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
 
 record(longout, "$(T)TimSequenceNumberMon") {
     field(DESC, "Sequence Number Monitor")
     field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
 }
