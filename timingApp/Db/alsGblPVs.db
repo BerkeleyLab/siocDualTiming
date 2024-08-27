@@ -43,17 +43,6 @@ record(waveform, "$(T)TimInjReq") {
     info(archive,"Slow")
 }
 
-# FIXME: Is this still (ever?) necessary?
-record(waveform, $(T)GunBunchToGunBias) {
-    field(DESC, "Gun Bias Waveform")
-    field(EGU, "V")
-    field(NELM, "16")
-    field(FTVL, "DOUBLE")
-    field(PINI, "YES")
-    info(autosaveFields_pass0, "VAL")
-    info(archive,"Slow")
-}
-
 record(waveform, $(T)GunBunchToInjFieldTrigger) {
     field(DESC, "Injection Field Trigger Waveform")
     field(EGU, "125*EvtClkTicks")
