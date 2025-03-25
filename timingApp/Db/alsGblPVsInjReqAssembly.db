@@ -74,6 +74,7 @@ record(longout, "$(T)TimInjFieldEventDelay") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockInjectionFieldTrigger")
     field(EGU, "EvtClkTicks")
+    info(autosaveFields_pass0, "VAL")
     info(archive,"Slow")
 }
 
@@ -107,6 +108,7 @@ record(longout, "$(T)TimExtrFieldEventDelay") {
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)GaussClockExtractionFieldTrigger")
     field(EGU, "EvtClkTicks")
+    info(autosaveFields_pass0, "VAL")
     info(archive,"Slow")
 }
 
