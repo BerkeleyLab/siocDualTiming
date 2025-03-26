@@ -22,10 +22,6 @@
 // Assume dead and try again (seconds)
 #define TIMEOUT_AWAIT_PRECOMPLETION 5
 
-// Timeout for awaiting precompletion event.
-// Assume dead and try again (seconds)
-#define TIMEOUT_AWAIT_LOAD_REQUEST 5
-
 // Special mode
 #define SRINJECTION_MODE      40
 

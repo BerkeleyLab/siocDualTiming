@@ -571,9 +571,6 @@ ss ssTiming {
             startOverrunCount++;
             pvPut(startOverrunCount);
         } state increment_bad_count
-        when (delay(TIMEOUT_AWAIT_LOAD_REQUEST)) {
-            /* EVG never finished. Assume dead and try again */
-        } state default_sequence
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
 
