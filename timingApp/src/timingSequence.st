@@ -358,6 +358,10 @@ ss ssTiming {
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+        when (delay(TIMEOUT_AWAIT_START)) {
+            /* EVG never started. Assume dead and try again */
+        } state default_sequence
+
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
                                                     } state await_precompletion
     }
@@ -373,6 +377,9 @@ ss ssTiming {
         when (efTestAndClear(requestFlag)) {
             /* Ignore requests outside expected window */
         } state await_precompletion
+        when (delay(TIMEOUT_AWAIT_PRECOMPLETION)) {
+            /* EVG never finished. Assume dead and try again */
+        } state default_sequence
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_BUSY) == 0) {
             evgSequencerCurrentStarts = evgSequencerStarts;
@@ -564,6 +571,9 @@ ss ssTiming {
             startOverrunCount++;
             pvPut(startOverrunCount);
         } state increment_bad_count
+        when (delay(TIMEOUT_AWAIT_LOAD_REQUEST)) {
+            /* EVG never finished. Assume dead and try again */
+        } state default_sequence
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
 
