@@ -1,13 +1,13 @@
-#!../../bin/RL8-x86_64/timing
-##!../../bin/linux-x86_64/timing
+#!../../bin/linux-x86_64/timing
+##!../../bin/RL8-x86_64/timing
 
 ###############################################################################
 # Set up environment
-epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=test)"
-epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=192.168.1.20)"
+epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=)"
+epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=192.168.1.167)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
-epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)"
+epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=$(TOP)/autosave)"
 epicsEnvSet DB_TOP "$(TOP)/db"
 epicsEnvSet ENGINEER "jmweber"
 epicsEnvSet LOCATION "SoftIOC"
