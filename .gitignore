@@ -15,6 +15,9 @@ PVenv/*
 PVnames/*
 !PVnames/README.md
 configure/RELEASE.local
+autosave/
+*.log
+screenlog.*
 
 # Project specific
 *TimingLookups.h
