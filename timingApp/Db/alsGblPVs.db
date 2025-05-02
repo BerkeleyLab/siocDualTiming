@@ -1,4 +1,4 @@
-record(ao, "TimCycleDelay") {
+record(ao, "$(T)TimCycleDelay") {
     field(DESC,"Additional delay for end of cycle")
     field(DRVH, "15")
     field(DRVL, "0")
@@ -74,14 +74,14 @@ record(calc, "$(T)TimAllEVRvalid") {
 }
 
 # BR extraction calc. PVs
-record(ai,"B0215:TimSeqRemainder") {
+record(ai,"$(T)B0215:TimSeqRemainder") {
     info(archive,"Slow")
 }
 
-record(longin,"B0215:TimSeqFineDelay") {
+record(longin,"$(T)B0215:TimSeqFineDelay") {
     info(archive,"Slow")
 }
 
-record(longin,"B0215:TimSeqFineDelayOffst") {
+record(longin,"$(T)B0215:TimSeqFineDelayOffst") {
     info(archive,"Slow")
 }
