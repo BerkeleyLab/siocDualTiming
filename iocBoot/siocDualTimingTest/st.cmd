@@ -3,7 +3,7 @@
 
 ###############################################################################
 # Set up environment
-epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=)"
+epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=test)"
 epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=192.168.1.167)"
 < envPaths
 epicsEnvSet "IOCSH_PS1" "$(IOC)> "
@@ -12,7 +12,7 @@ epicsEnvSet DB_TOP "$(TOP)/db"
 epicsEnvSet ENGINEER "jmweber"
 epicsEnvSet LOCATION "SoftIOC"
 epicsEnvSet WIKI "DualEventGenerator"
-epicsEnvSet IOCNAME "DualTiming"
+epicsEnvSet IOCNAME "DualTimingTest"
 
 ###############################################################################
 # Conditionals
