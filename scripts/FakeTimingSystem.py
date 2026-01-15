@@ -77,7 +77,7 @@ while args.count > 0:
     while not cycleDone:
         time.sleep(0.05)
     cycleDone = False
-    bucketIndex = (bucketIndex + 1) % 328
+    bucketIndex = bucketIndex % 328
     request[TARGET_BUCKET] = bucketIndex + 1
     request[SEQUENCE] += 1
     requestPV.put(request)
