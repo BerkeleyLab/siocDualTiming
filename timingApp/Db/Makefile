@@ -17,12 +17,16 @@ DB += alsGblPVs.db
 DB += alsGblPVsInjReqAssembly.db
 DB += timing.db
 
-ifneq ($(RECCASTER),)
-DB_INSTALLS += $(RECCASTER)/db/reccaster.db
+ifneq ($(devIocStats),)
+DB_INSTALLS += $(devIocStats)/db/ioc_stats.db
 endif
 
 ifneq ($(IOCSTATS),)
-DB_INSTALLS += $(IOCSTATS)/db/ioc_stats.db
+DB_INSTALLS += $(IOCSTATS)/db/iocAdminSoft.db
+endif
+
+ifneq ($(RECCASTER),)
+DB_INSTALLS += $(RECCASTER)/db/reccaster.db
 endif
 
 #----------------------------------------------------

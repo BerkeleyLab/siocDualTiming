@@ -49,9 +49,14 @@ ifneq ($(AUTOSAVE),)
     timing_LIBS += autosave
 endif
 
+ifneq ($(devIocStats),)
+    dsbpm_DBD += devIocStats.dbd
+    dsbpm_LIBS += devIocStats
+endif
+
 ifneq ($(IOCSTATS),)
     timing_DBD += devIocStats.dbd
-    timing_LIBS += devIocStatsSeq
+    timing_LIBS += devIocStats
 endif
 
 ifneq ($(IOCEXIT),)
