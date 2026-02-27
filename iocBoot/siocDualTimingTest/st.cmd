@@ -51,8 +51,8 @@ dbLoadRecords "db/asynRecord.db" "P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=-1,IMAX=0
 #var save_restoreDebug 6
 set_savefile_path("$(AUTOSAVE_PATH)")
 set_requestfile_path("$(AUTOSAVE_PATH)")
-set_pass0_restoreFile("autosave.sav")
-set_pass1_restoreFile("autosave.sav")
+set_pass0_restoreFile("autosave$(T)EVG.sav")
+set_pass1_restoreFile("autosave$(T)EVG.sav")
 save_restoreSet_status_prefix("$(IOC):")
 dbLoadRecords("db/save_restoreStatus.db", "P=$(IOC):")
 
@@ -63,8 +63,8 @@ iocInit
 
 ###############################################################################
 # Autosave/restore
-makeAutosaveFileFromDbInfo("$(AUTOSAVE_PATH)/autosave.req", "autosaveFields_pass0")
-create_monitor_set("autosave.req", 300, "")
+makeAutosaveFileFromDbInfo("$(AUTOSAVE_PATH)/autosave$(T)EVG.req", "autosaveFields_pass0")
+create_monitor_set("autosave$(T)EVG.req", 300, "")
 
 ###############################################################################
 # Update IOC data
