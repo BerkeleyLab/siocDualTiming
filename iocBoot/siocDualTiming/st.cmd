@@ -3,20 +3,20 @@
 
 ###############################################################################
 # Set up environment
-epicsEnvSet "T" "$(DUAL_TIMING_IOC_TEST=)"
-epicsEnvSet "EVG_ADDRESS" "$(EVG_ADDRESS=131.243.93.169)"
+epicsEnvSet("T", "$(DUAL_TIMING_IOC_TEST=)")
+epicsEnvSet("EVG_ADDRESS", "$(EVG_ADDRESS=131.243.93.169)")
 < envPaths
-epicsEnvSet "IOCSH_PS1" "$(IOC)> "
-epicsEnvSet "AUTOSAVE_PATH" "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)"
-epicsEnvSet DB_TOP "$(TOP)/db"
-epicsEnvSet ENGINEER "jmweber"
-epicsEnvSet LOCATION "SoftIOC"
-epicsEnvSet WIKI "DualEventGenerator"
-epicsEnvSet IOCNAME "DualTiming"
+epicsEnvSet("IOCSH_PS1", "$(IOC)> ")
+epicsEnvSet("AUTOSAVE_PATH", "$(AUTOSAVE_PATH=/vxboot/ioc_data/$(IOC)/autosave)")
+epicsEnvSet(DB_TOP, "$(TOP)/db")
+epicsEnvSet(ENGINEER, "jmweber")
+epicsEnvSet(LOCATION, "SoftIOC")
+epicsEnvSet(WIKI, "DualEventGenerator")
+epicsEnvSet(IOCNAME, "DualTiming")
 
 ###############################################################################
 # Conditionals
-epicsEnvSet "SEQ_DEBUG" "$(SEQ_DEBUG=0)"
+epicsEnvSet("SEQ_DEBUG", "$(SEQ_DEBUG=0)")
 
 ###############################################################################
 # Register all support components
@@ -43,8 +43,8 @@ dbLoadRecords("db/alsGblPVsInjReqAssembly.db","T=$(T)")
 
 ##############################################################################
 # Load additional records
-iocshLoad "$(IOCSH_TOP)/als_default.iocsh"
-dbLoadRecords "db/asynRecord.db" "P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=-1,IMAX=0,OMAX=0"
+iocshLoad("$(IOCSH_TOP)/als_default.iocsh")
+dbLoadRecords("db/asynRecord.db", "P=$(IOC),R=:asyn,PORT=EVG01_CMD,ADDR=-1,IMAX=0,OMAX=0")
 
 #############################################################################
 # Autosave/restore
@@ -60,6 +60,10 @@ dbLoadRecords("db/save_restoreStatus.db", "P=$(IOC):")
 # Start IOC
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
+
+###############################################################################
+# Configure some modules after iocInit
+iocshLoad("$(IOCSH_TOP)/als_after_iocInit.iocsh")
 
 ###############################################################################
 # Autosave/restore
