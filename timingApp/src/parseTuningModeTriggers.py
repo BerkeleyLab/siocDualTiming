@@ -8,6 +8,7 @@ import re
 EventColumn      = -1
 OffsetColumn     = -1
 ExpressionColumn = -1
+CategoryColumn   = -1
 TickOffsetColumn = -1
 
 modeDict = { }
@@ -19,13 +20,13 @@ def match(pattern, string):
     return re.match(pattern, string, re.IGNORECASE)
 
 def offset(expr, str, lineno):
-    if match('^[\s]*[-]?[\d]+[\s]*$', str):
+    if match(r'^[\s]*[-]?[\d]+[\s]*$', str):
         n = int(str)
         if (n < 0):
             return (expr + ' - %d' % (-n))
         if (n > 0):
             return (expr + ' + %d' % (n))
-    elif not match('^[\s]*$', str):
+    elif not match(r'^[\s]*$', str):
         print('Line %d -- Error: Bad offset "%s"' % (lineno, str), file=sys.stderr)
         sys.exit(1)
     return expr
@@ -38,18 +39,20 @@ with open('TuningModeTriggers.csv') as csvFile:
         lineno += 1
         if inHeader:
             # Look for descriptive column headers
-            if match('Mode[\s]Number', line[0]):
+            if match(r'Mode[\s]Number', line[0]):
                 for c in range(0, len(line)):
                     val = line[c]
-                    if match('[\d]+', val):
+                    if match(r'[\d]+', val):
                         modeDict[val] = {'column':c, 'events':[]}
-                    if match('Number', val): EventColumn = c
-                    if match('Timestamp[\s]Offset', val): OffsetColumn = c
-                    if match('Functional[\s]Time', val): ExpressionColumn = c
-                    if match('Offset[\s]\[Ticks\]', val): TickOffsetColumn = c
+                    if match(r'Number', val): EventColumn = c
+                    if match(r'Timestamp[\s]Offset', val): OffsetColumn = c
+                    if match(r'Functional[\s]Time', val): ExpressionColumn = c
+                    if match(r'Category', val): CategoryColumn = c
+                    if match(r'Offset[\s]\[Ticks\]', val): TickOffsetColumn = c
                 if EventColumn < 0 \
                  or OffsetColumn < 0 \
                  or ExpressionColumn < 0 \
+                 or CategoryColumn < 0 \
                  or TickOffsetColumn < 0 \
                  or len(modeDict) == 0:
                     print("Line %d -- Error: Bad heading" % (lineno), file=sys.stderr)
@@ -57,7 +60,7 @@ with open('TuningModeTriggers.csv') as csvFile:
                 inHeader = False
         else:
             evt = line[EventColumn]
-            if match('^[\s]*[\d]+[\s]*$', evt):
+            if match(r'^[\s]*[\d]+[\s]*$', evt):
                 evt = int(evt)
                 if evt == 127: break
                 if evt <= 0 or evt > 255:
@@ -65,33 +68,40 @@ with open('TuningModeTriggers.csv') as csvFile:
                     sys.exit(1)
                 # Canonicalize expression
                 expr = line[ExpressionColumn]
-                if match('^[\s]*$', expr) or match('^[\s]*Start[\s]*$', expr):
+                if match(r'^[\s]*$', expr) or match(r'^[\s]*Start[\s]*$', expr):
                     expr = "0"
-                elif match('^[\s]*End', expr):
+                elif match(r'^[\s]*End', expr):
                     expr = "END_OF_SEQUENCE_TICKS"
                 else:
-                    expr = re.sub('InjFieldSync', 'injFieldSync', expr, re.IGNORECASE)
-                    expr = re.sub('GunBunchDelay', 'gunBunchesDelay', expr, re.IGNORECASE)
-                    expr = re.sub('#[\s]*Bunches', 'numBunches', expr, re.IGNORECASE)
-                    expr = re.sub('ExtrFieldSync', 'extrFieldSync', expr, re.IGNORECASE)
-                    expr = re.sub('TargetBucket', 'targetBucketDelay', expr, re.IGNORECASE)
-                    expr = re.sub('[\s]+', '', expr)
-                    expr = re.sub('\+', ' + ', expr)
+                    expr = re.sub(r'InjFieldSync', 'injFieldSync', expr, re.IGNORECASE)
+                    expr = re.sub(r'GunBunchDelay', 'gunBunchesDelay', expr, re.IGNORECASE)
+                    expr = re.sub(r'#[\s]*Bunches', 'numBunches', expr, re.IGNORECASE)
+                    expr = re.sub(r'ExtrFieldSync', 'extrFieldSync', expr, re.IGNORECASE)
+                    expr = re.sub(r'TargetBucket', 'targetBucketDelay', expr, re.IGNORECASE)
+                    expr = re.sub(r'[\s]+', '', expr)
+                    expr = re.sub(r'\+', ' + ', expr)
                 expr = offset(expr, line[TickOffsetColumn], lineno)
                 signature = expr
                 expr = offset(expr, line[OffsetColumn], lineno)
+                tstamp = expr
+                cat = line[CategoryColumn]
+                if match(r'^[\s]*[\d]+[\s]*$', cat):
+                    cat = int(cat)
+                    if cat < 0 or cat > 255:
+                        print("Line %d -- Error: Bad category number" % (lineno), file=sys.stderr)
+                        sys.exit(1)
                 # Stash info
-                eventDict[evt] = expr
+                eventDict[evt] = {'tstamp': tstamp, 'cat': cat}
                 # Note modes for which event is active
                 for mode, modeInfo in modeDict.items():
                     col = modeInfo['column']
                     isActive = line[col]
-                    if match('^[\s]*x[\s]*$', isActive):
+                    if match(r'^[\s]*x[\s]*$', isActive):
                         signature = 'x' + signature
                         evtList = modeInfo['events']
                         if not evt in evtList:
                             evtList.append(evt)
-                    elif not match('^[\s]*$', isActive):
+                    elif not match(r'^[\s]*$', isActive):
                         print("Line %d -- Error: Bad value in column %d" % (lineno, col+1), file=sys.stderr)
                         sys.exit(1)
                     else:
@@ -147,8 +157,23 @@ getTimestamp(int evtCode, int injFieldSync, int extrFieldSync, int numBunches, i
 {
     switch (evtCode) {
 ''')
-    for evtCode, expr in eventDict.items():
-        print('    case %d: return %s;' % (evtCode, expr), file=outFile)
+    for evtCode, val in eventDict.items():
+        print('    case %d: return %s;' % (evtCode, val['tstamp']), file=outFile)
+    outFile.write('''    default: break;
+    }
+    return -1;
+}
+''')
+
+    # Emit category lookup
+    outFile.write('''
+static int
+getCategory(int evtCode)
+{
+    switch (evtCode) {
+''')
+    for evtCode, val in eventDict.items():
+        print('    case %d: return %d;' % (evtCode, val['cat']), file=outFile)
     outFile.write('''    default: break;
     }
     return -1;
