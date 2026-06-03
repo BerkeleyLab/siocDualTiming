@@ -167,16 +167,23 @@ with open("TuningModeTriggers.csv") as csvFile:
                             sys.exit(1)
 
                         catCol = modeCategoryDict[mode]["column"]
-                        cat = line[catCol]
+                        catStr = line[catCol]
+                        cat = 0
 
-                        if match(r"^[\s]*[\d]+[\s]*$", cat):
-                            cat = int(cat)
+                        if match(r"^[\s]*[\d]+[\s]*$", catStr):
+                            cat = int(catStr)
                             if cat < 0 or cat > 255:
                                 print(
                                     f"Line {lineno} -- Error: Bad category number {cat}",
                                     file=sys.stderr,
                                 )
                                 sys.exit(1)
+                        elif not match(r"^[\s]*$", catStr):
+                            print(
+                                f"Line {lineno} -- Error: Bad 'active event' value in column {col + 1}",
+                                file=sys.stderr,
+                            )
+                            sys.exit(1)
 
                         if not any(evtItem.get("number") == evt for evtItem in evtList):
                             newEvt = {"number": evt,
@@ -185,7 +192,7 @@ with open("TuningModeTriggers.csv") as csvFile:
                             evtList.append(newEvt)
                     elif not match(r"^[\s]*$", isActive):
                         print(
-                            f"Line {lineno} -- Error: Bad value in column {col + 1}",
+                            f"Line {lineno} -- Error: Bad 'active event' value in column {col + 1}",
                             file=sys.stderr,
                         )
                         sys.exit(1)
@@ -238,7 +245,7 @@ eventListForMode(int mode)
 """)
     for mode, modeInfo in modeDict.items():
         evtList = modeInfo["events"]
-        outFile.write(f"    case {mode}:{{ static const unsigned char e[] = {{ ")
+        outFile.write(f"    case {mode}: {{ static const unsigned char e[] = {{ ")
         for e in evtList:
             outFile.write(f"{e['number']}, ")
         print("127 }; return e;}", file=outFile)
@@ -268,6 +275,32 @@ getTimestamp(int mode, int evtCode, int injFieldSync, int extrFieldSync, int num
 """)
         print("        break;", file=outFile)
     outFile.write("""    default: break;
+
+    }
+    return -1;
+}
+""")
+
+    # Emit category lookup
+    outFile.write("""
+static int
+getCategory(int mode, int evtCode)
+{
+    switch (mode) {
+""")
+    for mode, modeInfo in modeDict.items():
+        evtList = modeInfo["events"]
+        print(f"    case {mode}:", file=outFile)
+        print(f"        switch (evtCode) {{", file=outFile)
+
+        for e in evtList:
+            print(f"        case {e['number']}: return {e['cat']};", file=outFile)
+        outFile.write("""        default: return -1;
+        }
+""")
+        print("        break;", file=outFile)
+    outFile.write("""    default: break;
+
     }
     return -1;
 }
