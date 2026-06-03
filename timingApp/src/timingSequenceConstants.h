@@ -3,7 +3,8 @@
 
 // Array capacities
 #define MAX_SEQUENCE_LENGTH   100
-#define EVG_SEQUENCE_CAPACITY 200
+// each elements consists of: timestamp, event number, category
+#define EVG_SEQUENCE_CAPACITY 300
 
 // Ranges for request parameters
 #define MIN_BUCKETS 1
