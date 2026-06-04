@@ -541,9 +541,9 @@ ss ssTiming {
                     category = 0;
                 }
                 else {
-                    tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
+                    tstamp = getTimestamp(mode, event, injFieldSync, extrFieldSync,
                                    bunches, gunBunchesDelay, targetBucketDelay);
-                    category = getCategory(event);
+                    category = getCategory(mode, event);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
                         tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
                     }
@@ -551,6 +551,12 @@ ss ssTiming {
                     if (tstamp < 0) {
                         fprintf(stderr, "WARNING: tstamp for evtcode %d is %d"
                                                " -- ignoring\n", event, tstamp);
+                        continue;
+                    }
+
+                    if (category < 0) {
+                        fprintf(stderr, "WARNING: category for evtcode %d is %d"
+                                               " -- ignoring\n", event, category);
                         continue;
                     }
 
