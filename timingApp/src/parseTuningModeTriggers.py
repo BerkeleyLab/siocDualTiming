@@ -335,6 +335,9 @@ if inHeader:
         )
         sys.exit(1)
 
+    print("Error -- Can't find column headers", file=sys.stderr)
+    sys.exit(1)
+
 with open("TimingLookups.h", "w+") as outFile:
     # Emit event list lookup
     outFile.write(
