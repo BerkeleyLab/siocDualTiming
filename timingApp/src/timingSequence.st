@@ -20,7 +20,7 @@ option +d;
  * Additional ticks for end of cycle
  */
 int endOfCycleDelay;
-assign endOfCycleDelay to "TimCycleDelay";
+assign endOfCycleDelay to "{T}TimCycleDelay";
 monitor endOfCycleDelay;
 
 /*
