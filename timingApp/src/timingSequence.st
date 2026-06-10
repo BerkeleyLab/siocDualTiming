@@ -238,7 +238,9 @@ tsCompare(const void *a, const void *b)
 
 /*
  * Ensure monotonically increasing time stamps
- * and convert time stamps to delay.
+ * and convert time stamps to delay and category
+ * relative category (only the first in the group
+ * has the delay)
  */
 static int
 monotonicSequence(int count, int *tstampsEventsAndCat)
@@ -246,16 +248,20 @@ monotonicSequence(int count, int *tstampsEventsAndCat)
     int i, idx;
     int ret = 1;
     int prev = -1;
+    int prevCat = 0;
 
     for (i = 0, idx = 0; i < count; i++, idx += 3) {
         int this = tstampsEventsAndCat[idx];
+        int thisCat = tstampsEventsAndCat[idx+2];
         if ((i < (count - 1)) && (tstampsEventsAndCat[idx+3] <= this)) {
             ret = 0;
             tstampsEventsAndCat[idx+3] = this + 1;
         }
 
         tstampsEventsAndCat[idx] = (this - prev) - 1;
+        tstampsEventsAndCat[idx+2] = (thisCat - prevCat) != 0? thisCat : 0;
         prev = this;
+        prevCat = thisCat;
     }
 
     return ret;
