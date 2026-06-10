@@ -63,9 +63,11 @@ def sequenceCallback(pvname=None, value=None, **kws):
     while True:
         gap = value[i]
         evCode = value[i+1]
-        i += 2
-        print('%d:%d'%(gap, evCode))
+        cat = value[i+2]
+        i += 3
+        print(f"{gap}:{evCode}:{cat}")
         if evCode == 127: break;
+
 if args.monitor:
     # Show event generator updates
     sequence = pv(args.evg + 'E1:SEQ1')
