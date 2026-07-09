@@ -20,7 +20,7 @@ option +d;
  * Additional ticks for end of cycle
  */
 int endOfCycleDelay;
-assign endOfCycleDelay to "TimCycleDelay";
+assign endOfCycleDelay to "{T}TimCycleDelay";
 monitor endOfCycleDelay;
 
 /*
@@ -223,6 +223,7 @@ int evgSequencerCurrentStarts;
  * Comparison routine for qsort
  * Primary sort on time stamp (first word)
  * Secondary sort on event code (second word)
+ * No sort on category code (third word)
  */
 static int
 tsCompare(const void *a, const void *b)
@@ -237,23 +238,32 @@ tsCompare(const void *a, const void *b)
 
 /*
  * Ensure monotonically increasing time stamps
- * and convert time stamps to delay.
+ * and convert time stamps to delay and category
+ * relative category (only the first in the group
+ * has the delay)
  */
 static int
-monotonicSequence(int count, int *tstampsAndEvents)
+monotonicSequence(int count, int *tstampsEventsAndCat)
 {
     int i, idx;
     int ret = 1;
     int prev = -1;
-    for (i = 0, idx = 0; i < count; i++, idx += 2) {
-        int this = tstampsAndEvents[idx];
-        if ((i < (count - 1)) && (tstampsAndEvents[idx+2] <= this)) {
+    int prevCat = 0;
+
+    for (i = 0, idx = 0; i < count; i++, idx += 3) {
+        int this = tstampsEventsAndCat[idx];
+        int thisCat = tstampsEventsAndCat[idx+2];
+        if ((i < (count - 1)) && (tstampsEventsAndCat[idx+3] <= this)) {
             ret = 0;
-            tstampsAndEvents[idx+2] = this + 1;
+            tstampsEventsAndCat[idx+3] = this + 1;
         }
-        tstampsAndEvents[idx] = (this - prev) - 1;
+
+        tstampsEventsAndCat[idx] = (this - prev) - 1;
+        tstampsEventsAndCat[idx+2] = (thisCat - prevCat) != 0? thisCat : 0;
         prev = this;
+        prevCat = thisCat;
     }
+
     return ret;
 }
 
@@ -304,13 +314,16 @@ ss ssTiming {
             if(debugFlag) printf("State: await_connections\n");
             oldConnectCount = -1;
         }
+
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (pvConnectCount() == pvAssignCount()) {
             if (faultCode == FC_MISSING_CONNECTION) {
                 faultCode = FC_SUCCESS;
                 pvPut(faultCode);
             }
         } state await_potentate
+
         when (delay(10) && (pvConnectCount() != oldConnectCount)) {
             oldConnectCount = pvConnectCount();
             printf("Timing Sequencer: %d/%d connected\n", pvConnectCount(),
@@ -329,6 +342,7 @@ ss ssTiming {
         entry {
             if(debugFlag) printf("State: await_potentate\n");
         }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (injCycleEnable != 0) { } state inj_cycle_disable
         when (potentate != 0) { } state await_precompletion
@@ -345,6 +359,7 @@ ss ssTiming {
             injCycleEnable = 0;
             pvPut(injCycleEnable, SYNC);
         }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state await_potentate
         when () { } state await_precompletion
@@ -355,15 +370,17 @@ ss ssTiming {
      */
     state await_start {
         entry { if(debugFlag) printf("State: await_start\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (delay(TIMEOUT_AWAIT_START)) {
             /* EVG never started. Assume dead and try again */
         } state default_sequence
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
-                                                    } state await_precompletion
+        } state await_precompletion
     }
 
     /*
@@ -371,12 +388,15 @@ ss ssTiming {
      */
     state await_precompletion {
         entry { if(debugFlag) printf("State: await_precompletion\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (efTestAndClear(requestFlag)) {
             /* Ignore requests outside expected window */
         } state await_precompletion
+
         when (delay(TIMEOUT_AWAIT_PRECOMPLETION)) {
             /* EVG never finished. Assume dead and try again */
         } state default_sequence
@@ -391,9 +411,11 @@ ss ssTiming {
      */
     state await_request {
         entry { if(debugFlag) printf("State: await_request\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (delay(REQUEST_WINDOW)) {
             /* No request, default cycle will be emitted */
         } state default_sequence
@@ -424,6 +446,7 @@ ss ssTiming {
      */
     state validate_request {
         entry { if(debugFlag) printf("State: validate_request\n"); }
+
         when (sequence == lastSequence) {
             faultCode = FC_STALE_SEQUENCE;
         } state increment_bad_count
@@ -442,6 +465,7 @@ ss ssTiming {
 
     state check_beamcurrent {
         entry { if(debugFlag) printf("State: check_beamcurrent\n"); }
+
         when ((mode == SRINJECTION_MODE) && (pvSeverity(beamcurrent) == pvSevrINVALID)) {
             faultCode = FC_INVALID_BEAM_CURRENT;
         } state increment_bad_count
@@ -456,6 +480,7 @@ ss ssTiming {
 
     state check_severities {
         entry { if(debugFlag) printf("State: check_severities\n"); }
+
         when ((pvSeverity(evgSeqStatus) != pvSevrNONE)
             || (pvSeverity(evgSequencerStarts) != pvSevrNONE)) {
             faultCode = FC_PV_SEVERITY;
@@ -467,6 +492,7 @@ ss ssTiming {
 
     state check_links {
         entry { if(debugFlag) printf("State: check_links\n"); }
+
         when ((pvStatus(allEVRvalid) != pvStatOK) || (allEVRvalid == 0)) {
             faultCode = FC_BAD_EVR;
         } state increment_bad_count
@@ -480,6 +506,7 @@ ss ssTiming {
      */
     state create_requested_sequence {
         entry { if(debugFlag) printf("State: create_requested_sequence\n"); }
+
         when () {
             %%const unsigned char *e;
             int targetBucketDelayRaw = 125 * ((bucket * 21) % 328);
@@ -507,42 +534,60 @@ ss ssTiming {
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
                 int event = e[i];
                 int tstamp;
+                int category;
+
                 if (inhibit) {
                     if (event == GUNON_EVTCODE || event == GUNOFF_EVTCODE) {
                         continue;
                     }
                 }
+
                 if (event == SEQUENCE_END_EVTCODE) {
                     tstamp = DELAY_END + endOfCycleDelay;
+                    category = 0;
                 }
                 else {
-                    tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
+                    tstamp = getTimestamp(mode, event, injFieldSync, extrFieldSync,
                                    bunches, gunBunchesDelay, targetBucketDelay);
+                    category = getCategory(mode, event);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
                         tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
                     }
+
                     if (tstamp < 0) {
                         fprintf(stderr, "WARNING: tstamp for evtcode %d is %d"
                                                " -- ignoring\n", event, tstamp);
                         continue;
                     }
+
+                    if (category < 0) {
+                        fprintf(stderr, "WARNING: category for evtcode %d is %d"
+                                               " -- ignoring\n", event, category);
+                        continue;
+                    }
+
                     if (tstamp >= highwater) {
                         highwater = tstamp + 1;
                     }
                 }
-                evgSequence[(2*nTStamps)+0] = tstamp;
-                evgSequence[(2*nTStamps)+1] = event;
+
+                evgSequence[(3*nTStamps)+0] = tstamp;
+                evgSequence[(3*nTStamps)+1] = event;
+                evgSequence[(3*nTStamps)+2] = category;
                 nTStamps++;
+
                 if (event == SEQUENCE_END_EVTCODE) {
                     foundEOS = 1;
                     break;
                 }
             }
+
             if (!foundEOS) {
                 faultCode = FC_NO_EOS;
                 state increment_bad_count;
             }
-            qsort(evgSequence, nTStamps, 2*sizeof(int), tsCompare);
+
+            qsort(evgSequence, nTStamps, 3*sizeof(int), tsCompare);
             if (!monotonicSequence(nTStamps, evgSequence)) {
                 duplicateTimestampFound = 1;
                 pvPut(duplicateTimestampFound);
