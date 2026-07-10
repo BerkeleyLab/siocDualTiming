@@ -4,8 +4,8 @@
 /cfg/
 /bin/
 /lib/
-/db/
 /dbd/
+/db/
 /html/
 /include/
 /templates/
@@ -39,21 +39,42 @@ dllPath.bat
 *BAK.adl
 auto_settings.sav*
 auto_positions.sav*
+PVenv/*
+!PVenv/README.md
+PVnames/*
+!PVnames/README.md
+autosave/*
+!autosave/README.md
+*.sav
+*.req
+
+
+# ALS-U IOC
+/*App/Db/*#
+/*Boot/*/screenlog.*
+/*Boot/*/*.log
+/*Boot/*/*.states
+
+# General
 
 *~
 .\#*
 \#*
 .versions
 *-src
-*.local
-*.mk
+*.service
+*.list
 *.swp
+*.log.0
+tags
 *.orig
-*tags
-
-# Project specific
-*TimingLookups.h
-PVenv/*
-!PVenv/README.md
-PVnames/*
-!PVnames/README.md
+/iocsh
+*.iocsh_history
+#
+.project
+.cproject
+# tex
+*.aux
+*.out
+*.toc
+.DS_Store
