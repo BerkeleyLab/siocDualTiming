@@ -47,6 +47,7 @@ autosave/*
 !autosave/README.md
 *.sav
 *.req
+*TimingLookups.h
 
 
 # ALS-U IOC
