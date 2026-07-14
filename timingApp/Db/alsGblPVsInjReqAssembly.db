@@ -36,6 +36,8 @@ record(mbbo, "$(T)TimInjMode") {
     field(FRST, "SR Inj Prep")
     field(FVST, "SR Injection")
     field(SXST, "SR Tuning")
+    field(SVST, "Topoff Intlk Test")
+    field(EIST, "AR Injection")
     field(ZRVL, "0")
     field(ONVL, "10")
     field(TWVL, "20")
@@ -43,6 +45,8 @@ record(mbbo, "$(T)TimInjMode") {
     field(FRVL, "41")
     field(FVVL, "40")
     field(SXVL, "42")
+    field(SVVL, "50")
+    field(EIVL, "60")
     info(archive,"Slow")
 }
 
@@ -145,7 +149,7 @@ record(aSub, "$(T)TimInjReq:sub") {
     field(INPB, "$(T)TimGunBunchCount")
     field(INPC, "$(T)TimInjMode.RVAL")
     field(INPD, "$(T)TimGunInhibit")
-    field(INPE, "0")
+    field(INPE, "$(T)TimARTargetBucket")
     field(INPF, "0")
     field(INPG, "$(T)TimSequenceNumber")
     field(FTA, "LONG")
@@ -196,7 +200,7 @@ record(aSub, "$(T)TimInjReqToPVs:sub") {
     field(OUTB, "$(T)TimGunBunchCount PP MS")
     field(OUTC, "$(T)TimInjMode PP MS")
     field(OUTD, "$(T)TimGunInhibit PP MS")
-    field(OUTE, "0")
+    field(OUTE, "$(T)TimARTargetBucket PP MS")
     field(OUTF, "0")
     field(OUTG, "$(T)TimSequenceNumber PP MS")
     field(FTVA, "LONG")
@@ -361,6 +365,17 @@ record(bo, "$(T)TimGunInhibitMon") {
     field(ONAM, "Inhibit")
     field(OSV, "MAJOR")
     field(VAL, "0")
+    field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
+}
+
+record(longout, "$(T)TimARTargetBucketMon") {
+    field(DESC, "AR Bucket number Monitor")
+    field(DRVH, "304")
+    field(DRVL, "1")
+    field(HOPR, "304")
+    field(LOPR, "1")
+    field(VAL, "1")
     field(TSEL, "$(T)TimInjReq.TIME")
     info(archive,"Slow")
 }

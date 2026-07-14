@@ -26,12 +26,14 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
     info(archive,"Slow")
 }
 
+alias("$(P)$(R)INJ:tgtARBucket", "$(T)TimARTargetBucket")
+
 # Injection Request Waveform: 7 elements meaning:
 # 0: SR Bucket Number to target (1 to 328)
 # 1: Number of Gun Bunches (1 to 16)
 # 2: Injection Mode Number (sets enables for setup, injection, tuning modes)
 # 3: Gun Inhibit (0: det. by Inj. Mode Number; 1: Disable the gun trigger)
-# 4: Reserved for future use
+# 4: AR Bucket Number to target (1 to 304)
 # 5: Reserved for future use
 # 6: Sequence Number (must change from last cycle to do anything but default cycle)
 # This is to be used by the timing sequencer.
