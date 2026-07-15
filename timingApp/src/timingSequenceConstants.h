@@ -9,6 +9,8 @@
 // Ranges for request parameters
 #define MIN_BUCKETS 1
 #define MAX_BUCKETS 328
+#define MIN_AR_BUCKETS 1
+#define MAX_AR_BUCKETS 304
 #define MIN_BUNCHES 1
 #define MAX_BUNCHES 16
 
