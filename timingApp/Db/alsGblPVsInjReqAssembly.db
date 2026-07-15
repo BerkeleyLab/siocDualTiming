@@ -149,7 +149,7 @@ record(aSub, "$(T)TimInjReq:sub") {
     field(INPB, "$(T)TimGunBunchCount")
     field(INPC, "$(T)TimInjMode.RVAL")
     field(INPD, "$(T)TimGunInhibit")
-    field(INPE, "$(T)TimARTargetBucket")
+    field(INPE, "$(T)TimTargetARBucket")
     field(INPF, "0")
     field(INPG, "$(T)TimSequenceNumber")
     field(FTA, "LONG")
@@ -200,7 +200,7 @@ record(aSub, "$(T)TimInjReqToPVs:sub") {
     field(OUTB, "$(T)TimGunBunchCount PP MS")
     field(OUTC, "$(T)TimInjMode PP MS")
     field(OUTD, "$(T)TimGunInhibit PP MS")
-    field(OUTE, "$(T)TimARTargetBucket PP MS")
+    field(OUTE, "$(T)TimTargetARBucket PP MS")
     field(OUTF, "0")
     field(OUTG, "$(T)TimSequenceNumber PP MS")
     field(FTVA, "LONG")
@@ -369,7 +369,7 @@ record(bo, "$(T)TimGunInhibitMon") {
     info(archive,"Slow")
 }
 
-record(longout, "$(T)TimARTargetBucketMon") {
+record(longout, "$(T)TimTargetARBucketMon") {
     field(DESC, "AR Bucket number Monitor")
     field(DRVH, "304")
     field(DRVL, "1")

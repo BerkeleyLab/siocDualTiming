@@ -26,7 +26,7 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
     info(archive,"Slow")
 }
 
-alias("$(P)$(R)INJ:tgtARBucket", "$(T)TimARTargetBucket")
+alias("$(P)$(R)INJ:tgtARBucket", "$(T)TimTargetARBucket")
 
 # Injection Request Waveform: 7 elements meaning:
 # 0: SR Bucket Number to target (1 to 328)

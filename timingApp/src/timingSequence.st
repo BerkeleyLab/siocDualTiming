@@ -38,8 +38,8 @@ typedef enum { /* Request waveform indices. */
         GUN_BUNCHES,
         INJ_MODE,
         GUN_INHIBIT,
-        INJ_FIELD_SYNC_DELAY,
-        EXTR_FIELD_SYNC_DELAY,
+        TARGET_AR_BUCKET,
+        FUTURE_USE_1,
         SEQUENCE,
 } REQUEST_FIELDS;
 }%
@@ -48,6 +48,8 @@ typedef enum { /* Request waveform indices. */
 int sequence = 0;       /* Sequence #: request ignored if no change from previous */
 int lastSequence = -1;
 int bucket = 1;         /* Target bucket (1-328) */
+int arBucket = 1;       /* AR Target bucket (1-304) */
+assign arBucket to "{T}TimTargetARBucket";
 int bunches = 1;        /* Number of electron gun bunches (1-16) */
 int inhibit = 0;        /* Inhibit electron gun if set, even if mode allows gun */
 int mode = 0;           /* Type of injection sequence.  See eventListForMode() */
@@ -69,6 +71,8 @@ int sequenceMon = 0;        /* Sequence #: request ignored if no change from pre
 assign sequenceMon to "{T}TimSequenceNumberMon";
 int bucketMon = 1;          /* Target bucket (1-328) */
 assign bucketMon to "{T}TimTargetBucketMon";
+int arBucketMon = 1;          /* Target AR Bucket (1-304) */
+assign arBucketMon to "{T}TimTargetARBucketMon";
 int bunchesMon = 1;         /* Number of electron gun bunches (1-16) */
 assign bunchesMon to "{T}TimGunBunchCountMon";
 int inhibitMon = 0;         /* Inhibit electron gun if set, even if mode allows gun */
@@ -435,6 +439,7 @@ ss ssTiming {
             bunches  = request[GUN_BUNCHES];
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
+            arBucket = request[TARGET_AR_BUCKET];
             sequence = request[SEQUENCE];
             injFieldSync = injFieldSyncDelay;
             extrFieldSync = extrFieldSyncDelay;
@@ -452,6 +457,10 @@ ss ssTiming {
         } state increment_bad_count
 
         when ((bucket < MIN_BUCKETS) || (bucket > MAX_BUCKETS)) {
+            faultCode = FC_INVALID_BUCKET;
+        } state increment_bad_count
+
+        when ((arBucket < MIN_AR_BUCKETS) || (arBucket > MAX_AR_BUCKETS)) {
             faultCode = FC_INVALID_BUCKET;
         } state increment_bad_count
 
@@ -619,6 +628,8 @@ ss ssTiming {
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
 
+            pvPut(arBucket);
+
             pvPut(boExtrFineDelay);
             boExtrDelay = boExtrFineDelay + boExtrDelayOffset;
             pvPut(boExtrDelay);
@@ -646,6 +657,8 @@ ss ssTiming {
             pvPut(bunchesMon);
             inhibitMon = inhibit;
             pvPut(inhibitMon);
+            arBucketMon = arBucket;
+            pvPut(arBucketMon);
             modeMon = mode;
             pvPut(modeMon);
             injFieldSyncMon = injFieldSync;
