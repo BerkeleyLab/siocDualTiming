@@ -108,7 +108,10 @@ with open("TuningModeTriggers.csv") as csvFile:
                     if val in modeDict:
                         print(f"Column {c} -- Duplicate mode number {val}")
                         sys.exit(1)
-                    modeDict[val] = {"column": c, "events": []}
+                    # Mode 60 is special
+                    injSync = 1 if int(val) == 60 else 0
+                    alignSel = 1 if int(val) == 60 else 0
+                    modeDict[val] = {"column": c, "injSync": injSync, "alignSel": alignSel, "events": []}
                 if match(r"Number", val):
                     EventColumn = c
                 if match(r"Timestamp[\s]Offset", val):
@@ -362,6 +365,48 @@ eventListForMode(int mode)
         """    default: break;
     }
     return NULL;
+}
+"""
+    )
+
+    # Emit injection sync lookup
+    outFile.write(
+        """
+static int
+injSyncForMode(int mode)
+{
+    switch (mode) {
+"""
+    )
+    for mode, modeInfo in modeDict.items():
+        injSync = modeInfo["injSync"]
+        print(f"    case {mode}: return {injSync};", file=outFile)
+
+    outFile.write(
+        """    default: break;
+    }
+    return -1;
+}
+"""
+    )
+
+    # Emit injection alignment option lookup
+    outFile.write(
+        """
+static int
+injAlignSelForMode(int mode)
+{
+    switch (mode) {
+"""
+    )
+    for mode, modeInfo in modeDict.items():
+        alignSel = modeInfo["alignSel"]
+        print(f"    case {mode}: return {alignSel};", file=outFile)
+
+    outFile.write(
+        """    default: break;
+    }
+    return -1;
 }
 """
     )
