@@ -63,6 +63,12 @@ int extrFieldSyncDelay = 0;
 assign extrFieldSyncDelay to "{T}TimExtrFieldSyncDelay";
 monitor extrFieldSyncDelay;
 
+/* Save value until we're ready to write to the FPGA */
+int injSyncMode;
+assign injSyncMode to "{T}TimInjSyncMode";
+int injAlignSel;
+assign injAlignSel to "{T}TimInjAlignSel";
+
 /*
  * Monitor of injection request values sent to FPGA sequencer.
  */
@@ -538,6 +544,19 @@ ss ssTiming {
                 faultCode = FC_INVALID_MODE;
                 state increment_bad_count;
             }
+
+            injSyncMode = injSyncForMode(mode);
+            if (injSyncMode < 0) {
+                faultCode = FC_INVALID_MODE;
+                state increment_bad_count;
+            }
+
+            injAlignSel = injAlignSelForMode(mode);
+            if (injAlignSel < 0) {
+                faultCode = FC_INVALID_MODE;
+                state increment_bad_count;
+            }
+
             gunBunchesDelay = bunchesToField[bunches-1];
             memset(evgSequence, 0, sizeof(evgSequence[0])*EVG_SEQUENCE_CAPACITY);
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
@@ -629,6 +648,8 @@ ss ssTiming {
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
 
             pvPut(arBucket);
+            pvPut(injAlignSel);
+            pvPut(injSyncMode);
 
             pvPut(boExtrFineDelay);
             boExtrDelay = boExtrFineDelay + boExtrDelayOffset;

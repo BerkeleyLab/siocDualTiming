@@ -27,6 +27,8 @@ record(ai, "$(T)TimExtrFieldCounterFiltd") {
 }
 
 alias("$(P)$(R)INJ:tgtARBucket", "$(T)TimTargetARBucket")
+alias("$(P)$(R)INJ:alignSel", "$(T)TimInjAlignSel")
+alias("$(P)$(R)INJ:syncMode", "$(T)TimInjSyncMode")
 
 # Injection Request Waveform: 7 elements meaning:
 # 0: SR Bucket Number to target (1 to 328)
