@@ -11,8 +11,8 @@ asynSetTraceMask("$(PORT)_SEQ",-1,0x1)
 # Load record instances
 dbLoadRecords("$(TOP)/db/eventGenerator.db", "P=$(P), R=$(R), PORT=$(PORT)")
 dbLoadRecords("$(TOP)/db/timing.db", "P=$(P),R=$(R),T=$(T)")
-dbLoadRecords("$(TOP)/db/alsGblPVs.db", "T=$(T)")
-dbLoadRecords("$(TOP)/db/alsGblPVsInjReqAssembly.db", "T=$(T)")
+dbLoadRecords("$(TOP)/db/alsGblPVs.db", "P=$(P),R=$(R),T=$(T)")
+dbLoadRecords("$(TOP)/db/alsGblPVsInjReqAssembly.db", "P=$(P),R=$(R),T=$(T)")
 
 ##############################################################################
 # Load additional records
