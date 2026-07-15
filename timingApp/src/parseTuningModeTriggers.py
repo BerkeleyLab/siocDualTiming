@@ -110,7 +110,7 @@ with open("TuningModeTriggers.csv") as csvFile:
                         sys.exit(1)
                     # Mode 60 is special
                     injSync = 1 if int(val) == 60 else 0
-                    alignSel = 1 if int(val) == 60 else 0
+                    alignSel = 0 if int(val) == 60 else 1
                     modeDict[val] = {"column": c, "injSync": injSync, "alignSel": alignSel, "events": []}
                 if match(r"Number", val):
                     EventColumn = c
