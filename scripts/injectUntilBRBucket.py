@@ -1,39 +1,41 @@
 import argparse
+import sys
 import epics
 from FakeTimingSystem import TimingSystem
 
-def _pv(name):
+
+def get_pv(name: str, timeout: float = 1.0) -> epics.PV:
     """Connect to a PV and return it, raising an error on failure."""
-    pv_obj = epics.PV(name, connection_timeout=1.0)
-    pv_obj.get()
-    if not pv_obj.connect():
-        # Raise an exception instead of sys.exit() so calling scripts can handle the failure
+    pv_obj = epics.PV(name, connection_timeout=timeout)
+    if not pv_obj.wait_for_connection(timeout=timeout):
         raise RuntimeError(f'Unable to connect to "{name}"')
     return pv_obj
 
-def main():
-    """Parses command-line arguments and initiates the TimingSystem the test """
+
+def main() -> None:
+    """Parses command-line arguments and initiates the TimingSystem test."""
     parser = argparse.ArgumentParser(
-        description='Keep injecting unitl BR bucket is the desired one.',
+        description='Keep injecting until BR bucket is the desired one.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument('-e', '--evg', default='testEVG:', help='Event generator record name prefix')
+    parser.add_argument('-p', '--evr-prefix', default='BL01:UT1:', help='EVR prefix')
     parser.add_argument('-m', '--monitor', action='store_true', help='Monitor and display event sequences')
     parser.add_argument('-t', '--test', default='test', help='Timing system test prefix')
     parser.add_argument('-v', '--verbose', action='store_true', help='Show outgoing requests')
     parser.add_argument('-b', '--br-bucket', type=int, help='BR bucket to wait for', required=True)
 
     args = parser.parse_args()
-    br_bucket_pv = _pv('testEVG:INJ:tgtBRBucket')
-    event_10_PV = _pv('BL01:UT1:EVR:event10trig')
-    event_11_PV = _pv('BL01:UT1:EVR:event11trig')
-
-    # Set EVR to trigger on the event
-    if True:
-        event_10_PV.put(0)
-        event_11_PV.put(1)
 
     try:
+        br_bucket_pv = get_pv(f"{args.evg}INJ:tgtBRBucket")
+        event_10_pv = get_pv(f"{args.evr_prefix}EVR:event10trig")
+        event_11_pv = get_pv(f"{args.evr_prefix}EVR:event11trig")
+
+        # Set EVR to trigger on the event
+        event_10_pv.put(0)
+        event_11_pv.put(1)
+
         evg = TimingSystem(
             evg_prefix=args.evg,
             test_prefix=args.test,
@@ -50,8 +52,9 @@ def main():
             print(f"BR bucket: {br_bucket}")
 
     except RuntimeError as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
