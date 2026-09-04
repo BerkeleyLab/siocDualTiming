@@ -255,8 +255,8 @@ with open("TuningModeTriggers.csv") as csvFile:
                                 re.IGNORECASE,
                             )
                             exprStr = re.sub(
-                                r"ExtrFieldSync2",
-                                "extrFieldSync2",
+                                r"ExtrFieldARSync",
+                                "extrFieldARSync",
                                 exprStr,
                                 re.IGNORECASE,
                             )
@@ -421,7 +421,7 @@ injAlignSelForMode(int mode)
     outFile.write(
         """
 static int
-getTimestamp(int mode, int evtCode, int injFieldSync, int extrFieldSync, int extrFieldSync2, int numBunches, int gunBunchesDelay, int targetBucketDelay)
+getTimestamp(int mode, int evtCode, int injFieldSync, int extrFieldSync, int extrFieldARSync, int numBunches, int gunBunchesDelay, int targetBucketDelay)
 {
     switch (mode) {
 """
