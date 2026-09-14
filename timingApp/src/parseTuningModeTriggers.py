@@ -237,31 +237,43 @@ with open("TuningModeTriggers.csv") as csvFile:
                             exprStr = "END_OF_SEQUENCE_TICKS"
                         else:
                             exprStr = re.sub(
-                                r"InjFieldSync", "injFieldSync", exprStr, re.IGNORECASE
+                                r"\bInjFieldSync\b",
+                                "injFieldSync",
+                                exprStr,
+                                re.IGNORECASE
                             )
                             exprStr = re.sub(
-                                r"GunBunchDelay",
+                                r"\bBrTargetBucket\b",
+                                "brTargetBucketDelay",
+                                exprStr,
+                                re.IGNORECASE
+                            )
+                            exprStr = re.sub(
+                                r"\bGunBunchDelay\b",
                                 "gunBunchesDelay",
                                 exprStr,
                                 re.IGNORECASE,
                             )
                             exprStr = re.sub(
-                                r"#[\s]*Bunches", "numBunches", exprStr, re.IGNORECASE
+                                r"#[\s]*Bunches",
+                                "numBunches",
+                                exprStr,
+                                re.IGNORECASE
                             )
                             exprStr = re.sub(
-                                r"ExtrFieldSync",
+                                r"\bExtrFieldSync\b",
                                 "extrFieldSync",
                                 exprStr,
                                 re.IGNORECASE,
                             )
                             exprStr = re.sub(
-                                r"ExtrFieldARSync",
+                                r"\bExtrFieldARSync\b",
                                 "extrFieldARSync",
                                 exprStr,
                                 re.IGNORECASE,
                             )
                             exprStr = re.sub(
-                                r"TargetBucket",
+                                r"\bTargetBucket\b",
                                 "targetBucketDelay",
                                 exprStr,
                                 re.IGNORECASE,
@@ -421,7 +433,7 @@ injAlignSelForMode(int mode)
     outFile.write(
         """
 static int
-getTimestamp(int mode, int evtCode, int injFieldSync, int extrFieldSync, int extrFieldARSync, int numBunches, int gunBunchesDelay, int targetBucketDelay)
+getTimestamp(int mode, int evtCode, int injFieldSync, int brTargetBucketDelay, int extrFieldSync, int extrFieldARSync, int numBunches, int gunBunchesDelay, int targetBucketDelay)
 {
     switch (mode) {
 """
