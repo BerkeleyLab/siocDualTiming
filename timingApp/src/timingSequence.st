@@ -55,6 +55,9 @@ int inhibit = 0;        /* Inhibit electron gun if set, even if mode allows gun 
 int mode = 0;           /* Type of injection sequence.  See eventListForMode() */
 int injFieldSync = 0;   /* Injection field delay */
 int extrFieldSync = 0;  /* Extraction field delay */
+int extrFieldARSync = 0;  /* Extraction field AR delay */
+int extrFieldARSyncSP = 0;  /* Extraction field AR delay in AR/BR alignment cycles */
+int brTgtDelay = 0;  /* BR target bucket delay (in EC ticks) for AR injection */
 
 int injFieldSyncDelay = 0;
 assign injFieldSyncDelay to "{T}TimInjFieldSyncDelay";
@@ -62,6 +65,12 @@ monitor injFieldSyncDelay;
 int extrFieldSyncDelay = 0;
 assign extrFieldSyncDelay to "{T}TimExtrFieldSyncDelay";
 monitor extrFieldSyncDelay;
+int extrFieldARSyncDelay = 0;
+assign extrFieldARSyncDelay to "{T}TimExtrFieldARSyncDelay";
+monitor extrFieldARSyncDelay;
+int extrFieldARSyncDelaySP = 0;
+assign extrFieldARSyncDelaySP to "{T}TimExtrFieldARSyncDelaySP";
+monitor extrFieldARSyncDelaySP;
 
 /* Save value until we're ready to write to the FPGA */
 int injSyncMode;
@@ -89,6 +98,8 @@ int injFieldSyncMon = 0;    /* Injection field delay */
 assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
 int extrFieldSyncMon = 0;   /* Extraction field delay */
 assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
+int extrFieldARSyncMon = 0;   /* Extraction field delay */
+assign extrFieldARSyncMon to "{T}TimExtrFieldARSyncDelayMon";
 
 /*
  * Storage ring current.
@@ -312,6 +323,8 @@ ss ssTiming {
             mode = 0;
             injFieldSync = injFieldSyncDelay;
             extrFieldSync = extrFieldSyncDelay;
+            extrFieldARSync = extrFieldARSyncDelay;
+            extrFieldARSyncSP = extrFieldARSyncDelaySP;
         } state create_requested_sequence
     }
 
@@ -449,6 +462,8 @@ ss ssTiming {
             sequence = request[SEQUENCE];
             injFieldSync = injFieldSyncDelay;
             extrFieldSync = extrFieldSyncDelay;
+            extrFieldARSync = extrFieldARSyncDelay;
+            extrFieldARSyncSP = extrFieldARSyncDelaySP;
         } state validate_request
     }
 
@@ -537,6 +552,11 @@ ss ssTiming {
             boExtrFineDelay = boExtrFineDelayLookupTable[targetBucketDelayRem];
 
             /*
+             * Calculate BR target bucket delay offset for AR injection
+             */
+            brTgtDelay = (18*(extrFieldARSyncSP % BR_H_NUMBER) % BR_H_NUMBER);
+
+            /*
              * Get time stamp for each event and merge into common array
              */
             e = eventListForMode(mode);
@@ -575,8 +595,8 @@ ss ssTiming {
                     category = 0;
                 }
                 else {
-                    tstamp = getTimestamp(mode, event, injFieldSync, extrFieldSync,
-                                   bunches, gunBunchesDelay, targetBucketDelay);
+                    tstamp = getTimestamp(mode, event, injFieldSync, brTgtDelay, extrFieldSync,
+                            extrFieldARSync, bunches, gunBunchesDelay, targetBucketDelay);
                     category = getCategory(mode, event);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
                         tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
@@ -686,6 +706,8 @@ ss ssTiming {
             pvPut(injFieldSyncMon);
             extrFieldSyncMon = extrFieldSync;
             pvPut(extrFieldSyncMon);
+            extrFieldARSyncMon = extrFieldARSync;
+            pvPut(extrFieldARSyncMon);
         } state await_start
     }
 
