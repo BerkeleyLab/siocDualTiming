@@ -14,6 +14,9 @@
 #define MIN_BUNCHES 1
 #define MAX_BUNCHES 16
 
+// Machine definitions
+#define BR_H_NUMBER 125
+
 // Delay window (seconds)
 #define REQUEST_WINDOW 0.5
 
@@ -25,8 +28,9 @@
 // Assume dead and try again (seconds)
 #define TIMEOUT_AWAIT_PRECOMPLETION 5
 
-// Special mode
+// Special modes
 #define SRINJECTION_MODE      40
+#define ARINJECTION_MODE      60
 
 // Special events
 #define GUNON_EVTCODE         36
