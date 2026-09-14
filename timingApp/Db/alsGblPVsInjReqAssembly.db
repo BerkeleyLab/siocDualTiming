@@ -60,6 +60,9 @@ record(bo, "$(T)TimGunInhibit") {
     info(archive,"Slow")
 }
 
+#
+# Injection Field Trigger delay
+#
 # This setpoint is assumed to contain the event delay, which is then
 # subtracted below
 #
@@ -94,6 +97,8 @@ record(calc, "$(T)GaussClockInjectionFieldTrigger") {
 }
 
 #
+# Extraction Field Trigger delay
+#
 # This setpoint is assumed to contain the event delay, which is then
 # subtracted below
 #
@@ -118,10 +123,46 @@ record(longout, "$(T)TimExtrFieldEventDelay") {
 
 record(calc, "$(T)GaussClockExtractionFieldTrigger") {
     alias("$(T)TimExtrFieldSyncDelay")
-    field(DESC, "ExtrInj delay in ticks")
+    field(DESC, "Extr field delay in ticks")
     field(INPA, "$(T)TimExtrFieldSyncDelaySP")
     field(INPB, "10250")
     field(INPC, "$(T)TimExtrFieldEventDelay")
+    field(CALC, "(A*B)-C")
+    field(EGU, "EvtClkTicks")
+    info(archive,"Slow")
+}
+
+#
+# Extraction AR Field Trigger delay. Usually same as above
+# but with a different increment to keep BR/AR in sync
+#
+# This setpoint is assumed to contain the event delay, which is then
+# subtracted below
+#
+record(longout, "$(T)TimExtrFieldARSyncDelaySP") {
+    field(DESC, "Extr field delay in AR/BR align cycles")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)TimExtrFieldARSyncDelay")
+    field(EGU, "BR/AR alignment cycles")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
+}
+
+record(longout, "$(T)TimExtrFieldAREventDelay") {
+    field(DESC, "Fine adjustment to Sync Delay")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(T)TimExtrFieldARSyncDelay")
+    field(EGU, "EvtClkTicks")
+    info(autosaveFields_pass0, "VAL")
+    info(archive,"Slow")
+}
+
+record(calc, "$(T)TimExtrFieldARSyncDelay") {
+    field(DESC, "Extr field AR delay in ticks")
+    field(INPA, "$(T)TimExtrFieldARSyncDelaySP")
+    field(INPB, "50768")
+    field(INPC, "$(T)TimExtrFieldAREventDelay")
     field(CALC, "(A*B)-C")
     field(EGU, "EvtClkTicks")
     info(archive,"Slow")
@@ -390,7 +431,14 @@ record(longout, "$(T)GaussClockInjectionFieldTriggerMon") {
 
 record(longout, "$(T)GaussClockExtractionFieldTriggerMon") {
     alias("$(T)TimExtrFieldSyncDelayMon")
-    field(DESC, "ExtrInj delay in ticks monitor")
+    field(DESC, "Extr delay in ticks monitor")
+    field(EGU, "EvtClkTicks")
+    field(TSEL, "$(T)TimInjReq.TIME")
+    info(archive,"Slow")
+}
+
+record(longout, "$(T)TimExtrFieldARSyncDelayMon") {
+    field(DESC, "Extr delay AR in ticks monitor")
     field(EGU, "EvtClkTicks")
     field(TSEL, "$(T)TimInjReq.TIME")
     info(archive,"Slow")
