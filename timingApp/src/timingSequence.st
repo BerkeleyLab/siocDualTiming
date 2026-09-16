@@ -57,7 +57,7 @@ int injFieldSync = 0;   /* Injection field delay */
 int extrFieldSync = 0;  /* Extraction field delay */
 int extrFieldARSync = 0;  /* Extraction field AR delay */
 int extrFieldARSyncSP = 0;  /* Extraction field AR delay in AR/BR alignment cycles */
-int brTgtDelay = 0;  /* BR target bucket delay (in EC ticks) for AR injection */
+int brTgtBucket = 1;  /* BR target bucket (in buckets) for AR injection */
 
 int injFieldSyncDelay = 0;
 assign injFieldSyncDelay to "{T}TimInjFieldSyncDelay";
@@ -71,6 +71,9 @@ monitor extrFieldARSyncDelay;
 int extrFieldARSyncDelaySP = 0;
 assign extrFieldARSyncDelaySP to "{T}TimExtrFieldARSyncDelaySP";
 monitor extrFieldARSyncDelaySP;
+int injStBRBucket = 1;
+assign injStBRBucket to "{P}{R}INJ:stBRBucket";
+monitor injStBRBucket;
 
 /* Save value until we're ready to write to the FPGA */
 int injSyncMode;
@@ -100,6 +103,16 @@ int extrFieldSyncMon = 0;   /* Extraction field delay */
 assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
 int extrFieldARSyncMon = 0;   /* Extraction field delay */
 assign extrFieldARSyncMon to "{T}TimExtrFieldARSyncDelayMon";
+
+/*
+ * Calculated values
+ */
+int injStBRBucketIdx = 0;
+
+int tgtBRDelayOffset = 0;
+assign tgtBRDelayOffset to "{T}TimTgtBRDelayOffset";
+int tgtBRBucket = 1;
+assign tgtBRBucket to "{T}TimTgtBRBucket";
 
 /*
  * Storage ring current.
@@ -325,6 +338,7 @@ ss ssTiming {
             extrFieldSync = extrFieldSyncDelay;
             extrFieldARSync = extrFieldARSyncDelay;
             extrFieldARSyncSP = extrFieldARSyncDelaySP;
+            injStBRBucketIdx = (injStBRBucket <= 0)?  0 : injStBRBucket-1;
         } state create_requested_sequence
     }
 
@@ -464,6 +478,7 @@ ss ssTiming {
             extrFieldSync = extrFieldSyncDelay;
             extrFieldARSync = extrFieldARSyncDelay;
             extrFieldARSyncSP = extrFieldARSyncDelaySP;
+            injStBRBucketIdx = (injStBRBucket <= 0)?  0 : injStBRBucket-1;
         } state validate_request
     }
 
@@ -554,7 +569,7 @@ ss ssTiming {
             /*
              * Calculate BR target bucket delay offset for AR injection
              */
-            brTgtDelay = (18*(extrFieldARSyncSP % BR_H_NUMBER) % BR_H_NUMBER);
+            tgtBRDelayOffset = (18*(extrFieldARSyncSP % BR_H_NUMBER) % BR_H_NUMBER);
 
             /*
              * Get time stamp for each event and merge into common array
@@ -595,7 +610,7 @@ ss ssTiming {
                     category = 0;
                 }
                 else {
-                    tstamp = getTimestamp(mode, event, injFieldSync, brTgtDelay, extrFieldSync,
+                    tstamp = getTimestamp(mode, event, injFieldSync, tgtBRDelayOffset, extrFieldSync,
                             extrFieldARSync, bunches, gunBunchesDelay, targetBucketDelay);
                     category = getCategory(mode, event);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
@@ -670,6 +685,12 @@ ss ssTiming {
             pvPut(arBucket);
             pvPut(injAlignSel);
             pvPut(injSyncMode);
+
+            pvPut(tgtBRDelayOffset);
+
+            tgtBRBucket = ((injStBRBucketIdx +
+                72*(extrFieldARSyncSP % BR_H_NUMBER)) % BR_H_NUMBER) + 1;
+            pvPut(tgtBRBucket);
 
             pvPut(boExtrFineDelay);
             boExtrDelay = boExtrFineDelay + boExtrDelayOffset;
