@@ -168,6 +168,17 @@ record(calc, "$(T)TimExtrFieldARSyncDelay") {
     info(archive,"Slow")
 }
 
+record(longin, "$(T)TimTgtBRDelayOffset") {
+    field(DESC, "Target BR bucket delay offset")
+    field(EGU,  "EvtClkTicks")
+    info(archive,"Slow")
+}
+
+record(longin, "$(T)TimTgtBRBucket") {
+    field(DESC, "Target BR bucket")
+    info(archive,"Slow")
+}
+
 record(longout, "$(T)TimSequenceNumber") {
     field(DESC, "Sequence Number")
     info(archive,"Slow")
