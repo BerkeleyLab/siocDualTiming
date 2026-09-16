@@ -1,7 +1,7 @@
 import argparse
 import sys
 import epics
-from FakeTimingSystem import TimingSystem
+from fakeTimingSystem import TimingSystem
 
 
 def get_pv(name: str, timeout: float = 1.0) -> epics.PV:
