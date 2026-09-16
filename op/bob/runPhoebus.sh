@@ -37,6 +37,6 @@ P=`echo "$prefix" | sed -ne '/\(.\).*/s//\1/p'`
 R=`echo "$prefix" | sed -ne '/.\(.*\)/s//\1/p'`
 EVG=`getPath EVG`
 
-ln -sf $EVG/op/bob/autoconvert/*.bob autoconvert/
+ln -sf $EVG/op/bob/*.bob .
 
-phoebus -resource file:${SCRIPTPATH}/autoconvert/${bob}?"P=${P}&R=${R}&T=${P}${R}"
+phoebus -resource file:${SCRIPTPATH}/${bob}?"P=${P}&R=${R}&T=${P}${R}"
