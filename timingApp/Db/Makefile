@@ -4,30 +4,56 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
 #----------------------------------------------------
-#  Optimization of db files using dbst (DEFAULT: NO)
-#DB_OPT = YES
-
-#----------------------------------------------------
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
-DB_INSTALLS += $(AUTOSAVE)/db/save_restoreStatus.db
+# Install databases, templates & substitutions like this
+
+ifneq ($(ASYN),)
 DB_INSTALLS += $(ASYN)/db/asynRecord.db
-DB_INSTALLS += $(EVG)/db/eventGenerator.db
-DB += alsGblPVs.db
-DB += alsGblPVsInjReqAssembly.db
-DB += timing.db
+endif
 
 ifneq ($(devIocStats),)
-DB_INSTALLS += $(devIocStats)/db/ioc_stats.db
+DB_INSTALLS += $(devIocStats)/db/iocAdminSoft.db
 endif
 
 ifneq ($(IOCSTATS),)
-DB_INSTALLS += $(IOCSTATS)/db/iocAdminSoft.db
+DB_INSTALLS += $(IOCSTATS)/db/ioc_stats.db
 endif
 
 ifneq ($(RECCASTER),)
 DB_INSTALLS += $(RECCASTER)/db/reccaster.db
 endif
+
+ifneq ($(AUTOSAVE),)
+DB_INSTALLS += $(AUTOSAVE)/db/save_restoreStatus.db
+endif
+
+ifneq ($(PMAC),)
+DB_INSTALLS += $(PMAC)/db/pmacController.template
+DB_INSTALLS += $(PMAC)/db/pmacStatusAxis.template
+DB_INSTALLS += $(PMAC)/db/powerPmacStatus.template
+endif
+
+ifneq ($(EVENTGENERATORSUP),)
+DB_INSTALLS += $(EVENTGENERATORSUP)/db/eventGenerator.db
+endif
+
+#DB += $(patsubst ../%, %, $(wildcard ../*.template))
+#DB += $(patsubst ../%, %, $(wildcard ../*.db))
+#DB += $(patsubst ../%, %, $(wildcard ../*.vdb))
+#DB += $(patsubst ../%, %, $(wildcard ../*.substitutions))
+
+
+##
+DB += $(patsubst ../%, %, $(wildcard ../*.proto))
+DB += $(patsubst ../%, %, $(wildcard ../*.json))
+#DB += $(patsubst ../%, %, $(wildcard ../*.acf))
+
+DB += alsGblPVs.db
+DB += alsGblPVsInjReqAssembly.db
+DB += timing.db
+
+#REQ += $(patsubst ../%, %, $(wildcard ../*.req))
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
@@ -36,4 +62,3 @@ endif
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
-

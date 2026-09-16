@@ -3,13 +3,19 @@
 
 // Array capacities
 #define MAX_SEQUENCE_LENGTH   100
-#define EVG_SEQUENCE_CAPACITY 200
+// each elements consists of: timestamp, event number, category
+#define EVG_SEQUENCE_CAPACITY 300
 
 // Ranges for request parameters
 #define MIN_BUCKETS 1
 #define MAX_BUCKETS 328
+#define MIN_AR_BUCKETS 1
+#define MAX_AR_BUCKETS 304
 #define MIN_BUNCHES 1
 #define MAX_BUNCHES 16
+
+// Machine definitions
+#define BR_H_NUMBER 125
 
 // Delay window (seconds)
 #define REQUEST_WINDOW 0.5
@@ -22,8 +28,9 @@
 // Assume dead and try again (seconds)
 #define TIMEOUT_AWAIT_PRECOMPLETION 5
 
-// Special mode
+// Special modes
 #define SRINJECTION_MODE      40
+#define ARINJECTION_MODE      60
 
 // Special events
 #define GUNON_EVTCODE         36

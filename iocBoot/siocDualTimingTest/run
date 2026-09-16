@@ -1,2 +1,0 @@
-#!/bin/sh
-screen -m -S siocDualTimingTest -c ./screenrc -L ./st.cmd

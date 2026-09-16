@@ -20,7 +20,7 @@ option +d;
  * Additional ticks for end of cycle
  */
 int endOfCycleDelay;
-assign endOfCycleDelay to "TimCycleDelay";
+assign endOfCycleDelay to "{T}TimCycleDelay";
 monitor endOfCycleDelay;
 
 /*
@@ -38,8 +38,8 @@ typedef enum { /* Request waveform indices. */
         GUN_BUNCHES,
         INJ_MODE,
         GUN_INHIBIT,
-        INJ_FIELD_SYNC_DELAY,
-        EXTR_FIELD_SYNC_DELAY,
+        TARGET_AR_BUCKET,
+        FUTURE_USE_1,
         SEQUENCE,
 } REQUEST_FIELDS;
 }%
@@ -48,11 +48,16 @@ typedef enum { /* Request waveform indices. */
 int sequence = 0;       /* Sequence #: request ignored if no change from previous */
 int lastSequence = -1;
 int bucket = 1;         /* Target bucket (1-328) */
+int arBucket = 1;       /* AR Target bucket (1-304) */
+assign arBucket to "{T}TimTargetARBucket";
 int bunches = 1;        /* Number of electron gun bunches (1-16) */
 int inhibit = 0;        /* Inhibit electron gun if set, even if mode allows gun */
 int mode = 0;           /* Type of injection sequence.  See eventListForMode() */
 int injFieldSync = 0;   /* Injection field delay */
 int extrFieldSync = 0;  /* Extraction field delay */
+int extrFieldARSync = 0;  /* Extraction field AR delay */
+int extrFieldARSyncSP = 0;  /* Extraction field AR delay in AR/BR alignment cycles */
+int brTgtBucket = 1;  /* BR target bucket (in buckets) for AR injection */
 
 int injFieldSyncDelay = 0;
 assign injFieldSyncDelay to "{T}TimInjFieldSyncDelay";
@@ -60,6 +65,21 @@ monitor injFieldSyncDelay;
 int extrFieldSyncDelay = 0;
 assign extrFieldSyncDelay to "{T}TimExtrFieldSyncDelay";
 monitor extrFieldSyncDelay;
+int extrFieldARSyncDelay = 0;
+assign extrFieldARSyncDelay to "{T}TimExtrFieldARSyncDelay";
+monitor extrFieldARSyncDelay;
+int extrFieldARSyncDelaySP = 0;
+assign extrFieldARSyncDelaySP to "{T}TimExtrFieldARSyncDelaySP";
+monitor extrFieldARSyncDelaySP;
+int injStBRBucket = 1;
+assign injStBRBucket to "{P}{R}INJ:stBRBucket";
+monitor injStBRBucket;
+
+/* Save value until we're ready to write to the FPGA */
+int injSyncMode;
+assign injSyncMode to "{T}TimInjSyncMode";
+int injAlignSel;
+assign injAlignSel to "{T}TimInjAlignSel";
 
 /*
  * Monitor of injection request values sent to FPGA sequencer.
@@ -69,6 +89,8 @@ int sequenceMon = 0;        /* Sequence #: request ignored if no change from pre
 assign sequenceMon to "{T}TimSequenceNumberMon";
 int bucketMon = 1;          /* Target bucket (1-328) */
 assign bucketMon to "{T}TimTargetBucketMon";
+int arBucketMon = 1;          /* Target AR Bucket (1-304) */
+assign arBucketMon to "{T}TimTargetARBucketMon";
 int bunchesMon = 1;         /* Number of electron gun bunches (1-16) */
 assign bunchesMon to "{T}TimGunBunchCountMon";
 int inhibitMon = 0;         /* Inhibit electron gun if set, even if mode allows gun */
@@ -79,6 +101,18 @@ int injFieldSyncMon = 0;    /* Injection field delay */
 assign injFieldSyncMon to "{T}TimInjFieldSyncDelayMon";
 int extrFieldSyncMon = 0;   /* Extraction field delay */
 assign extrFieldSyncMon to "{T}TimExtrFieldSyncDelayMon";
+int extrFieldARSyncMon = 0;   /* Extraction field delay */
+assign extrFieldARSyncMon to "{T}TimExtrFieldARSyncDelayMon";
+
+/*
+ * Calculated values
+ */
+int injStBRBucketIdx = 0;
+
+int tgtBRDelayOffset = 0;
+assign tgtBRDelayOffset to "{T}TimTgtBRDelayOffset";
+int tgtBRBucket = 1;
+assign tgtBRBucket to "{T}TimTgtBRBucket";
 
 /*
  * Storage ring current.
@@ -223,6 +257,7 @@ int evgSequencerCurrentStarts;
  * Comparison routine for qsort
  * Primary sort on time stamp (first word)
  * Secondary sort on event code (second word)
+ * No sort on category code (third word)
  */
 static int
 tsCompare(const void *a, const void *b)
@@ -237,23 +272,32 @@ tsCompare(const void *a, const void *b)
 
 /*
  * Ensure monotonically increasing time stamps
- * and convert time stamps to delay.
+ * and convert time stamps to delay and category
+ * relative category (only the first in the group
+ * has the delay)
  */
 static int
-monotonicSequence(int count, int *tstampsAndEvents)
+monotonicSequence(int count, int *tstampsEventsAndCat)
 {
     int i, idx;
     int ret = 1;
     int prev = -1;
-    for (i = 0, idx = 0; i < count; i++, idx += 2) {
-        int this = tstampsAndEvents[idx];
-        if ((i < (count - 1)) && (tstampsAndEvents[idx+2] <= this)) {
+    int prevCat = 0;
+
+    for (i = 0, idx = 0; i < count; i++, idx += 3) {
+        int this = tstampsEventsAndCat[idx];
+        int thisCat = tstampsEventsAndCat[idx+2];
+        if ((i < (count - 1)) && (tstampsEventsAndCat[idx+3] <= this)) {
             ret = 0;
-            tstampsAndEvents[idx+2] = this + 1;
+            tstampsEventsAndCat[idx+3] = this + 1;
         }
-        tstampsAndEvents[idx] = (this - prev) - 1;
+
+        tstampsEventsAndCat[idx] = (this - prev) - 1;
+        tstampsEventsAndCat[idx+2] = (thisCat - prevCat) != 0? thisCat : 0;
         prev = this;
+        prevCat = thisCat;
     }
+
     return ret;
 }
 
@@ -292,6 +336,9 @@ ss ssTiming {
             mode = 0;
             injFieldSync = injFieldSyncDelay;
             extrFieldSync = extrFieldSyncDelay;
+            extrFieldARSync = extrFieldARSyncDelay;
+            extrFieldARSyncSP = extrFieldARSyncDelaySP;
+            injStBRBucketIdx = (injStBRBucket <= 0)?  0 : injStBRBucket-1;
         } state create_requested_sequence
     }
 
@@ -304,13 +351,16 @@ ss ssTiming {
             if(debugFlag) printf("State: await_connections\n");
             oldConnectCount = -1;
         }
+
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (pvConnectCount() == pvAssignCount()) {
             if (faultCode == FC_MISSING_CONNECTION) {
                 faultCode = FC_SUCCESS;
                 pvPut(faultCode);
             }
         } state await_potentate
+
         when (delay(10) && (pvConnectCount() != oldConnectCount)) {
             oldConnectCount = pvConnectCount();
             printf("Timing Sequencer: %d/%d connected\n", pvConnectCount(),
@@ -329,6 +379,7 @@ ss ssTiming {
         entry {
             if(debugFlag) printf("State: await_potentate\n");
         }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (injCycleEnable != 0) { } state inj_cycle_disable
         when (potentate != 0) { } state await_precompletion
@@ -345,6 +396,7 @@ ss ssTiming {
             injCycleEnable = 0;
             pvPut(injCycleEnable, SYNC);
         }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state await_potentate
         when () { } state await_precompletion
@@ -355,15 +407,17 @@ ss ssTiming {
      */
     state await_start {
         entry { if(debugFlag) printf("State: await_start\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (delay(TIMEOUT_AWAIT_START)) {
             /* EVG never started. Assume dead and try again */
         } state default_sequence
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) != 0) {
-                                                    } state await_precompletion
+        } state await_precompletion
     }
 
     /*
@@ -371,12 +425,15 @@ ss ssTiming {
      */
     state await_precompletion {
         entry { if(debugFlag) printf("State: await_precompletion\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (efTestAndClear(requestFlag)) {
             /* Ignore requests outside expected window */
         } state await_precompletion
+
         when (delay(TIMEOUT_AWAIT_PRECOMPLETION)) {
             /* EVG never finished. Assume dead and try again */
         } state default_sequence
@@ -391,9 +448,11 @@ ss ssTiming {
      */
     state await_request {
         entry { if(debugFlag) printf("State: await_request\n"); }
+
         when (pvConnectCount() != pvAssignCount()) { } state missing_connection
         when (potentate == 0) { } state no_potentate
         when (injCycleEnable != 0) { } state inj_cycle_disable
+
         when (delay(REQUEST_WINDOW)) {
             /* No request, default cycle will be emitted */
         } state default_sequence
@@ -413,9 +472,13 @@ ss ssTiming {
             bunches  = request[GUN_BUNCHES];
             mode     = request[INJ_MODE];
             inhibit  = request[GUN_INHIBIT];
+            arBucket = request[TARGET_AR_BUCKET];
             sequence = request[SEQUENCE];
             injFieldSync = injFieldSyncDelay;
             extrFieldSync = extrFieldSyncDelay;
+            extrFieldARSync = extrFieldARSyncDelay;
+            extrFieldARSyncSP = extrFieldARSyncDelaySP;
+            injStBRBucketIdx = (injStBRBucket <= 0)?  0 : injStBRBucket-1;
         } state validate_request
     }
 
@@ -424,11 +487,16 @@ ss ssTiming {
      */
     state validate_request {
         entry { if(debugFlag) printf("State: validate_request\n"); }
+
         when (sequence == lastSequence) {
             faultCode = FC_STALE_SEQUENCE;
         } state increment_bad_count
 
         when ((bucket < MIN_BUCKETS) || (bucket > MAX_BUCKETS)) {
+            faultCode = FC_INVALID_BUCKET;
+        } state increment_bad_count
+
+        when ((arBucket < MIN_AR_BUCKETS) || (arBucket > MAX_AR_BUCKETS)) {
             faultCode = FC_INVALID_BUCKET;
         } state increment_bad_count
 
@@ -442,6 +510,7 @@ ss ssTiming {
 
     state check_beamcurrent {
         entry { if(debugFlag) printf("State: check_beamcurrent\n"); }
+
         when ((mode == SRINJECTION_MODE) && (pvSeverity(beamcurrent) == pvSevrINVALID)) {
             faultCode = FC_INVALID_BEAM_CURRENT;
         } state increment_bad_count
@@ -456,6 +525,7 @@ ss ssTiming {
 
     state check_severities {
         entry { if(debugFlag) printf("State: check_severities\n"); }
+
         when ((pvSeverity(evgSeqStatus) != pvSevrNONE)
             || (pvSeverity(evgSequencerStarts) != pvSevrNONE)) {
             faultCode = FC_PV_SEVERITY;
@@ -467,6 +537,7 @@ ss ssTiming {
 
     state check_links {
         entry { if(debugFlag) printf("State: check_links\n"); }
+
         when ((pvStatus(allEVRvalid) != pvStatOK) || (allEVRvalid == 0)) {
             faultCode = FC_BAD_EVR;
         } state increment_bad_count
@@ -480,6 +551,7 @@ ss ssTiming {
      */
     state create_requested_sequence {
         entry { if(debugFlag) printf("State: create_requested_sequence\n"); }
+
         when () {
             %%const unsigned char *e;
             int targetBucketDelayRaw = 125 * ((bucket * 21) % 328);
@@ -495,6 +567,11 @@ ss ssTiming {
             boExtrFineDelay = boExtrFineDelayLookupTable[targetBucketDelayRem];
 
             /*
+             * Calculate BR target bucket delay offset for AR injection
+             */
+            tgtBRDelayOffset = (18*(extrFieldARSyncSP % BR_H_NUMBER) % BR_H_NUMBER);
+
+            /*
              * Get time stamp for each event and merge into common array
              */
             e = eventListForMode(mode);
@@ -502,47 +579,78 @@ ss ssTiming {
                 faultCode = FC_INVALID_MODE;
                 state increment_bad_count;
             }
+
+            injSyncMode = injSyncForMode(mode);
+            if (injSyncMode < 0) {
+                faultCode = FC_INVALID_MODE;
+                state increment_bad_count;
+            }
+
+            injAlignSel = injAlignSelForMode(mode);
+            if (injAlignSel < 0) {
+                faultCode = FC_INVALID_MODE;
+                state increment_bad_count;
+            }
+
             gunBunchesDelay = bunchesToField[bunches-1];
             memset(evgSequence, 0, sizeof(evgSequence[0])*EVG_SEQUENCE_CAPACITY);
             for (i = 0, nTStamps = 0; i < MAX_SEQUENCE_LENGTH; i++) {
                 int event = e[i];
                 int tstamp;
+                int category;
+
                 if (inhibit) {
                     if (event == GUNON_EVTCODE || event == GUNOFF_EVTCODE) {
                         continue;
                     }
                 }
+
                 if (event == SEQUENCE_END_EVTCODE) {
                     tstamp = DELAY_END + endOfCycleDelay;
+                    category = 0;
                 }
                 else {
-                    tstamp = getTimestamp(event, injFieldSync, extrFieldSync,
-                                   bunches, gunBunchesDelay, targetBucketDelay);
+                    tstamp = getTimestamp(mode, event, injFieldSync, tgtBRDelayOffset, extrFieldSync,
+                            extrFieldARSync, bunches, gunBunchesDelay, targetBucketDelay);
+                    category = getCategory(mode, event);
                     if (tstamp > (END_OF_SEQUENCE_TICKS / 2)) {
                         tstamp = highwater + (tstamp - END_OF_SEQUENCE_TICKS) + 2;
                     }
+
                     if (tstamp < 0) {
                         fprintf(stderr, "WARNING: tstamp for evtcode %d is %d"
                                                " -- ignoring\n", event, tstamp);
                         continue;
                     }
+
+                    if (category < 0) {
+                        fprintf(stderr, "WARNING: category for evtcode %d is %d"
+                                               " -- ignoring\n", event, category);
+                        continue;
+                    }
+
                     if (tstamp >= highwater) {
                         highwater = tstamp + 1;
                     }
                 }
-                evgSequence[(2*nTStamps)+0] = tstamp;
-                evgSequence[(2*nTStamps)+1] = event;
+
+                evgSequence[(3*nTStamps)+0] = tstamp;
+                evgSequence[(3*nTStamps)+1] = event;
+                evgSequence[(3*nTStamps)+2] = category;
                 nTStamps++;
+
                 if (event == SEQUENCE_END_EVTCODE) {
                     foundEOS = 1;
                     break;
                 }
             }
+
             if (!foundEOS) {
                 faultCode = FC_NO_EOS;
                 state increment_bad_count;
             }
-            qsort(evgSequence, nTStamps, 2*sizeof(int), tsCompare);
+
+            qsort(evgSequence, nTStamps, 3*sizeof(int), tsCompare);
             if (!monotonicSequence(nTStamps, evgSequence)) {
                 duplicateTimestampFound = 1;
                 pvPut(duplicateTimestampFound);
@@ -574,6 +682,16 @@ ss ssTiming {
 
         when ((evgSeqStatus & EVG_SEQ_STATUS_ACTIVE) == 0) {
 
+            pvPut(arBucket);
+            pvPut(injAlignSel);
+            pvPut(injSyncMode);
+
+            pvPut(tgtBRDelayOffset);
+
+            tgtBRBucket = ((injStBRBucketIdx +
+                72*(extrFieldARSyncSP % BR_H_NUMBER)) % BR_H_NUMBER) + 1;
+            pvPut(tgtBRBucket);
+
             pvPut(boExtrFineDelay);
             boExtrDelay = boExtrFineDelay + boExtrDelayOffset;
             pvPut(boExtrDelay);
@@ -601,12 +719,16 @@ ss ssTiming {
             pvPut(bunchesMon);
             inhibitMon = inhibit;
             pvPut(inhibitMon);
+            arBucketMon = arBucket;
+            pvPut(arBucketMon);
             modeMon = mode;
             pvPut(modeMon);
             injFieldSyncMon = injFieldSync;
             pvPut(injFieldSyncMon);
             extrFieldSyncMon = extrFieldSync;
             pvPut(extrFieldSyncMon);
+            extrFieldARSyncMon = extrFieldARSync;
+            pvPut(extrFieldARSyncMon);
         } state await_start
     }
 
