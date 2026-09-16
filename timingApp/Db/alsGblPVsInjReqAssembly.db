@@ -143,7 +143,7 @@ record(longout, "$(T)TimExtrFieldARSyncDelaySP") {
     field(DESC, "Extr field delay in AR/BR align cycles")
     field(DTYP, "Soft Channel")
     field(FLNK, "$(T)TimExtrFieldARSyncDelay")
-    field(EGU, "BR/AR alignment cycles")
+    field(EGU, "BR/AR cycles")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
     info(archive,"Slow")
