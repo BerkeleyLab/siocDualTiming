@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-10-05 14:12:33 by lrusso-->
+<!--Saved on 2026-10-05 16:30:16 by lrusso-->
 <display version="2.0.0">
   <name>TIM injectionSequencer</name>
   <x>265</x>
@@ -317,17 +317,6 @@
           </background_color>
           <horizontal_alignment>2</horizontal_alignment>
           <vertical_alignment>1</vertical_alignment>
-          <rules>
-            <rule name="EDM visibility" prop_id="visible" out_exp="false">
-              <exp bool_exp="pv0&gt;=1.0 &amp;&amp; pv0&lt;2.0">
-                <value>true</value>
-              </exp>
-              <exp bool_exp="true">
-                <value>false</value>
-              </exp>
-              <pv_name>$(T)InjSeqDupTimestamp</pv_name>
-            </rule>
-          </rules>
         </widget>
         <widget type="led" version="2.0.0">
           <name>LED_1</name>
