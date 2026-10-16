@@ -1,341 +1,520 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Saved on 2026-10-05 16:30:16 by lrusso-->
 <display version="2.0.0">
   <name>TIM injectionSequencer</name>
   <x>265</x>
   <y>170</y>
-  <width>380</width>
-  <height>271</height>
+  <width>420</width>
+  <height>444</height>
   <background_color>
-    <color name="GLOBAL canvas" red="200" green="200" blue="200">
+    <color red="236" green="239" blue="244">
     </color>
   </background_color>
   <grid_visible>false</grid_visible>
+  <widget type="rectangle" version="2.0.0">
+    <name>Header Bar</name>
+    <width>420</width>
+    <height>48</height>
+    <line_width>0</line_width>
+    <background_color>
+      <color red="30" green="41" blue="59">
+      </color>
+    </background_color>
+  </widget>
   <widget type="label" version="2.0.0">
-    <name>Banner</name>
-    <text>$(T) Timing Sequencer</text>
-    <x>2</x>
-    <width>361</width>
-    <height>28</height>
+    <name>Header Title</name>
+    <text>Timing Sequencer</text>
+    <x>16</x>
+    <width>388</width>
+    <height>48</height>
     <font>
-      <font name="Header 1" family="Liberation Sans" style="BOLD" size="22.0">
+      <font family="Liberation Sans" style="BOLD" size="20.0">
       </font>
     </font>
     <foreground_color>
-      <color name="black-14" red="0" green="0" blue="0">
+      <color red="255" green="255" blue="255">
       </color>
     </foreground_color>
     <background_color>
-      <color name="green-19" red="0" green="128" blue="0">
+      <color red="0" green="128" blue="0">
       </color>
     </background_color>
-    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Header Prefix</name>
+    <text>$(T)</text>
+    <x>16</x>
+    <width>388</width>
+    <height>48</height>
+    <font>
+      <font family="Liberation Mono" style="REGULAR" size="13.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="148" green="163" blue="184">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="0" green="128" blue="0">
+      </color>
+    </background_color>
+    <horizontal_alignment>2</horizontal_alignment>
     <vertical_alignment>1</vertical_alignment>
   </widget>
   <widget type="group" version="3.0.0">
-    <name>Statistics</name>
-    <x>35</x>
-    <y>36</y>
-    <width>310</width>
-    <height>125</height>
-    <style>2</style>
+    <name>Card Slot</name>
+    <x>44</x>
+    <y>104</y>
+    <width>332</width>
+    <height>184</height>
+    <style>3</style>
     <transparent>true</transparent>
-    <widget type="label" version="2.0.0">
-      <name>Section Title</name>
-      <text>Injection Requests</text>
-      <width>306</width>
-      <height>22</height>
-      <font>
-        <font name="Header 3" family="Liberation Sans" style="BOLD" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color name="black-14" red="0" green="0" blue="0">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color name="green-19" red="0" green="128" blue="0">
-        </color>
-      </background_color>
-      <horizontal_alignment>1</horizontal_alignment>
-      <vertical_alignment>1</vertical_alignment>
-    </widget>
     <widget type="group" version="3.0.0">
-      <name>Statistics Content</name>
-      <y>24</y>
-      <width>306</width>
-      <height>97</height>
+      <name>Injection Requests</name>
+      <width>332</width>
+      <height>184</height>
       <style>3</style>
       <transparent>true</transparent>
-      <widget type="group" version="3.0.0">
-        <name>Row</name>
-        <width>306</width>
+      <widget type="rectangle" version="2.0.0">
+        <name>Card</name>
+        <width>332</width>
+        <height>184</height>
+        <line_width>1</line_width>
+        <line_color>
+          <color red="214" green="219" blue="226">
+          </color>
+        </line_color>
+        <background_color>
+          <color red="255" green="255" blue="255">
+          </color>
+        </background_color>
+        <corner_width>8</corner_width>
+        <corner_height>8</corner_height>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Accent</name>
+        <x>16</x>
+        <y>14</y>
+        <width>4</width>
+        <height>18</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="37" green="99" blue="235">
+          </color>
+        </background_color>
+      </widget>
+      <widget type="label" version="2.0.0">
+        <name>Card Title</name>
+        <text>Injection Requests</text>
+        <x>28</x>
+        <y>12</y>
+        <width>288</width>
         <height>22</height>
-        <style>3</style>
-        <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>Successful requests</text>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
-        <widget type="textupdate" version="2.0.0">
-          <name>Readback</name>
-          <pv_name>$(T)InjSeqSuccessCount</pv_name>
-          <x>156</x>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="grey-2" red="218" green="218" blue="218">
-            </color>
-          </background_color>
-          <show_units>false</show_units>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
+        <font>
+          <font family="Liberation Sans" style="BOLD" size="14.0">
+          </font>
+        </font>
+        <foreground_color>
+          <color red="30" green="41" blue="59">
+          </color>
+        </foreground_color>
+        <background_color>
+          <color red="0" green="128" blue="0">
+          </color>
+        </background_color>
+        <vertical_alignment>1</vertical_alignment>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Separator</name>
+        <x>1</x>
+        <y>42</y>
+        <width>330</width>
+        <height>1</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="226" green="232" blue="240">
+          </color>
+        </background_color>
       </widget>
       <widget type="group" version="3.0.0">
-        <name>Row</name>
-        <y>25</y>
-        <width>306</width>
-        <height>22</height>
+        <name>Content</name>
+        <x>16</x>
+        <y>54</y>
+        <width>300</width>
+        <height>126</height>
         <style>3</style>
         <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>Failed requests</text>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
+        <widget type="group" version="3.0.0">
+          <name>Successful requests</name>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Successful requests</text>
+            <width>160</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
+          <widget type="textupdate" version="2.0.0">
+            <name>Readback</name>
+            <pv_name>$(T)InjSeqSuccessCount</pv_name>
+            <x>168</x>
+            <width>132</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Mono" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="15" green="23" blue="42">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="241" green="245" blue="249">
+              </color>
+            </background_color>
+            <show_units>false</show_units>
+            <horizontal_alignment>2</horizontal_alignment>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
-        <widget type="textupdate" version="2.0.0">
-          <name>Readback</name>
-          <pv_name>$(T)InjSeqFailedCount</pv_name>
-          <x>156</x>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="grey-2" red="218" green="218" blue="218">
-            </color>
-          </background_color>
-          <show_units>false</show_units>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
+        <widget type="group" version="3.0.0">
+          <name>Failed requests</name>
+          <y>30</y>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Failed requests</text>
+            <width>160</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
+          <widget type="textupdate" version="2.0.0">
+            <name>Readback</name>
+            <pv_name>$(T)InjSeqFailedCount</pv_name>
+            <x>168</x>
+            <width>132</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Mono" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="15" green="23" blue="42">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="241" green="245" blue="249">
+              </color>
+            </background_color>
+            <show_units>false</show_units>
+            <horizontal_alignment>2</horizontal_alignment>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
-      </widget>
-      <widget type="group" version="3.0.0">
-        <name>Row</name>
-        <y>50</y>
-        <width>306</width>
-        <height>22</height>
-        <style>3</style>
-        <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>Start overruns</text>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
+        <widget type="group" version="3.0.0">
+          <name>Start overruns</name>
+          <y>60</y>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Start overruns</text>
+            <width>160</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
+          <widget type="textupdate" version="2.0.0">
+            <name>Readback</name>
+            <pv_name>$(T)InjSeqStartOverrunCount</pv_name>
+            <x>168</x>
+            <width>132</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Mono" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="15" green="23" blue="42">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="241" green="245" blue="249">
+              </color>
+            </background_color>
+            <show_units>false</show_units>
+            <horizontal_alignment>2</horizontal_alignment>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
-        <widget type="textupdate" version="2.0.0">
-          <name>Readback</name>
-          <pv_name>$(T)InjSeqStartOverrunCount</pv_name>
-          <x>156</x>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="grey-2" red="218" green="218" blue="218">
-            </color>
-          </background_color>
-          <show_units>false</show_units>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
-      </widget>
-      <widget type="group" version="3.0.0">
-        <name>Row</name>
-        <y>75</y>
-        <width>306</width>
-        <height>22</height>
-        <style>3</style>
-        <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>Fault code</text>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
-        <widget type="textupdate" version="2.0.0">
-          <name>Readback</name>
-          <pv_name>$(T)InjSeqFaultCode</pv_name>
-          <x>156</x>
-          <width>150</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="grey-2" red="218" green="218" blue="218">
-            </color>
-          </background_color>
-          <show_units>false</show_units>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
+        <widget type="group" version="3.0.0">
+          <name>Fault code</name>
+          <y>90</y>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Fault code</text>
+            <width>160</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
+          <widget type="textupdate" version="2.0.0">
+            <name>Readback</name>
+            <pv_name>$(T)InjSeqFaultCode</pv_name>
+            <x>168</x>
+            <width>132</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Mono" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="15" green="23" blue="42">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="241" green="245" blue="249">
+              </color>
+            </background_color>
+            <show_units>false</show_units>
+            <horizontal_alignment>2</horizontal_alignment>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
       </widget>
     </widget>
   </widget>
   <widget type="group" version="3.0.0">
-    <name>Status</name>
-    <x>35</x>
-    <y>179</y>
-    <width>204</width>
-    <height>75</height>
-    <style>2</style>
+    <name>Card Slot</name>
+    <x>44</x>
+    <y>304</y>
+    <width>332</width>
+    <height>124</height>
+    <style>3</style>
     <transparent>true</transparent>
-    <widget type="label" version="2.0.0">
-      <name>Section Title</name>
-      <text>Status</text>
-      <width>200</width>
-      <height>22</height>
-      <font>
-        <font name="Header 3" family="Liberation Sans" style="BOLD" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color name="black-14" red="0" green="0" blue="0">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color name="green-19" red="0" green="128" blue="0">
-        </color>
-      </background_color>
-      <horizontal_alignment>1</horizontal_alignment>
-      <vertical_alignment>1</vertical_alignment>
-    </widget>
     <widget type="group" version="3.0.0">
-      <name>Status Content</name>
-      <y>24</y>
-      <width>200</width>
-      <height>47</height>
+      <name>Status</name>
+      <width>332</width>
+      <height>124</height>
       <style>3</style>
       <transparent>true</transparent>
-      <widget type="group" version="3.0.0">
-        <name>Row</name>
-        <width>200</width>
+      <widget type="rectangle" version="2.0.0">
+        <name>Card</name>
+        <width>332</width>
+        <height>124</height>
+        <line_width>1</line_width>
+        <line_color>
+          <color red="214" green="219" blue="226">
+          </color>
+        </line_color>
+        <background_color>
+          <color red="255" green="255" blue="255">
+          </color>
+        </background_color>
+        <corner_width>8</corner_width>
+        <corner_height>8</corner_height>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Accent</name>
+        <x>16</x>
+        <y>14</y>
+        <width>4</width>
+        <height>18</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="37" green="99" blue="235">
+          </color>
+        </background_color>
+      </widget>
+      <widget type="label" version="2.0.0">
+        <name>Card Title</name>
+        <text>Status</text>
+        <x>28</x>
+        <y>12</y>
+        <width>288</width>
         <height>22</height>
-        <style>3</style>
-        <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>All EVR valid</text>
-          <width>156</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
-        <widget type="led" version="2.0.0">
-          <name>LED</name>
-          <pv_name>$(T)TimAllEVRvalid</pv_name>
-          <x>174</x>
-        </widget>
+        <font>
+          <font family="Liberation Sans" style="BOLD" size="14.0">
+          </font>
+        </font>
+        <foreground_color>
+          <color red="30" green="41" blue="59">
+          </color>
+        </foreground_color>
+        <background_color>
+          <color red="0" green="128" blue="0">
+          </color>
+        </background_color>
+        <vertical_alignment>1</vertical_alignment>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Separator</name>
+        <x>1</x>
+        <y>42</y>
+        <width>330</width>
+        <height>1</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="226" green="232" blue="240">
+          </color>
+        </background_color>
       </widget>
       <widget type="group" version="3.0.0">
-        <name>Alarms</name>
-        <y>25</y>
-        <width>200</width>
-        <height>22</height>
+        <name>Content</name>
+        <x>16</x>
+        <y>54</y>
+        <width>300</width>
+        <height>66</height>
         <style>3</style>
         <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Duplicate Timestamp</name>
-          <text>Duplicate Timestamp</text>
-          <width>156</width>
-          <height>22</height>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
+        <widget type="group" version="3.0.0">
+          <name>EVR Valid</name>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="led" version="2.0.0">
+            <name>EVR Valid LED</name>
+            <pv_name>$(T)TimAllEVRvalid</pv_name>
+            <y>1</y>
+            <width>22</width>
+            <height>22</height>
+            <off_color>
+              <color red="203" green="213" blue="225">
+              </color>
+            </off_color>
+            <on_color>
+              <color red="34" green="197" blue="94">
+              </color>
+            </on_color>
+          </widget>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>All EVR valid</text>
+            <x>32</x>
+            <width>268</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
-        <widget type="led" version="2.0.0">
-          <name>LED_1</name>
-          <pv_name>$(T)InjSeqDupTimestamp</pv_name>
-          <x>174</x>
-          <off_color>
-            <color red="100" green="60" blue="60">
-            </color>
-          </off_color>
-          <on_color>
-            <color name="MAJOR" red="255" green="0" blue="0">
-            </color>
-          </on_color>
+        <widget type="group" version="3.0.0">
+          <name>Alarms</name>
+          <y>30</y>
+          <width>300</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="led" version="2.0.0">
+            <name>Duplicate Timestamp LED</name>
+            <pv_name>$(T)InjSeqDupTimestamp</pv_name>
+            <y>1</y>
+            <width>22</width>
+            <height>22</height>
+            <off_color>
+              <color red="203" green="213" blue="225">
+              </color>
+            </off_color>
+            <on_color>
+              <color red="220" green="38" blue="38">
+              </color>
+            </on_color>
+          </widget>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Duplicate Timestamp</text>
+            <x>32</x>
+            <width>268</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
         </widget>
       </widget>
     </widget>
   </widget>
   <widget type="action_button" version="3.0.0">
-    <name>More Button</name>
+    <name>Nav EVG</name>
     <actions>
       <action type="open_display">
         <file>EVG_Engineering.bob</file>
@@ -346,29 +525,52 @@
         <target>tab</target>
         <description>EVG</description>
       </action>
+    </actions>
+    <text>EVG</text>
+    <x>44</x>
+    <y>60</y>
+    <width>162</width>
+    <height>28</height>
+    <font>
+      <font family="Liberation Sans" style="BOLD" size="13.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="29" green="78" blue="216">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="255" green="255" blue="255">
+      </color>
+    </background_color>
+    <tooltip>Open EVG</tooltip>
+  </widget>
+  <widget type="action_button" version="3.0.0">
+    <name>Nav Seq Debug</name>
+    <actions>
       <action type="open_display">
         <file>TIM_debugControl.bob</file>
         <target>tab</target>
         <description>Seq Debug</description>
       </action>
     </actions>
-    <text>More...</text>
-    <x>265</x>
-    <y>203</y>
-    <width>80</width>
-    <height>25</height>
+    <text>Seq Debug</text>
+    <x>214</x>
+    <y>60</y>
+    <width>162</width>
+    <height>28</height>
     <font>
-      <font family="Liberation Sans" style="BOLD" size="14.0">
+      <font family="Liberation Sans" style="BOLD" size="13.0">
       </font>
     </font>
     <foreground_color>
-      <color name="black-14" red="0" green="0" blue="0">
+      <color red="29" green="78" blue="216">
       </color>
     </foreground_color>
     <background_color>
-      <color name="cyan-31" red="0" green="224" blue="224">
+      <color red="255" green="255" blue="255">
       </color>
     </background_color>
-    <tooltip>$(actions)</tooltip>
+    <tooltip>Open Seq Debug</tooltip>
   </widget>
 </display>

@@ -3,171 +3,253 @@
   <name>TIM debugControl</name>
   <x>295</x>
   <y>332</y>
-  <width>380</width>
-  <height>103</height>
+  <width>420</width>
+  <height>174</height>
   <background_color>
-    <color name="GLOBAL canvas" red="200" green="200" blue="200">
+    <color red="236" green="239" blue="244">
     </color>
   </background_color>
   <grid_visible>false</grid_visible>
+  <widget type="rectangle" version="2.0.0">
+    <name>Header Bar</name>
+    <width>420</width>
+    <height>48</height>
+    <line_width>0</line_width>
+    <background_color>
+      <color red="30" green="41" blue="59">
+      </color>
+    </background_color>
+  </widget>
   <widget type="label" version="2.0.0">
-    <name>Banner</name>
-    <text>$(T) Timing Sequencer</text>
-    <x>2</x>
-    <width>361</width>
-    <height>28</height>
+    <name>Header Title</name>
+    <text>Sequencer Debug</text>
+    <x>16</x>
+    <width>388</width>
+    <height>48</height>
     <font>
-      <font name="Header 1" family="Liberation Sans" style="BOLD" size="22.0">
+      <font family="Liberation Sans" style="BOLD" size="20.0">
       </font>
     </font>
     <foreground_color>
-      <color name="black-14" red="0" green="0" blue="0">
+      <color red="255" green="255" blue="255">
       </color>
     </foreground_color>
     <background_color>
-      <color name="green-19" red="0" green="128" blue="0">
+      <color red="0" green="128" blue="0">
       </color>
     </background_color>
-    <horizontal_alignment>1</horizontal_alignment>
+    <vertical_alignment>1</vertical_alignment>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>Header Prefix</name>
+    <text>$(T)</text>
+    <x>16</x>
+    <width>388</width>
+    <height>48</height>
+    <font>
+      <font family="Liberation Mono" style="REGULAR" size="13.0">
+      </font>
+    </font>
+    <foreground_color>
+      <color red="148" green="163" blue="184">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="0" green="128" blue="0">
+      </color>
+    </background_color>
+    <horizontal_alignment>2</horizontal_alignment>
     <vertical_alignment>1</vertical_alignment>
   </widget>
   <widget type="group" version="3.0.0">
-    <name>Debug</name>
+    <name>Card Slot</name>
     <x>29</x>
-    <y>36</y>
-    <width>322</width>
-    <height>50</height>
-    <style>2</style>
+    <y>64</y>
+    <width>362</width>
+    <height>94</height>
+    <style>3</style>
     <transparent>true</transparent>
-    <widget type="label" version="2.0.0">
-      <name>Section Title</name>
-      <text>Sequencer Debug</text>
-      <width>318</width>
-      <height>22</height>
-      <font>
-        <font name="Header 3" family="Liberation Sans" style="BOLD" size="16.0">
-        </font>
-      </font>
-      <foreground_color>
-        <color name="black-14" red="0" green="0" blue="0">
-        </color>
-      </foreground_color>
-      <background_color>
-        <color name="green-19" red="0" green="128" blue="0">
-        </color>
-      </background_color>
-      <horizontal_alignment>1</horizontal_alignment>
-      <vertical_alignment>1</vertical_alignment>
-    </widget>
     <widget type="group" version="3.0.0">
-      <name>Debug Content</name>
-      <y>24</y>
-      <width>318</width>
-      <height>22</height>
+      <name>Sequencer Debug</name>
+      <width>362</width>
+      <height>94</height>
       <style>3</style>
       <transparent>true</transparent>
-      <widget type="group" version="3.0.0">
-        <name>Row</name>
+      <widget type="rectangle" version="2.0.0">
+        <name>Card</name>
+        <width>362</width>
+        <height>94</height>
+        <line_width>1</line_width>
+        <line_color>
+          <color red="214" green="219" blue="226">
+          </color>
+        </line_color>
+        <background_color>
+          <color red="255" green="255" blue="255">
+          </color>
+        </background_color>
+        <corner_width>8</corner_width>
+        <corner_height>8</corner_height>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Accent</name>
+        <x>16</x>
+        <y>14</y>
+        <width>4</width>
+        <height>18</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="37" green="99" blue="235">
+          </color>
+        </background_color>
+      </widget>
+      <widget type="label" version="2.0.0">
+        <name>Card Title</name>
+        <text>Sequencer Debug</text>
+        <x>28</x>
+        <y>12</y>
         <width>318</width>
         <height>22</height>
+        <font>
+          <font family="Liberation Sans" style="BOLD" size="14.0">
+          </font>
+        </font>
+        <foreground_color>
+          <color red="30" green="41" blue="59">
+          </color>
+        </foreground_color>
+        <background_color>
+          <color red="0" green="128" blue="0">
+          </color>
+        </background_color>
+        <vertical_alignment>1</vertical_alignment>
+      </widget>
+      <widget type="rectangle" version="2.0.0">
+        <name>Separator</name>
+        <x>1</x>
+        <y>42</y>
+        <width>360</width>
+        <height>1</height>
+        <line_width>0</line_width>
+        <background_color>
+          <color red="226" green="232" blue="240">
+          </color>
+        </background_color>
+      </widget>
+      <widget type="group" version="3.0.0">
+        <name>Content</name>
+        <x>16</x>
+        <y>54</y>
+        <width>330</width>
+        <height>36</height>
         <style>3</style>
         <transparent>true</transparent>
-        <widget type="label" version="2.0.0">
-          <name>Label</name>
-          <text>Debug</text>
-          <width>60</width>
-          <height>22</height>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="green-19" red="0" green="128" blue="0">
-            </color>
-          </background_color>
-          <horizontal_alignment>2</horizontal_alignment>
-          <vertical_alignment>1</vertical_alignment>
-        </widget>
-        <widget type="action_button" version="3.0.0">
-          <name>Write Button</name>
-          <actions>
-            <action type="write_pv">
-              <pv_name>$(pv_name)</pv_name>
-              <value>0</value>
-              <description>Disable</description>
-            </action>
-          </actions>
-          <pv_name>$(T)InjSeqDebug</pv_name>
-          <text>Disable</text>
-          <x>66</x>
-          <width>80</width>
-          <height>22</height>
-          <font>
-            <font family="Liberation Sans" style="BOLD" size="14.0">
+        <widget type="group" version="3.0.0">
+          <name>Debug</name>
+          <width>330</width>
+          <height>24</height>
+          <style>3</style>
+          <transparent>true</transparent>
+          <widget type="label" version="2.0.0">
+            <name>Label</name>
+            <text>Debug</text>
+            <width>60</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="REGULAR" size="13.0">
+              </font>
             </font>
-          </font>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="cyan-31" red="0" green="224" blue="224">
-            </color>
-          </background_color>
-        </widget>
-        <widget type="action_button" version="3.0.0">
-          <name>Write Button</name>
-          <actions>
-            <action type="write_pv">
-              <pv_name>$(pv_name)</pv_name>
-              <value>1</value>
-              <description>States</description>
-            </action>
-          </actions>
-          <pv_name>$(T)InjSeqDebug</pv_name>
-          <text>States</text>
-          <x>152</x>
-          <width>80</width>
-          <height>22</height>
-          <font>
-            <font family="Liberation Sans" style="BOLD" size="14.0">
+            <foreground_color>
+              <color red="71" green="85" blue="105">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="0" green="128" blue="0">
+              </color>
+            </background_color>
+            <vertical_alignment>1</vertical_alignment>
+          </widget>
+          <widget type="action_button" version="3.0.0">
+            <name>Command</name>
+            <actions>
+              <action type="write_pv">
+                <pv_name>$(pv_name)</pv_name>
+                <value>0</value>
+                <description>Disable</description>
+              </action>
+            </actions>
+            <pv_name>$(T)InjSeqDebug</pv_name>
+            <text>Disable</text>
+            <x>68</x>
+            <width>82</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="BOLD" size="13.0">
+              </font>
             </font>
-          </font>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="cyan-31" red="0" green="224" blue="224">
-            </color>
-          </background_color>
-        </widget>
-        <widget type="action_button" version="3.0.0">
-          <name>Write Button</name>
-          <actions>
-            <action type="write_pv">
-              <pv_name>$(pv_name)</pv_name>
-              <value>2</value>
-              <description>Requests</description>
-            </action>
-          </actions>
-          <pv_name>$(T)InjSeqDebug</pv_name>
-          <text>Requests</text>
-          <x>238</x>
-          <width>80</width>
-          <height>22</height>
-          <font>
-            <font family="Liberation Sans" style="BOLD" size="14.0">
+            <foreground_color>
+              <color red="255" green="255" blue="255">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="37" green="99" blue="235">
+              </color>
+            </background_color>
+          </widget>
+          <widget type="action_button" version="3.0.0">
+            <name>Command</name>
+            <actions>
+              <action type="write_pv">
+                <pv_name>$(pv_name)</pv_name>
+                <value>1</value>
+                <description>States</description>
+              </action>
+            </actions>
+            <pv_name>$(T)InjSeqDebug</pv_name>
+            <text>States</text>
+            <x>158</x>
+            <width>82</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="BOLD" size="13.0">
+              </font>
             </font>
-          </font>
-          <foreground_color>
-            <color name="black-14" red="0" green="0" blue="0">
-            </color>
-          </foreground_color>
-          <background_color>
-            <color name="cyan-31" red="0" green="224" blue="224">
-            </color>
-          </background_color>
+            <foreground_color>
+              <color red="255" green="255" blue="255">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="37" green="99" blue="235">
+              </color>
+            </background_color>
+          </widget>
+          <widget type="action_button" version="3.0.0">
+            <name>Command</name>
+            <actions>
+              <action type="write_pv">
+                <pv_name>$(pv_name)</pv_name>
+                <value>2</value>
+                <description>Requests</description>
+              </action>
+            </actions>
+            <pv_name>$(T)InjSeqDebug</pv_name>
+            <text>Requests</text>
+            <x>248</x>
+            <width>82</width>
+            <height>24</height>
+            <font>
+              <font family="Liberation Sans" style="BOLD" size="13.0">
+              </font>
+            </font>
+            <foreground_color>
+              <color red="255" green="255" blue="255">
+              </color>
+            </foreground_color>
+            <background_color>
+              <color red="37" green="99" blue="235">
+              </color>
+            </background_color>
+          </widget>
         </widget>
       </widget>
     </widget>
